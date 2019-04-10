@@ -28,9 +28,9 @@ mix.webpackConfig({
   // }
   output: {
     // 依据该路径进行编译以及异步加载
-    publicPath: 'assets/main/',
+    publicPath: 'assets/js/',
     // 注意开发期间不加 hash，以免自动刷新失败
-    chunkFilename: `assets/js/chunk[name].${ mix.inProduction() ? '[chunkhash].' : '' }js`
+    chunkFilename: `chunk[name].${ mix.inProduction() ? '[chunkhash].' : '' }js`
   },
 });
 
