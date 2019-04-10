@@ -3,7 +3,7 @@
 @section('title', '后台管理')
 
 @section('head')
-    
+
     @parent
 
     <script>
@@ -28,7 +28,7 @@
     <div id="app"></div>
 
     @parent
-
+    <script src="//at.alicdn.com/t/font_1133704_it40oi774gq.js"></script>
     <script src="{{ mix('js/admin.js', 'assets') }}"></script>
 
 @endsection

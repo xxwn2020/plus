@@ -12,14 +12,27 @@ let path = require('path');
  |
  */
 
-mix.setPublicPath(path.join('public', 'assets'));
-mix.setResourceRoot('/assets/');
-mix.sourceMaps(! mix.inProduction());
-mix.disableNotifications();
-
-if (mix.config.hmr === true) {
-  mix.setResourceRoot('/');
-}
+mix.webpackConfig({
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      "@": path.resolve(
+        __dirname,
+        "resources/assets/admin"
+      )
+    }
+  },
+  // output: {
+  //   filename: '[name].js',
+  //   chunkFilename: 'assets/js/[name].app.js'
+  // }
+  output: {
+    // 依据该路径进行编译以及异步加载
+    publicPath: 'assets/main/',
+    // 注意开发期间不加 hash，以免自动刷新失败
+    chunkFilename: `assets/js/chunk[name].${ mix.inProduction() ? '[chunkhash].' : '' }js`
+  },
+});
 
 /*
  |--------------------------------------------------------------------------
@@ -30,8 +43,8 @@ if (mix.config.hmr === true) {
  |
  */
 
-mix.sass('resources/sass/bootstrap.scss', path.join('public', 'assets', 'css'))
-   .js('resources/js/bootstrap.js', path.join('public', 'assets', 'js'))
+// mix.sass('resources/sass/bootstrap.scss', path.join('public', 'assets', 'css'))
+//    .js('resources/js/bootstrap.js', path.join('public', 'assets', 'js'))
 
 
 /*
@@ -43,4 +56,19 @@ mix.sass('resources/sass/bootstrap.scss', path.join('public', 'assets', 'css'))
  |
  */
 
-mix.js('resources/assets/admin', path.join('public', 'assets', 'js'));
+mix.setPublicPath(path.join('public'))
+    .setResourceRoot('/assets/')
+    .options({
+      processCssUrls: false
+    })
+    .js('resources/assets/admin/main.js', path.join('public', 'assets', 'js', 'admin.js'))
+    .autoload({
+      vue: ['Vue']
+    });
+
+if (mix.inProduction()) {
+  mix.version()
+} else {
+  mix.disableNotifications()
+      .sourceMaps(true)
+}

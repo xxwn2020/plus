@@ -1,31 +1,25 @@
-// The file is store.
-//
-// @author Seven Du <shiweidu@outlook.com>
-// @homepage http://medz.cn
-// ---------------------------------------
+import Vue from 'vue'
+import Vuex from 'vuex'
+import getters from './getters'
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+Vue.use(Vuex)
 
-// modules.
-import user from './module/user';
-import site from './module/site';
-import area from './module/area';
-import manages from './module/manages';
-import alert from './module/alert';
+// https://webpack.js.org/guides/dependency-management/#requirecontext
+const modulesFiles = require.context('./modules', false, /\.js$/)
 
-Vue.use(Vuex);
-
-const modules = {
-  user,
-  site,
-  area,
-  manages,
-  alert,
-};
+// you do not need `import app from './modules/app'`
+// it will auto require all vuex module from modules file
+const modules = modulesFiles.keys().reduce((modules, modulePath) => {
+  // set './app.js' => 'app'
+  const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  const value = modulesFiles(modulePath)
+  modules[moduleName] = value.default
+  return modules
+}, {})
 
 const store = new Vuex.Store({
-  modules
-});
+  modules,
+  getters
+})
 
-export default store;
+export default store
