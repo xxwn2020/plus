@@ -22,10 +22,6 @@ import Api from './api'
 
 import * as filters from './filters' // global filters
 
-
-// mock api in github pages site build
-if (process.env.NODE_ENV === 'production') { mockXHR() }
-
 Vue.use(Api)
 
 Vue.use(Element, {
@@ -40,10 +36,12 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-new Vue({
+const app = new Vue({
   el: '#app',
   router,
   store,
   i18n,
   render: h => h(App)
 })
+
+export default app

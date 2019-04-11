@@ -1,93 +1,93 @@
-import http from 'axios';
-import { isCanceled } from '../utils/tools';
+import http from 'axios'
+import { isCanceled } from '../utils/tools'
 
-const { csrfToken: csrf_token, token, baseUrl: admin_base_url, api: apiv2_base_url } = window.TS;
+const { csrfToken, token, baseUrl: adminBaseUrl, api: apiv2BaseUrl } = window.TS
 
 // API公共请求参数.
-http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
 // 创建一个新实例.
 const createInstance = (options) => {
   if (typeof options === 'string') {
-    options = { baseURL: options };
+    options = { baseURL: options }
   } else {
     options = options || {}
   }
 
   options.headers = {
-    'X-CSRF-TOKEN': csrf_token,
+    'X-CSRF-TOKEN': csrfToken,
     Authorization: `Bearer ${token}`,
     ...options.headers || {}
-  };
+  }
 
-  const instance = http.create(options);
+  const instance = http.create(options)
 
-  instance.isCancel = http.isCancel.bind(http);
-  instance.CancelToken = http.CancelToken.bind(http);
+  instance.isCancel = http.isCancel.bind(http)
+  instance.CancelToken = http.CancelToken.bind(http)
 
-  return instance;
-};
+  return instance
+}
 
 // 创建并导出两个API实例
-export const admin = createInstance(admin_base_url);
-export const apiv2 = createInstance(apiv2_base_url);
+export const admin = createInstance(adminBaseUrl)
+export const apiv2 = createInstance(apiv2BaseUrl)
 
 // 创建并导出一个资源类
 export class Resource {
-  constructor(uri, api) {
-    this.api = api || apiv2;
-    this.uri = encodeURI(uri);
+  constructor (uri, api) {
+    this.api = api || apiv2
+    this.uri = encodeURI(uri)
   }
 
-  list(params = {}) {
+  list (params = {}) {
     return this.api.get(`${this.uri}`, {
-      params, validateStatus: s => s === 200,
-    });
+      params, validateStatus: s => s === 200
+    })
   }
 
-  get(id, params = {}) {
-    id = id ? encodeURIComponent(id) : id;
+  get (id, params = {}) {
+    id = id ? encodeURIComponent(id) : id
 
     return this.api.get(`${this.uri}/${id}`, {
-      params, validateStatus: s => s === 200,
-    });
+      params, validateStatus: s => s === 200
+    })
   }
 
-  save(data, id = null) {
-    id = id ? encodeURIComponent(id) : id;
-    const method = id ? 'patch' : 'post';
-    const uri = this.uri + (id ? `/${id}` : '');
+  save (data, id = null) {
+    id = id ? encodeURIComponent(id) : id
+    const method = id ? 'patch' : 'post'
+    const uri = this.uri + (id ? `/${id}` : '')
 
     return apiv2[method](uri, data, {
-      validateStatus: s => [200, 201, 204].includes(s),
-    });
+      validateStatus: s => [200, 201, 204].includes(s)
+    })
   }
 
-  del(id) {
-    id = id ? encodeURIComponent(id) : id;
+  del (id) {
+    id = id ? encodeURIComponent(id) : id
 
     return apiv2.delete(`${this.uri}/${id}`, {
-      validateStatus: s => s === 204 || s === 404,
-    });
+      validateStatus: s => s === 204 || s === 404
+    })
   }
 
-  map(mapper) {
-    const map = {};
+  map (mapper) {
+    const map = {}
 
     if (typeof mapper === 'object') {
-      const isArr = Array.isArray(mapper);
+      const isArr = Array.isArray(mapper)
 
       for (const key in mapper) {
-        const method = mapper[key];
-        const alias = isArr ? method : key;
+        const method = mapper[key]
+        const alias = isArr ? method : key
 
         if (this[method] && method !== 'map') {
-          map[alias] = this[method].bind(this);
+          map[alias] = this[method].bind(this)
         }
       }
     }
 
-    return map;
+    return map
   }
 }
 
@@ -98,16 +98,16 @@ export class Resource {
  * @return {Object}
  */
 export const normError = (error) => {
-  let status, message, errors;
-  const canceled = isCanceled(error)
-    || http.isCancel(error);
+  let status, message, errors
+  const canceled = isCanceled(error) ||
+    http.isCancel(error)
 
   if (!canceled && error.response) {
-    status = error.response.status;
-    const data = error.response.data;
+    status = error.response.status
+    const data = error.response.data
 
     if (typeof data === 'object') {
-      errors = { ...(data.errors || data) };
+      errors = { ...(data.errors || data) }
 
       if (!data.errors) {
         const keys = [
@@ -115,35 +115,35 @@ export const normError = (error) => {
           'line',
           'file',
           'trace',
-          'exception',
-        ];
+          'exception'
+        ]
         keys.forEach((key) => {
           if (key in errors) {
-            delete errors[key];
+            delete errors[key]
           }
-        });
+        })
       }
 
       if (Object.keys(errors).length) {
         for (const key in errors) {
-          message = errors[key];
-          break;
+          message = errors[key]
+          break
         }
       } else {
-        message = data.message;
+        message = data.message
       }
 
       if (Array.isArray(message)) {
-        message = message.join('\n');
+        message = message.join('\n')
       }
     } else {
-      message = `${data}`;
+      message = `${data}`
     }
   } else {
-    message = error.message || `${error}`;
+    message = error.message || `${error}`
   }
 
-  return { status, message, errors, canceled };
-};
+  return { status, message, errors, canceled }
+}
 
-export default http;
+export default http

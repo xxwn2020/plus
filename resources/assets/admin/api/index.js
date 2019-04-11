@@ -1,9 +1,9 @@
-import http, { normError } from "./http";
+import http, { normError } from './http'
 const api = {
   normError,
-  http,
-};
+  http
+}
 
-api.install = Vue => (Vue.prototype.$api = api);
+api.install = Vue => (Vue.prototype.$api = api)
 
-export default api;
+export default api

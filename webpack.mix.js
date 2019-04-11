@@ -12,24 +12,24 @@ let path = require('path');
  |
  */
 mix.setPublicPath(path.join('public', 'assets'))
-    .setResourceRoot('assets/')
-    .webpackConfig({
-        resolve: {
-            extensions: ['.js', '.vue', '.json'],
-            alias: {
-                "@": path.resolve(
-                    __dirname,
-                    "resources/assets/admin"
-                )
-            }
-        },
-        output: {
-            // 依据该路径进行编译以及异步加载
-            publicPath: 'assets/',
-            // 注意开发期间不加 hash，以免自动刷新失败
-            chunkFilename: `js/chunk-[name].${mix.inProduction() ? '-[chunkhash].' : ''}js`
-        },
-    });
+  .setResourceRoot('assets/')
+  .webpackConfig({
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        "@": path.resolve(
+          __dirname,
+          "resources/assets/admin"
+        )
+      }
+    },
+    output: {
+      // 依据该路径进行编译以及异步加载
+      publicPath: 'assets/',
+      // 注意开发期间不加 hash，以免自动刷新失败
+      chunkFilename: `js/chunk-[name].${mix.inProduction() ? '-[chunkhash].' : ''}js`
+    },
+  });
 /*
  |--------------------------------------------------------------------------
  | 后台可运行 js 捆
@@ -42,8 +42,8 @@ mix.setPublicPath(path.join('public', 'assets'))
 mix.js('resources/assets/admin/main.js', path.join('public', 'assets', 'js', 'admin.js'));
 
 if (mix.inProduction()) {
-    mix.version()
+  mix.version()
 } else {
-    mix.disableNotifications()
-        .sourceMaps(true)
+  mix.disableNotifications()
+    .sourceMaps(true)
 }

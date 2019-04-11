@@ -12,7 +12,7 @@ module.exports = {
           "switchCase": 1,
           "ignores": []
         }
-      ]
+      ],
     },
     "indent": [
       "error",
