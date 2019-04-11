@@ -7,8 +7,8 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+/* TSPlus Route */
 import tsplusRouter from './tsplus'
-
 Vue.use(Router)
 
 /**
@@ -38,6 +38,8 @@ Vue.use(Router)
  * all roles can be accessed
  */
 export const constantRoutes = [
+  // ts+后台路由
+  ...tsplusRouter,
   {
     path: '/redirect',
     component: Layout,
@@ -173,8 +175,6 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
-  // ts+后台路由
-  tsplusRouter,
 
   {
     path: '/example',

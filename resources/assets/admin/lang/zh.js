@@ -61,7 +61,18 @@ export default {
     theme: '换肤',
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
-    externalLink: '外链'
+    externalLink: '外链',
+    /** TSPlust */
+    management: '管理',
+    users: '用户管理',
+    userList: '用户列表',
+    tags: '标签管理',
+    integral: '积分管理',
+    operation: '运营管理',
+    operationBasic: '基础设置',
+    operationSensitiveWords: '敏感词',
+    operationAreas: '地区管理'
+    /** TSPlus */
   },
   navbar: {
     logOut: '退出登录',
