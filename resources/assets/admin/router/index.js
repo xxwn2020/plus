@@ -7,6 +7,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+import tsplusRouter from './tsplus'
 
 Vue.use(Router)
 
@@ -172,6 +173,8 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
+  // ts+后台路由
+  tsplusRouter,
 
   {
     path: '/example',
