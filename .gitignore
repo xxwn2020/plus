@@ -6,6 +6,8 @@
 
 composer.lock
 yarn.lock
+yarn-error.log
+npm-debug.log
 jpush.log
 
 /config/component.php
@@ -21,9 +23,16 @@ jpush.log
 /.vscode
 /nbproject
 /.vagrant
-.env
-.phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.env
+.phpunit.result.cache
+/public/assets/*
+/public/assets/fonts/vendor/*
+/public/assets/fonts/*
+/public/assets/js/*
+/config/
+/resources/views/errors/
+_ide_helper.php

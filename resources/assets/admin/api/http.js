@@ -1,7 +1,7 @@
 import http from 'axios'
 import { isCanceled } from '../utils/tools'
 
-const { csrfToken, token, baseUrl: adminBaseUrl, api: apiv2BaseUrl } = window.TS
+const { csrfToken, token, baseURL: adminBaseUrl, api: apiv2BaseUrl } = window.TS
 
 // API公共请求参数.
 http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
