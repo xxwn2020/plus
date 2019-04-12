@@ -1,7 +1,9 @@
-import ManagementRouter from './management'
-import OperationRouter from './operation'
+import ManagementRouter from './modules/management'
+import OperationRouter from './modules/operation'
+import SystemRouter from './modules/system'
 
 export default [
   ManagementRouter,
-  OperationRouter
+  OperationRouter,
+  SystemRouter
 ]

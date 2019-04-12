@@ -71,7 +71,17 @@ export default {
     operation: '运营管理',
     operationBasic: '基础设置',
     operationSensitiveWords: '敏感词',
-    operationAreas: '地区管理'
+    operationAreas: '地区管理',
+    system: {
+      root: '系统配置',
+      info: '系统信息',
+      registerSetting: '注册设置',
+      certification: '认证设置',
+      thirdparty: '第三方登录',
+      smsSetting: '短信配置',
+      mailSetting: '邮件配置',
+      payment: '支付配置'
+    }
     /** TSPlus */
   },
   navbar: {
