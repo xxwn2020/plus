@@ -39,7 +39,7 @@ class RoleController extends Controller
     {
         if (! $request->user()->ability('admin:role:show')) {
             return response()->json([
-                'errors' => ['你没有管理角色的权限'],
+                'message' => '你没有管理角色的权限',
             ])->setStatusCode(403);
         }
 
@@ -63,10 +63,10 @@ class RoleController extends Controller
     {
         if (! $request->user()->ability('admin: Deleting role')) {
             return response()->json([
-                'errors' => ['你没有删除角色权限'],
+                'message' => '你没有权限删除角色'
             ])->setStatusCode(403);
         } elseif ($role->non_delete) {
-            return response(['errors' => ['不可删除的用户组']], 403);
+            return response(['message' => '不可删除的角色'], 403);
         }
 
         $role->delete();
@@ -127,7 +127,7 @@ class RoleController extends Controller
     {
         if (! $request->user()->ability('admin:role:show')) {
             return response()->json([
-                'errors' => ['你没有权限查看角色信息'],
+                'message' => '你没有权限查看角色信息'
             ])->setStatusCode(403);
         }
 

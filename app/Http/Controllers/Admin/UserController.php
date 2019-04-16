@@ -23,6 +23,9 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 use DB;
 use Cache;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 use Zhiyi\Plus\Models\Role;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
@@ -170,8 +173,9 @@ class UserController extends Controller
 
     /**
      * 设置注册时关注.
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param Request $request [description]
+     * @param Famous  $famous
+     * @return JsonResponse [type]           [description]
      */
     public function handleFamous(Request $request, Famous $famous)
     {
@@ -196,8 +200,9 @@ class UserController extends Controller
 
     /**
      * 取消注册时关注.
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param User   $user
+     * @param Famous $famous
+     * @return JsonResponse [type]           [description]
      */
     public function handleUnFamous(User $user, Famous $famous)
     {
@@ -289,8 +294,10 @@ class UserController extends Controller
 
     /**
      * @param Request $request
-     * @param User $user
+     * @param User    $user
      * @return mixed
+     * @throws ValidationException
+     * @throws Throwable
      */
     public function update(Request $request, User $user)
     {
@@ -366,6 +373,7 @@ class UserController extends Controller
     /**
      * @param Request $request
      * @return mixed
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -374,6 +382,11 @@ class UserController extends Controller
             'email' => 'nullable|email|unique:users,email',
             'name' => 'required|username|min:2|max:12|unique:users,name',
             'password' => 'required',
+            'roles' => [
+                'required',
+                'array',
+                Rule::in(Role::all()->keyBy('id')->keys()->toArray()),
+            ],
         ];
         $messages = [
             'phone.cn_phone' => '请输入大陆地区合法手机号码',
@@ -386,6 +399,9 @@ class UserController extends Controller
             'name.max' => '用户名最多输入十二个字',
             'name.unique' => '用户名已经被其他用户所使用',
             'password.required' => '请输入密码',
+            'roles.required' => '必须选择用户组',
+            'roles.array' => '发送数据格式错误',
+            'roles.in' => '选择的用户组中存在不合法信息',
         ];
         $this->validate($request, $rules, $messages);
 
@@ -394,19 +410,22 @@ class UserController extends Controller
         $user->phone = $request->input('phone');
         $user->email = $request->input('email');
         $user->createPassword($request->input('password'));
-        $user->save();
+        DB::transaction(function () use ($user, $request) {
+            $user->save();
+            $user->roles()->sync($request->input('roles'));
+        });
 
         if (setting('user', 'vendor:easemob', ['open' => false])['open'] ?? false) {
             $request->user_id = $user->id;
             if ((new EaseMobController)->createUser($request)->getStatusCode() !== 201) {
                 return response()->json([
-                    'message' => ['环信用户注册失败'],
+                    'message' => '环信用户注册失败',
                 ])->setStatusCode(400);
             }
         }
 
         return response()->json([
-            'message' => ['成功'],
+            'message' => '成功',
             'user_id' => $user->id,
         ])->setStatusCode(201);
     }
@@ -414,15 +433,17 @@ class UserController extends Controller
     /**
      * 删除用户.
      *
-     * @param User $user
+     * @param Request $request
+     * @param User    $user
      * @return mixed
+     * @throws \Exception
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function deleteUser(Request $request, User $user)
     {
         if (! $request->user()->ability('admin:user:delete')) {
             return response()->json([
-                'errors' => ['你没有删除用户的权限'],
+                'message' => '你没有删除用户的权限'
             ])->setStatusCode(403);
         }
 
@@ -442,7 +463,7 @@ class UserController extends Controller
     {
         if (! $request->user()->ability('admin:user:show')) {
             return response()->json([
-                'errors' => ['你没有权限执行该操作'],
+                'message' => '你没有权限执行该操作'
             ])->setStatusCode(403);
         }
 
@@ -480,6 +501,7 @@ class UserController extends Controller
      *
      * @param Request $request
      * @return mixed
+     * @throws ValidationException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function storeSetting(Request $request)
@@ -498,15 +520,16 @@ class UserController extends Controller
 
         return response()
             ->json([
-                'message' => ['更新成功!'],
+                'message' => '更新成功!',
             ])
             ->setStatusCode(201);
     }
 
     /**
      * 增加推荐用户.
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param Request         $request [description]
+     * @param UserRecommended $recommend
+     * @return JsonResponse [type]           [description]
      */
     public function handleRecommend(Request $request, UserRecommended $recommend)
     {
@@ -542,8 +565,8 @@ class UserController extends Controller
 
     /**
      * 注册配置，暂时存放于配置文件.
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param Request $request [description]
+     * @return JsonResponse [type]           [description]
      */
     public function updateRegisterSetting(Request $request)
     {
@@ -560,7 +583,7 @@ class UserController extends Controller
 
     /**
      * 获取注册配置.
-     * @return [type] [description]
+     * @return JsonResponse [type] [description]
      */
     public function getRegisterSetting()
     {
