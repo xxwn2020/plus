@@ -73,6 +73,8 @@
     "babel-plugin-component": "^1.1.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "browser-sync": "^2.26.3",
+    "browser-sync-webpack-plugin": "2.0.1",
     "chalk": "2.4.2",
     "chokidar": "2.1.5",
     "connect": "3.6.6",
