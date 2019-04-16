@@ -16,14 +16,17 @@ import router from './router'
 import i18n from './lang' // Internationalization
 import './icons' // icon
 import './permission' // permission control
-import './utils/errorLog' // error log
+import './utils/errorLog'
 
+import components from './components'
 import Api from './api'
+import mixins from './mixins'
 
-import * as filters from './filters' // global filters
+import * as filters from './filters' // error log
+import plusMessageBunld from 'plus-message-bundle'
 
 Vue.use(Api)
-
+Vue.mixin(mixins)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
@@ -32,6 +35,12 @@ Vue.use(Element, {
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
+})
+
+Vue.prototype.$messageBundle = plusMessageBunld
+
+components.forEach(component => {
+  Vue.component(component.name, component)
 })
 
 Vue.config.productionTip = false
