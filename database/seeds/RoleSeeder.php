@@ -36,11 +36,6 @@ class RoleSeeder extends Seeder
                 'description' => '站点创始人',
                 'non_delete' => 1,
             ],
-            'disabler' => [
-                'display_name' => '禁用用户',
-                'description' => '被禁止登录用户， 需要手动设置',
-                'non_delete' => 1,
-            ],
             'developer' => [
                 'display_name' => '开发/运维人员',
                 'description' => '用于访问调试监控工具的专属角色',
