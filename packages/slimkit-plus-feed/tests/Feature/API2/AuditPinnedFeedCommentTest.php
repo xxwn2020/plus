@@ -40,6 +40,7 @@ class AuditPinnedFeedCommentTest extends TestCase
     protected $comment;
 
     public function setUp()
+    : void
     {
         parent::setUp();
 
@@ -78,13 +79,13 @@ class AuditPinnedFeedCommentTest extends TestCase
     public function testPassPinnedFeedComment()
     {
         $response = $this
-           ->actingAs($this->owner, 'api')
-           ->json(
-               'PATCH',
-               "/api/v2/feeds/{$this->feed->id}/comments/{$this->comment->id}/currency-pinneds/{$this->pinned->id}");
+            ->actingAs($this->owner, 'api')
+            ->json(
+                'PATCH',
+                "/api/v2/feeds/{$this->feed->id}/comments/{$this->comment->id}/currency-pinneds/{$this->pinned->id}");
         $response
-           ->assertStatus(201)
-           ->assertJsonStructure(['message']);
+            ->assertStatus(201)
+            ->assertJsonStructure(['message']);
     }
 
     /**
