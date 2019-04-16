@@ -1,5 +1,8 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <nav-bar-in-page/>
+    <router-view></router-view>
+  </div>
 </template>
 <script>
 // 用户管理
