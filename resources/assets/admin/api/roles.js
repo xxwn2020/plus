@@ -6,6 +6,7 @@ export default {
   ...roles.map({
     list: 'list',
     save: 'save',
-    del: 'del'
+    del: 'del',
+    get: 'get'
   })
 }
