@@ -1,12 +1,10 @@
 <template>
-  <el-main>
-    <el-card :body-style="{ padding: '0px' }">
-      <div slot="header">
-        <span>标签管理</span>
-      </div>
-      <!-- card body -->
-    </el-card>
-  </el-main>
+  <div>
+    <nav-bar-in-page/>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
+  </div>
 </template>
 <script>
 // 标签管理
