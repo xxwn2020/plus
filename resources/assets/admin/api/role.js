@@ -1,20 +1,20 @@
 import request from '@/utils/request'
 
-export function getRoutes() {
+export function getRoutes () {
   return request({
     url: '/routes',
     method: 'get'
   })
 }
 
-export function getRoles() {
+export function getRoles () {
   return request({
     url: '/roles',
     method: 'get'
   })
 }
 
-export function addRole(data) {
+export function addRole (data) {
   return request({
     url: '/role',
     method: 'post',
@@ -22,7 +22,7 @@ export function addRole(data) {
   })
 }
 
-export function updateRole(id, data) {
+export function updateRole (id, data) {
   return request({
     url: `/role/${id}`,
     method: 'put',
@@ -30,7 +30,7 @@ export function updateRole(id, data) {
   })
 }
 
-export function deleteRole(id) {
+export function deleteRole (id) {
   return request({
     url: `/role/${id}`,
     method: 'delete'
