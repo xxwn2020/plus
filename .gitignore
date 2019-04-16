@@ -16,6 +16,7 @@ jpush.log
 /node_modules
 /public/hot
 /public/storage
+/public/assets
 /storage/*.key
 /vendor
 /resources/views/vendor
