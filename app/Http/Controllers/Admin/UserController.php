@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use DB;
+use Cache;
 use Carbon\Carbon;
 use Zhiyi\Plus\Models\Role;
 use Zhiyi\Plus\Models\User;
@@ -61,19 +62,35 @@ class UserController extends Controller
         $registStartDate = $request->query('regist_start_date');
         $registEndDate = $request->query('regist_end_date');
         $location = array_filter(explode(' ', $request->query('location') ?? ' '));
+        // 禁用用户
+        $trashed = $request->query('trashed', 0);
+        /* 推荐用户 */
+        $recommend = $request->query('recommend', 0);
 
         $builder = with(new User())->setHidden([])->newQuery();
+        $builder->when($recommend, function ($query) use ($recommend) {
+            $query->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('users_recommended')
+                    ->whereRaw('users_recommended.user_id = users.id');
+            });
+        });
+        // 有禁用参数的时候， 只查询被禁用的用户
+        $builder->when($trashed, function ($query) use ($trashed) {
+            $query->onlyTrashed();
+        });
 
         $datas = [];
         if ($showRole) {
-            $datas['roles'] = Role::all();
+            $datas['roles'] = Cache::rememberForever('all-user-roles', function () {
+                return Role::all();
+            });
         }
         // user id
         if ($userId && $users = $builder->where('id', $userId)->paginate($perPage)) {
             $datas['users'] = $users->map(function ($user) {
                 $user->setHidden([]);
-                $user->load('recommended');
-                $user->load('famous');
+                $user->load(['recommended', 'famous', 'currency']);
 
                 return $user;
             });
@@ -139,8 +156,7 @@ class UserController extends Controller
 
         $datas['users'] = $pages->map(function ($user) {
             $user->setHidden([]);
-            $user->load('recommended');
-            $user->load('famous');
+            $user->load(['recommended', 'famous', 'currency']);
 
             return $user;
         });
