@@ -61,17 +61,17 @@ class TopicFollow extends Controller
             throw new NotFoundHttpException('关注的话题不存在');
         }
 
-        $link = $topic->users()->wherePivot('user_id', $user->id)->first()->pivot;
-        if ($link->following_at ?? false) {
+        $link = $topic->users()->wherePivot('user_id', $user->id)->first();
+        if ($link && $link->pivot->following_at ?? false) {
             return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT /* 204 */);
         }
 
         $feedsCount = $topic->feeds()->where('user_id', $user->id)->count();
 
         return $user->getConnection()->transaction(function () use ($topic, $user, $feedsCount, $link): Response {
-            if ($link) {
-                $link->following_at = new Carbon;
-                $link->save();
+            if ($link->pivot) {
+                $link->pivot->following_at = new Carbon;
+                $link->pivot->save();
             } else {
                 $topic->users()->attach($user, [
                     'following_at' => new Carbon(),
