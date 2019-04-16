@@ -209,11 +209,18 @@ export default {
   admin: {
     /* 公用部分 */
     operation: '更多操作',
-    edit: '编辑',
+    edit: '编 辑',
     success: '操作成功',
-    notice: '提示',
+    notice: '提 示',
+    confirm: '确 认',
+    cancel: '取 消',
+    submit: '提 交',
+    uname: '用户名',
+    startDateTime: '开始日期',
+    endDateTime: '结束日志',
     /* 用户模块 */
     users: {
+      create: '创建用户',
       disable: '禁用',
       followEachOthers: '注册相互关注',
       followTa: '注册关注',
@@ -222,8 +229,15 @@ export default {
       unrecommend: '取消推荐',
       edit: '编辑用户',
       restore: '取消禁用',
+      phone: '手机号',
+      email: 'Email',
+      password: '账号密码',
+      roles: '用户角色',
+      userList: '用户列表',
+      confirmDisable: '此操作将禁用该用户, 确认要继续?',
+      continue: '继续',
       search: {
-        userId: '用户ID',
+        userId: 'ID',
         sort: '排序方式',
         email: '电子邮箱',
         phone: '手机号码',
