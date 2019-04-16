@@ -20,11 +20,6 @@ const managementRouter = {
           meta: { title: 'management.users.list', tabs: true }
         },
         {
-          path: 'recommend',
-          name: 'management-users-recommend',
-          meta: { title: 'management.users.recommend', tabs: true }
-        },
-        {
           path: 'certificated',
           name: 'management-users-certificated',
           meta: { title: 'management.users.certificated', tabs: true }

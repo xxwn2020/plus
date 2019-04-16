@@ -1,29 +1,22 @@
 <template>
-  <el-card :body-style="{ padding: '0px' }">
+  <el-card :body-style="{ padding: '0px' }" class="user-list-page">
     <div slot="header">
-      <span>用户列表</span>
+      <span>{{$t('admin.users.userList')}}</span>
       <el-button
         @click="goTo({name: 'management-users-add'})"
         style="float: right; padding: 3px 0"
         type="text"
-      >添加用户</el-button>
+      >{{$t('admin.users.create')}}</el-button>
     </div>
     <el-main>
       <el-form :inline="true" :model="query" ref="userFilterForm" label-width="80px">
-        <el-form-item
-          :label="$t(`admin.${formFileds.module}.search.${field.id}`)"
-          v-for="field in formFileds.fields"
-          :key="field.id"
-          :prop="field.id"
-        >
+        <div class="form-item" v-for="field in formFileds.fields" :key="field.id">
           <el-input
-            size="mini"
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'input'"
             v-model="query[field.id]"
           ></el-input>
           <el-cascader
-            size="mini"
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'cascader'"
             :options="field.options"
@@ -31,7 +24,6 @@
             @change="handleChange"
           ></el-cascader>
           <el-select
-            size="mini"
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'select'"
             v-model="query[field.id]"
@@ -44,28 +36,39 @@
             ></el-option>
           </el-select>
           <el-date-picker
-            size="mini"
             v-if="field.type === 'dateTimeRange'"
             v-model="dateTimeRange"
             type="datetimerange"
             value-format="yyyy-MM-dd HH:mm:ss"
             :range-separator="field.options.rangeSeparator"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            :start-placeholder="$t('admin.startDateTime')"
+            :end-placeholder="$t('admin.endDateTime')"
             align="right"
           ></el-date-picker>
-        </el-form-item>
-        <el-form-item label>
+        </div>
+        <div>
           <el-button
-            size="mini"
             type="primary"
             :loading="loading"
             @click="doSearch()"
           >{{ $t('admin.search.root') }}</el-button>
-        </el-form-item>
+        </div>
       </el-form>
-      <el-table v-loading="loading" :data="users" border stripe>
-        <el-table-column fixed width="80" prop="id" :label="$t('admin.users.search.userId')"/>
+      <el-table
+        :default-sort="defaultSort"
+        @sort-change="sortChange"
+        v-loading="loading"
+        :data="users"
+        border
+        stripe
+      >
+        <el-table-column
+          sortable="custom"
+          fixed
+          width="80"
+          prop="id"
+          :label="$t('admin.users.search.userId')"
+        />
         <el-table-column width="100" prop="name" :label="$t('admin.users.search.name')"/>
         <el-table-column width="110" prop="phone" :label="$t('admin.users.search.phone')"/>
         <!-- <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"/> -->
@@ -195,20 +198,6 @@ const formFormatter = {
       type: "input"
     },
     {
-      id: "sort",
-      type: "select",
-      options: [
-        {
-          label: "注册时间倒序",
-          value: "down"
-        },
-        {
-          label: "注册时间正序",
-          value: "up"
-        }
-      ]
-    },
-    {
       id: "email",
       type: "input"
     },
@@ -237,11 +226,11 @@ const formFormatter = {
         rangeSeparator: "至"
       }
     },
-    {
-      id: "location",
-      type: "cascader",
-      options: []
-    },
+    // {
+    //   id: "location",
+    //   type: "cascader",
+    //   options: []
+    // },
     {
       id: "follow",
       type: "select",
@@ -313,9 +302,22 @@ export default {
     },
     trashed() {
       return ({ trashed = 0 } = this.$route.query || {});
+    },
+    defaultSort() {
+      const {
+        query: { sort }
+      } = this;
+      return { prop: "id", order: sort === "up" ? "ascending" : "descending" };
     }
   },
   methods: {
+    /* 更改排序 */
+    sortChange(data) {
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.setQuery({ sort: order === "ascending" ? "up" : "down" });
+      }
+    },
     /* 取消用户禁用 */
     handleRestore(user) {
       this.$api.users
@@ -332,17 +334,33 @@ export default {
     },
     /* 禁用用户 */
     handleTrash(user) {
-      this.$api.users
-        .del(user.id)
+      this.$confirm(
+        this.$t("admin.users.confirmDisable"),
+        this.$t("admin.notice"),
+        {
+          confirmButtonText: this.$t("admin.confirm"),
+          cancelButtonText: this.$t("admin.cancel"),
+          type: "warning"
+        }
+      )
         .then(() => {
-          this.$notify({
-            type: "success",
-            message: "用户已被禁用！",
-            title: "成功"
-          });
-          this.fetchData();
+          this.$api.users
+            .del(user.id)
+            .then(() => {
+              this.$message({
+                type: "success",
+                message: "用户已被禁用！"
+              });
+              this.fetchData();
+            })
+            .catch(this.showApiError);
         })
-        .catch(this.showApiError);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
     },
     /* 给mixin用的公共方法 */
     fetchData() {
@@ -447,3 +465,17 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.user-list-page {
+  .el-form {
+    display: flex;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    .form-item {
+      margin-right: 5px;
+      margin-bottom: 20px;
+    }
+  }
+}
+</style>
+
