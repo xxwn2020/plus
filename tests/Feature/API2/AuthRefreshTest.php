@@ -72,7 +72,7 @@ class AuthRefreshTest extends TestCase
         $token = $this->guard()->login($this->user);
 
         $response = $this->getJson('/api/v2/auth/refresh', [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $response

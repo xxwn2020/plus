@@ -53,7 +53,7 @@ class ReportTest extends TestCase
      */
     public function testReportUser()
     {
-        $response = $this->actingAs($this->user, 'api')->json('POST', 'api/v2/report/users/' . $this->target_user->id);
+        $response = $this->actingAs($this->user, 'api')->json('POST', 'api/v2/report/users/'.$this->target_user->id);
 
         $response->assertStatus(201);
     }
@@ -75,7 +75,7 @@ class ReportTest extends TestCase
             'commentable_type' => 'system',
         ]);
 
-        $response = $this->actingAs($this->user, 'api')->json('POST', 'api/v2/report/comments/' . $comment->id);
+        $response = $this->actingAs($this->user, 'api')->json('POST', 'api/v2/report/comments/'.$comment->id);
 
         $response->assertStatus(201);
     }

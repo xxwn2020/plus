@@ -63,7 +63,7 @@ class WalletCashTest extends TestCase
 
         $this->assertOrderData($data);
 
-        $after = $this->actingAs($this->user, 'api')->json('GET', '/api/v2/plus-pay/cashes?after=' . $data['id']);
+        $after = $this->actingAs($this->user, 'api')->json('GET', '/api/v2/plus-pay/cashes?after='.$data['id']);
         $after->assertStatus(200);
         $afterData = $after->json()[0];
 
