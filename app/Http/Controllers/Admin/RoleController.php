@@ -37,7 +37,7 @@ class RoleController extends Controller
      */
     public function roles(Request $request)
     {
-        if (!$request->user()->ability('admin:role:show')) {
+        if (! $request->user()->ability('admin:role:show')) {
             return response()->json([
                 'errors' => ['你没有管理角色的权限'],
             ])->setStatusCode(403);
@@ -61,7 +61,7 @@ class RoleController extends Controller
      */
     public function delete(Request $request, Role $role)
     {
-        if (!$request->user()->ability('admin: Deleting role')) {
+        if (! $request->user()->ability('admin: Deleting role')) {
             return response()->json([
                 'errors' => ['你没有删除角色权限'],
             ])->setStatusCode(403);
@@ -85,7 +85,7 @@ class RoleController extends Controller
      */
     public function createRole(Request $request)
     {
-        if (!$request->user()->ability('admin:role:add')) {
+        if (! $request->user()->ability('admin:role:add')) {
             return response()->json([
                 'message' => '你没有添加角色的权限',
             ])->setStatusCode(403);
@@ -95,7 +95,7 @@ class RoleController extends Controller
         $display_name = $request->input('display_name');
         $description = $request->input('description');
 
-        if (!$name) {
+        if (! $name) {
             return response()->json(['message' => '名称不能为空'])->setStatusCode(422);
         } elseif (Role::where('name', 'LIKE', $name)->first()) {
             return response()->json(['message' => '名称已经存在'])
@@ -107,7 +107,7 @@ class RoleController extends Controller
         $role->display_name = $display_name;
         $role->description = $description;
 
-        if (!$role->save()) {
+        if (! $role->save()) {
             return response()->json(['message' => '保存失败'])
                 ->setStatusCode(400);
         }
@@ -125,7 +125,7 @@ class RoleController extends Controller
      */
     public function showRole(Request $request, Role $role)
     {
-        if (!$request->user()->ability('admin:role:show')) {
+        if (! $request->user()->ability('admin:role:show')) {
             return response()->json([
                 'errors' => ['你没有权限查看角色信息'],
             ])->setStatusCode(403);
@@ -159,7 +159,7 @@ class RoleController extends Controller
      */
     public function updateRole(Request $request, Role $role)
     {
-        if (!$request->user()->ability('admin:role:update')) {
+        if (! $request->user()->ability('admin:role:update')) {
             return response()->json(['message' => '你没有权限编辑角色权限'])
                 ->setStatusCode(403);
         }
@@ -181,7 +181,7 @@ class RoleController extends Controller
      */
     public function abilities(Request $request)
     {
-        if (!$request->user()->ability('admin:perm:show')) {
+        if (! $request->user()->ability('admin:perm:show')) {
             return response()->json(['message' => '你没有管理权限节点的权限'])
                 ->setStatusCode(403);
         }
@@ -200,7 +200,7 @@ class RoleController extends Controller
      */
     public function createAbility(Request $request)
     {
-        if (!$request->user()->ability('admin:perm:add')) {
+        if (! $request->user()->ability('admin:perm:add')) {
             return response()->json(['message' => '你没有权限增加权限节点'])
                 ->setStatusCode(403);
         }
@@ -209,7 +209,7 @@ class RoleController extends Controller
         $display_name = $request->input('display_name');
         $description = $request->input('description');
 
-        if (!$name) {
+        if (! $name) {
             return response()->json(['message' => '名称不能为空'])
                 ->setStatusCode(422);
         } elseif (Ability::where('name', 'LIKE', $name)->first()) {
@@ -222,7 +222,7 @@ class RoleController extends Controller
         $ability->display_name = $display_name;
         $ability->description = $description;
 
-        if (!$ability->save()) {
+        if (! $ability->save()) {
             return response()->json(['message' => '保存失败'])
                 ->setStatusCode(400);
         }
@@ -242,7 +242,7 @@ class RoleController extends Controller
      */
     public function updateAbility(Request $request, Ability $ability)
     {
-        if (!$request->user()->ability('admin:perm:update')) {
+        if (! $request->user()->ability('admin:perm:update')) {
             return response()->json(['message' => '你没有修改权限节点的权限'])
                 ->setStatusCode(403);
         }
@@ -250,14 +250,14 @@ class RoleController extends Controller
         $key = $request->input('key');
         $value = $request->input('value');
 
-        if (!in_array($key, ['display_name', 'description'])) {
+        if (! in_array($key, ['display_name', 'description'])) {
             return response()->json(['message' => '请求不合法'])
                 ->setStatusCode(422);
         }
 
         $ability->$key = $value;
 
-        if (!$ability->save()) {
+        if (! $ability->save()) {
             return response()->json(['message' => '数据更新失败'])
                 ->setStatusCode(500);
         }
@@ -277,7 +277,7 @@ class RoleController extends Controller
      */
     public function deleteAbility(Request $request, Ability $ability)
     {
-        if (!$request->user()->ability('admin:perm:delete')) {
+        if (! $request->user()->ability('admin:perm:delete')) {
             return response()->json(['message' => '你没有权限删除该节点'])
                 ->setStatusCode(403);
         }
