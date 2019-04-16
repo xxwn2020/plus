@@ -1,5 +1,4 @@
-import Layout from '@/layout'
-import SystemInfo from '@/views/tsplus/system/systemInfo'
+const Layout = () => import(/* webpackChunkName: 'system' */ '@/layout')
 
 const SystemRouter = {
   path: '/system',
@@ -10,7 +9,7 @@ const SystemRouter = {
   children: [
     {
       path: 'info',
-      component: SystemInfo,
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/systemInfo'),
       name: 'System-Info',
       meta: { title: 'system.info', icon: 'example' }
     },

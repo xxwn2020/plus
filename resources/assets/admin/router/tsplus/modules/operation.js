@@ -1,28 +1,28 @@
-import Layout from '@/layout'
+const Layout = () => import(/* webpackChunkName: 'operation' */ '@/layout')
 
 const OperationRouter = {
   path: '/operation',
   component: Layout,
-  name: 'Opration',
+  name: 'Operation',
   meta: { title: 'operation', icon: 'dashboard' },
   children: [
     {
       path: 'basic',
       name: 'Operation-Basic',
       meta: { title: 'operationBasic' },
-      component: () => import('@/views/tsplus/operation/basic/index')
+      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/basic/index')
     },
     {
       path: 'sensitive-words',
       name: 'Operation-Sensitive-Words',
       meta: { title: 'operationSensitiveWords' },
-      component: () => import('@/views/tsplus/operation/sensitive-words/index')
+      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/sensitive-words/index')
     },
     {
       path: 'areas',
       name: 'Operation-Areas',
       meta: { title: 'operationAreas' },
-      component: () => import('@/views/tsplus/operation/areas/index')
+      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/areas/index')
     }
   ]
 }
