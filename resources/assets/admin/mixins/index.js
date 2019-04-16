@@ -1,5 +1,5 @@
 import file from '../api/file'
-
+import plueMessageBundle from 'plus-message-bundle'
 export default {
   methods: {
     showApiError (error, defaultMessage = null) {
@@ -30,6 +30,9 @@ export default {
     /* 路由导航 */
     goTo (params) {
       this.$router.push(params)
+    },
+    serverMessage (message, defaultMessage) {
+      return plueMessageBundle(message, defaultMessage).getMessage()
     }
   },
 
