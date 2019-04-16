@@ -30,8 +30,8 @@ class CreatePaidNodeUsersTable extends Migration
     public function up()
     {
         Schema::create('paid_node_users', function (Blueprint $table) {
-            $table->integer('node_id')->unsigned()->comment('付费发布ID');
-            $table->integer('user_id')->unsigned()->comment('用户ID');
+            $table->unsignedInteger('node_id')->comment('付费发布ID');
+            $table->unsignedBigInteger('user_id')->comment('用户ID');
 
             $table->foreign('node_id')->references('id')->on('paid_nodes')
                 ->onUpdate('cascade')->onDelete('cascade');

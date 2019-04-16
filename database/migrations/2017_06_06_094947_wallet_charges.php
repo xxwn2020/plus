@@ -34,8 +34,7 @@ class WalletCharges extends Migration
                 ->increments('id');
 
             $table
-                ->integer('user_id')
-                ->unsigned()
+                ->unsignedBigInteger('user_id')
                 ->nullable()
                 ->default(null)
                 ->comment('关联用户，可不存在，例如直接支付方式等。存在便于按照用户检索。');

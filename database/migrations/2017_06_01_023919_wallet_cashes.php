@@ -35,8 +35,7 @@ class WalletCashes extends Migration
                 ->comment('提现记录ID');
 
             $table
-                ->integer('user_id')
-                ->unsigned()
+                ->unsignedBigInteger('user_id')
                 ->comment('提现用户');
 
             $table

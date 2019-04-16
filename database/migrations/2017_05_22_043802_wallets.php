@@ -37,14 +37,12 @@ class Wallets extends Migration
 
             // 关联用户
             $table
-                ->integer('user_id')
-                ->unsigned()
+                ->unsignedBigInteger('user_id')
                 ->comment('钱包所属用户');
 
             // 余额，单位 分 (避免小数计算偏移)
             $table
-                ->bigInteger('balance')
-                ->unsigned()
+                ->unsignedBigInteger('balance')
                 ->comment('钱包余额');
             $table->timestamps(); // 自动维护时间
             $table->softDeletes(); // 软删除
