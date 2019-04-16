@@ -22,19 +22,19 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use DB;
 use Cache;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
 use Throwable;
+use Carbon\Carbon;
 use Zhiyi\Plus\Models\Role;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Famous;
 use Illuminate\Validation\Rule;
 use function Zhiyi\Plus\setting;
+use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Models\UserRecommended;
 use Zhiyi\Plus\EaseMobIm\EaseMobController;
 use Zhiyi\Plus\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -443,7 +443,7 @@ class UserController extends Controller
     {
         if (! $request->user()->ability('admin:user:delete')) {
             return response()->json([
-                'message' => '你没有删除用户的权限'
+                'message' => '你没有删除用户的权限',
             ])->setStatusCode(403);
         }
 
@@ -463,7 +463,7 @@ class UserController extends Controller
     {
         if (! $request->user()->ability('admin:user:show')) {
             return response()->json([
-                'message' => '你没有权限执行该操作'
+                'message' => '你没有权限执行该操作',
             ])->setStatusCode(403);
         }
 
