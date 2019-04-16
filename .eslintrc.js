@@ -8,7 +8,13 @@ module.exports = {
       2
     ]
   },
-  "overrides": [
+  parser: "babel-eslint",
+  parserOptions: {
+    sourceType: "module",
+    allowImportExportEverywhere: false,
+    codeFrame: false
+  },
+  overrides: [
     // {
     //   "files": [
     //     "*.vue",
