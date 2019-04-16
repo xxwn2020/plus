@@ -34,7 +34,7 @@ export const apiv2 = createInstance(apiv2BaseUrl)
 
 // 创建并导出一个资源类
 export class Resource {
-  constructor (uri, api) {
+  constructor(uri, api) {
     this.api = api || apiv2
     this.uri = encodeURI(uri)
   }
@@ -58,7 +58,7 @@ export class Resource {
     const method = id ? 'patch' : 'post'
     const uri = this.uri + (id ? `/${id}` : '')
 
-    return apiv2[method](uri, data, {
+    return this.api[method](uri, data, {
       validateStatus: s => [200, 201, 204].includes(s)
     })
   }
@@ -66,7 +66,7 @@ export class Resource {
   del (id) {
     id = id ? encodeURIComponent(id) : id
 
-    return apiv2.delete(`${this.uri}/${id}`, {
+    return this.api.delete(`${this.uri}/${id}`, {
       validateStatus: s => s === 204 || s === 404
     })
   }
