@@ -29,6 +29,7 @@ class UserCountsTest extends TestCase
     protected $user;
 
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -36,6 +37,7 @@ class UserCountsTest extends TestCase
     }
 
     protected function tearDown()
+    : void
     {
         $this->user->forceDelete();
 

@@ -38,6 +38,7 @@ class FileUploadTest extends TestCase
     protected $user;
 
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -63,6 +64,7 @@ class FileUploadTest extends TestCase
     }
 
     protected function tearDown()
+    : void
     {
         $this->user->forceDelete();
 

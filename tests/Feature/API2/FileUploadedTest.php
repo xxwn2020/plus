@@ -44,6 +44,7 @@ class FileUploadedTest extends TestCase
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -60,10 +61,10 @@ class FileUploadedTest extends TestCase
     {
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
-        $hash = md5_file((string) $file);
+        $hash = md5_file((string)$file);
         $response = $this
             ->actingAs($this->user, 'api')
-            ->json('GET', '/api/v2/files/uploaded/'.$hash);
+            ->json('GET', '/api/v2/files/uploaded/' . $hash);
 
         $response->assertStatus(404);
     }
@@ -78,7 +79,7 @@ class FileUploadedTest extends TestCase
     {
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
-        $hash = md5_file((string) $file);
+        $hash = md5_file((string)$file);
 
         factory(FileModel::class)->create([
             'hash' => $hash,
@@ -90,7 +91,7 @@ class FileUploadedTest extends TestCase
         ]);
         $response = $this
             ->actingAs($this->user, 'api')
-            ->json('GET', '/api/v2/files/uploaded/'.$hash);
+            ->json('GET', '/api/v2/files/uploaded/' . $hash);
 
         $response
             ->assertStatus(200)

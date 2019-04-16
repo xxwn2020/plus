@@ -34,6 +34,7 @@ class OrderTest extends TestCase
     protected $user;
 
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -54,7 +55,7 @@ class OrderTest extends TestCase
         $token = $this->guard()->login($this->user);
 
         $firstrResponse = $this->json('GET', '/api/v2/plus-pay/orders?limit=1', [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $firstrResponse->assertStatus(200);
@@ -64,8 +65,8 @@ class OrderTest extends TestCase
 
         $this->assertOrderData($data);
 
-        $after = $this->json('GET', '/api/v2/plus-pay/orders?limit=1&after='.$data['id'], [
-            'Authorization' => 'Bearer '.$token,
+        $after = $this->json('GET', '/api/v2/plus-pay/orders?limit=1&after=' . $data['id'], [
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $after->assertStatus(200);
@@ -102,12 +103,14 @@ class OrderTest extends TestCase
      *
      * @return \Illuminate\Contracts\Auth\Guard
      */
-    protected function guard(): Guard
+    protected function guard()
+    : Guard
     {
         return Auth::guard('api');
     }
 
     protected function tearDown()
+    : void
     {
         $this->user->forceDelete();
 

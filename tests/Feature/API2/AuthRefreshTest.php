@@ -43,6 +43,7 @@ class AuthRefreshTest extends TestCase
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -54,7 +55,8 @@ class AuthRefreshTest extends TestCase
      *
      * @return \Illuminate\Contracts\Auth\Guard
      */
-    protected function guard(): Guard
+    protected function guard()
+    : Guard
     {
         return Auth::guard('api');
     }
@@ -70,7 +72,7 @@ class AuthRefreshTest extends TestCase
         $token = $this->guard()->login($this->user);
 
         $response = $this->getJson('/api/v2/auth/refresh', [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $response

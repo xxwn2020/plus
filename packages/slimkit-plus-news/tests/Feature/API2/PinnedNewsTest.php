@@ -39,6 +39,7 @@ class PinnedNewsTest extends TestCase
     protected $news;
 
     public function setUp()
+    : void
     {
         parent::setUp();
         $this->user = factory(UserModel::class)->create();

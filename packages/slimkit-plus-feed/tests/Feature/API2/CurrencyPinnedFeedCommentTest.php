@@ -39,6 +39,7 @@ class CurrencyPinnedFeedCommentTest extends TestCase
     protected $comment;
 
     public function setUp()
+    : void
     {
         parent::setUp();
 

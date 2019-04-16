@@ -34,6 +34,7 @@ class GetFeedTest extends TestCase
     protected $feed;
 
     public function setUp()
+    : void
     {
         parent::setUp();
 
@@ -66,7 +67,7 @@ class GetFeedTest extends TestCase
     public function testGetFeed()
     {
         $response = $this->actingAs($this->user, 'api')
-            ->json('GET', '/api/v2/feeds/'.$this->feed->id);
+            ->json('GET', '/api/v2/feeds/' . $this->feed->id);
         $response
             ->assertStatus(200);
     }
@@ -89,7 +90,7 @@ class GetFeedTest extends TestCase
      */
     public function testNotAuthGetFeed()
     {
-        $response = $this->json('GET', '/api/v2/feeds/'.$this->feed->id);
+        $response = $this->json('GET', '/api/v2/feeds/' . $this->feed->id);
         $response
             ->assertStatus(200);
     }

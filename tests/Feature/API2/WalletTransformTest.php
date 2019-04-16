@@ -31,6 +31,7 @@ class WalletTransformTest extends TestCase
     protected $user;
 
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -52,6 +53,7 @@ class WalletTransformTest extends TestCase
     }
 
     protected function tearDown()
+    : void
     {
         $this->user->forceDelete();
 

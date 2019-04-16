@@ -33,6 +33,7 @@ class WalletCashTest extends TestCase
     protected $user;
 
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -62,7 +63,7 @@ class WalletCashTest extends TestCase
 
         $this->assertOrderData($data);
 
-        $after = $this->actingAs($this->user, 'api')->json('GET', '/api/v2/plus-pay/cashes?after='.$data['id']);
+        $after = $this->actingAs($this->user, 'api')->json('GET', '/api/v2/plus-pay/cashes?after=' . $data['id']);
         $after->assertStatus(200);
         $afterData = $after->json()[0];
 
@@ -105,6 +106,7 @@ class WalletCashTest extends TestCase
     }
 
     protected function tearDown()
+    : void
     {
         $this->user->forceDelete();
 

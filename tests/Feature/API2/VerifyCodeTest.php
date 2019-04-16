@@ -33,6 +33,7 @@ class VerifyCodeTest extends TestCase
     protected $user;
 
     protected function setUp()
+    : void
     {
         parent::setUp();
 
@@ -45,11 +46,12 @@ class VerifyCodeTest extends TestCase
      * @return void
      * @author BS <414606094@qq.com>
      */
-    public function testGetVerifyCodeByPhone()
+    public
+    function testGetVerifyCodeByPhone()
     {
         $token = $this->guard()->login($this->user);
 
-        $responseByPhone = $this->json('POST', 'api/v2/verifycodes?token='.$token, [
+        $responseByPhone = $this->json('POST', 'api/v2/verifycodes?token=' . $token, [
             'phone' => $this->user->phone,
         ]);
 
@@ -62,11 +64,12 @@ class VerifyCodeTest extends TestCase
      * @return void
      * @author BS <414606094@qq.com>
      */
-    public function testGetVerifyCodeByEmail()
+    public
+    function testGetVerifyCodeByEmail()
     {
         $token = $this->guard()->login($this->user);
 
-        $responseByEmail = $this->json('POST', 'api/v2/verifycodes?token='.$token, [
+        $responseByEmail = $this->json('POST', 'api/v2/verifycodes?token=' . $token, [
             'email' => $this->user->email,
         ]);
 
@@ -79,7 +82,10 @@ class VerifyCodeTest extends TestCase
      * @param $response
      * @return void
      */
-    protected function assertLoginResponse($response)
+    protected
+    function assertLoginResponse(
+        $response
+    )
     {
         $response
             ->assertStatus(202)
@@ -91,12 +97,16 @@ class VerifyCodeTest extends TestCase
      *
      * @return \Illuminate\Contracts\Auth\Guard
      */
-    protected function guard(): Guard
+    protected
+    function guard()
+    : Guard
     {
         return Auth::guard('api');
     }
 
-    protected function tearDown()
+    protected
+    function tearDown()
+    : void
     {
         $this->user->forceDelete();
 
