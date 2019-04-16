@@ -63,11 +63,27 @@ export default {
     i18n: '国际化',
     externalLink: '外链',
     /** TSPlust */
-    management: '管理',
-    users: '用户管理',
-    userList: '用户列表',
-    tags: '标签管理',
-    integral: '积分管理',
+    management: {
+      root: '管理',
+      users: {
+        root: '用户管理',
+        list: '用户列表',
+        recommend: '推荐用户',
+        certificated: '认证用户',
+        roles: '角色管理',
+        abilities: '权限管理',
+        edit: '编辑用户'
+      },
+      tags: {
+        root: '标签管理',
+        categories: '标签分类',
+        list: '标签列表',
+        add: '添加标签'
+      },
+      integral: {
+        root: '积分管理'
+      }
+    },
     operation: '运营管理',
     operationBasic: '基础设置',
     operationSensitiveWords: '敏感词',
@@ -187,5 +203,57 @@ export default {
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
+  },
+  /** TSPlus */
+  /* 管理后台 */
+  admin: {
+    /* 公用部分 */
+    operation: '更多操作',
+    edit: '编辑',
+    success: '操作成功',
+    notice: '提示',
+    /* 用户模块 */
+    users: {
+      disable: '禁用',
+      followEachOthers: '注册相互关注',
+      followTa: '注册关注',
+      cancelFollow: '取消关注设置',
+      recommend: '推荐',
+      unrecommend: '取消推荐',
+      edit: '编辑用户',
+      restore: '取消禁用',
+      search: {
+        userId: '用户ID',
+        sort: '排序方式',
+        email: '电子邮箱',
+        phone: '手机号码',
+        role: '用户角色',
+        follow: '关注设置',
+        regist_start_date: '注册时间',
+        regist_end_date: '注册时间',
+        name: '用户昵称',
+        location: '所在地区',
+        dateTimeRange: '注册时间',
+        trashed: '是否禁用',
+        recommend: '是否推荐',
+        currency: '积分',
+        createdAt: '注册时间',
+        sex: {
+          root: '性别',
+          male: '男',
+          female: '女',
+          hide: '保密'
+        }
+      }
+    },
+    /* 搜索翻译 */
+    search: {
+      root: '搜索',
+      perPage: '每页数据',
+      limit: '每页数据',
+      page: '当前页数'
+    }
+    /* 搜索翻译 */
+    /** TSPlus */
   }
 }
