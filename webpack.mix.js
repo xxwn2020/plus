@@ -25,18 +25,20 @@ mix.setPublicPath(path.join('public', 'assets'))
     }
   })
 
-    mix.browserSync({
-        ui: false,
-        injectChanges: true,
-        notify: false,
-        host: 'localhost',
-        port: 5858,
-        proxy: 'plus.test',
-        logLevel: 'silent',
-        files: [
-            'public/assets/*.*'
-        ]
-    })
+if (!mix.config.hmr) {
+  mix.browserSync({
+    ui: false,
+    injectChanges: true,
+    notify: false,
+    host: 'localhost',
+    port: 5858,
+    proxy: 'plus.test',
+    logLevel: 'silent',
+    files: [
+      'public/assets/*.*'
+    ]
+  })
+}
 
 mix.js('resources/assets/admin/main.js', path.join('public', 'assets', 'js', 'admin.js'))
 
