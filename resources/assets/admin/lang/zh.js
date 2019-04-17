@@ -214,18 +214,34 @@ export default {
     notice: '提 示',
     confirm: '确 认',
     cancel: '取 消',
+    canceled: '已取消',
     submit: '提 交',
     uname: '用户名',
+    delete: '删 除',
     startDateTime: '开始日期',
     endDateTime: '结束日志',
+    updatedAt: '更新时间',
+    idField: '编 号',
+    filter: '筛 选',
+    editTitle: '修改',
+    addTitle: '新增',
+    abilities: {
+      root: '权限节点',
+      list: '权限列表',
+      name: '节点名称',
+      displayName: '显示名称',
+      description: '描 述',
+      deleteAbility: '此操作将永久删除该权限, 是否继续?',
+      add: '添加权限'
+    },
     /* 用户模块 */
     users: {
       create: '创建用户',
-      disable: '禁用',
+      disable: '禁 用',
       followEachOthers: '注册相互关注',
       followTa: '注册关注',
       cancelFollow: '取消关注设置',
-      recommend: '推荐',
+      recommend: '推 荐',
       unrecommend: '取消推荐',
       edit: '编辑用户',
       restore: '取消禁用',
@@ -235,7 +251,8 @@ export default {
       roles: '用户角色',
       userList: '用户列表',
       confirmDisable: '此操作将禁用该用户, 确认要继续?',
-      continue: '继续',
+      continue: '继 续',
+
       search: {
         userId: 'ID',
         sort: '排序方式',
@@ -250,13 +267,13 @@ export default {
         dateTimeRange: '注册时间',
         trashed: '是否禁用',
         recommend: '是否推荐',
-        currency: '积分',
+        currency: '积 分',
         createdAt: '注册时间',
         sex: {
-          root: '性别',
+          root: '性 别',
           male: '男',
           female: '女',
-          hide: '保密'
+          hide: '保 密'
         }
       }
     },

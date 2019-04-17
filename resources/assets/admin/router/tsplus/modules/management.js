@@ -32,6 +32,7 @@ const managementRouter = {
         },
         {
           path: 'abilities',
+          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/abilities'),
           name: 'management-users-abilities',
           meta: { title: 'management.users.abilities', tabs: true }
         },

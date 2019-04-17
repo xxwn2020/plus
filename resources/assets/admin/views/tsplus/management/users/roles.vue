@@ -195,13 +195,12 @@ export default {
       if (abilityLoading) {
         return false;
       }
-      z;
       this.$set(this, "abilityLoading", true);
       // 是否查询所有的权限节点
       const query = this.abilities.length
         ? { abilities: true }
         : { all_abilities: true, abilities: true };
-
+      this.$set(this, "showEditForm", true);
       this.$api.roles
         .get(roleObject.id, query)
         .then(({ data: { role, abilities = [] } }) => {
@@ -211,8 +210,6 @@ export default {
           });
           this.$set(this, "checked", checked);
           this.$set(this, "editForm", role);
-
-          this.$set(this, "showEditForm", true);
           !this.abilities.length && this.$set(this, "abilities", abilities);
         })
         .catch(this.showApiError)
