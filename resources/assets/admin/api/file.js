@@ -8,7 +8,7 @@ import {
   createCancellablePromise
 } from '@/utils/tools'
 
-const { baseURL } = window.TS
+const { domain } = window.TS
 
 export default {
 
@@ -28,7 +28,7 @@ export default {
       query = queryString.stringify(query)
     }
     node = node.split(':')
-    const url = `${baseURL}/storage/${node[0]}:${Base64.encode(node[1])}`
+    const url = `${domain}/storage/${node[0]}:${Base64.encode(node[1])}`
 
     return rule ? `${url}?${query}` : url
   },
@@ -94,17 +94,17 @@ export default {
           const fd = new window.FormData()
           fd.append('file', file)
 
-          const { data: { id } = {} } = await apiInstance.post(
+          const { data: { id } = {} } = await apiv2.post(
             `/files`, fd, {
               validateStatus: s => s === 200 || s === 201,
               onUploadProgress: onProgress || (() => { }),
-              cancelToken: new apiInstance.CancelToken(setCancel)
+              cancelToken: new apiv2.CancelToken(setCancel)
             }
           )
 
           resolve(id)
         } catch (e) {
-          reject(apiInstance.isCancel(e) ? createCancel() : e)
+          reject(apiv2.isCancel(e) ? createCancel() : e)
         }
       }
     )

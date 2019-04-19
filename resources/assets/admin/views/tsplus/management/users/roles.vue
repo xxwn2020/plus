@@ -1,11 +1,54 @@
 <template>
   <div>
+    <el-card style="margin-bottom: 20px;">
+      <div slot="header">
+        <span>{{ $t('admin.roles.default') }}</span>
+      </div>
+      <el-main>
+        <el-alert
+          :title="$t('admin.roles.defaultRoleText')"
+          type="warning"
+          :closable="false"
+          show-icon
+          style="margin-bottom: 20px;"
+        ></el-alert>
+        <el-form>
+          <el-form-item :label="$t('admin.roles.default')">
+            <el-select v-model="defaultRole">
+              <el-option
+                :value="role.id"
+                v-for="role in roles"
+                :key="role.id"
+                :label="role.display_name"
+              >{{role.display_name}}</el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              :loading="settingLoading"
+              type="primary"
+              @click="saveDefaultRole"
+            >{{ $t('admin.submit') }}</el-button>
+          </el-form-item>
+        </el-form>
+      </el-main>
+    </el-card>
+
     <el-card>
       <div slot="header">
-        <span>角色管理</span>
-        <el-button @click="showAddForm = true" style="float: right; padding: 3px 0" type="text">添加角色</el-button>
+        <span>{{ $t('admin.roles.management') }}</span>
+        <el-button
+          @click="showAddForm = true"
+          style="float: right; padding: 3px 0"
+          type="text"
+        >{{ $t('admin.roles.add') }}</el-button>
       </div>
-      <el-alert :closable="false" title="!!尽量不要删除用户角色!!, 否则会造成用户角色混乱！请谨慎编辑。" type="warning"></el-alert>
+      <el-alert
+        :closable="false"
+        show-icon
+        :title="$t('admin.roles.deletedRoleWarn')"
+        type="warning"
+      ></el-alert>
       <el-main>
         <el-table v-loading="tableLoading" :data="roles" border stripe>
           <el-table-column prop="name" label="角色唯一的标识"/>
@@ -87,14 +130,41 @@ export default {
     tableLoading: false,
     saveLoading: false,
     delLoading: false,
+    settingLoading: false,
     role: {
       id: null,
       name: null
     },
     abilities: [],
-    checked: []
+    checked: [],
+    defaultRole: null
   }),
   methods: {
+    /* 获取用户设置 */
+    fetchUserSetting() {
+      this.$api.users.userSetting().then(({ data: { current_role } }) => {
+        this.$set(this, "defaultRole", current_role);
+      });
+    },
+    /* 保存默认角色 */
+    saveDefaultRole() {
+      const { defaultRole: role, settingLoading } = this;
+      if (!settingLoading) {
+        this.$set(this, "settingLoading", true);
+        this.$api.users
+          .setUserSetting(role)
+          .then(({ data }) => {
+            this.$message({
+              type: "success",
+              message: this.serverMessage(data)
+            });
+          })
+          .catch(this.showApiError)
+          .finally(() => {
+            this.$set(this, "settingLoading", false);
+          });
+      }
+    },
     /* 获取所有的角色 */
     fetchRoles() {
       const { tableLoading } = this;
@@ -241,6 +311,7 @@ export default {
     }
   },
   beforeMount() {
+    this.fetchUserSetting();
     this.fetchRoles();
   }
 };

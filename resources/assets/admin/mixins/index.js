@@ -19,10 +19,15 @@ export default {
     /* 返回上一页 */
     goBack (confirm = false) {
       if (confirm) {
-        this.$confirm('确定要退出吗')
+        this.$confirm('退出后不会保存已经填写的内容,要继续吗?', '提示', {
+          confirmButtonText: this.$t('admin.confirm'),
+          cancelButtonText: this.$t('admin.cancel'),
+          type: 'warning'
+        })
           .then(() => {
             this.$router.back()
           })
+          .catch(this.showApiError)
       } else {
         this.$router.back()
       }

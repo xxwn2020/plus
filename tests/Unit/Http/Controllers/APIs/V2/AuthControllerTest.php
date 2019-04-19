@@ -194,7 +194,6 @@ class AuthControllerTest extends TestCase
         $controller = $this->getMockBuilder(AuthController::class)
                            ->setMethods(['guard'])
                            ->getMock();
-
         // Mock stdClass::getTTL method
         $stdClass->expects($this->exactly(1))
                  ->method('getTTL')
@@ -203,8 +202,10 @@ class AuthControllerTest extends TestCase
         // Mock JWTGuard::refresh method
         $guard->expects($this->exactly(1))
               ->method('refresh')
-              ->will($this->returnValue($token = 'token'));
-
+              ->will($this->returnValue($token = \Auth::guard('api')->attempt([
+                'id' => 1,
+                'password' => 'root',
+            ])));
         // Mock JWTGuard::factory method
         $guard->expects($this->exactly(1))
               ->method('factory')

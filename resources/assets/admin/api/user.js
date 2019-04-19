@@ -39,6 +39,17 @@ export default {
     admin.delete(`/users/famous/${user}`, {
       validateStatus: s => (s === 204)
     })
+  ),
+  /* 获取用户设置 */
+  userSetting: () => (
+    admin.get('/user/setting', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  setUserSetting: role => (
+    admin.patch('/user/setting', { role }, {
+      validateStatus: s => (s === 201)
+    })
   )
 }
 

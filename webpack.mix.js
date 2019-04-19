@@ -30,8 +30,7 @@ if (!mix.config.hmr) {
     ui: false,
     injectChanges: true,
     notify: false,
-    host: 'localhost',
-    port: 5858,
+    startPath: '/admin',
     proxy: 'plus.test',
     logLevel: 'silent',
     files: [

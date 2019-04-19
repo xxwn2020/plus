@@ -82,6 +82,10 @@ export default {
       },
       integral: {
         root: '积分管理'
+      },
+      certifications: {
+        'add': '添加认证信息',
+        'edit': '编辑认证信息'
       }
     },
     operation: '运营管理',
@@ -218,6 +222,10 @@ export default {
     submit: '提 交',
     uname: '用户名',
     delete: '删 除',
+    status: '状 态',
+    all: '全 部',
+    createdAt: '时间',
+    upload: '请上传',
     startDateTime: '开始日期',
     endDateTime: '结束日志',
     updatedAt: '更新时间',
@@ -225,6 +233,29 @@ export default {
     filter: '筛 选',
     editTitle: '修改',
     addTitle: '新增',
+    uid: '用户ID',
+    username: '用户名',
+    name: '真实姓名',
+    phone: '手机号',
+    identify: '证件号',
+    type: '请输入',
+    select: '请选择',
+    correct: '正确的',
+    formInvalid: '请完善表单后再提交',
+    identifyPhoto: '证件照片',
+    identifyFront: '正面',
+    identifyBack: '背面',
+
+    certifications: {
+      root: '认 证',
+      list: '认证用户列表',
+      add: '新认证',
+      category: '认证类型',
+      description: '认证描述',
+      orgName: '机构名称',
+      orgAddress: '机构地址',
+      create: '新增认证'
+    },
     abilities: {
       root: '权限节点',
       list: '权限列表',
@@ -233,6 +264,15 @@ export default {
       description: '描 述',
       deleteAbility: '此操作将永久删除该权限, 是否继续?',
       add: '添加权限'
+    },
+    roles: {
+      root: '角色',
+      management: '角色管理',
+      add: '添加角色',
+      default: '默认角色',
+      registerDefault: '新用户默认的用户组',
+      defaultRoleText: '选择用户注册的默认角色',
+      deletedRoleWarn: '!!尽量不要删除用户角色!!, 否则会造成用户角色混乱！请谨慎编辑。'
     },
     /* 用户模块 */
     users: {
@@ -252,6 +292,7 @@ export default {
       userList: '用户列表',
       confirmDisable: '此操作将禁用该用户, 确认要继续?',
       continue: '继 续',
+      name: '用户名',
 
       search: {
         userId: 'ID',

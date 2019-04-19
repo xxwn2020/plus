@@ -45,13 +45,13 @@
     >
       <el-form :model="ability">
         <el-form-item :label="$t('admin.abilities.name')">
-          <el-input v-model="ability.name" placeholder></el-input>
+          <el-input :placeholder="$t('admin.abilities.name')" v-model="ability.name" placeholder></el-input>
         </el-form-item>
         <el-form-item :label="$t('admin.abilities.displayName')">
-          <el-input v-model="ability.display_name" placeholder></el-input>
+          <el-input :placeholder="$t('admin.abilities.displayName')" v-model="ability.display_name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('admin.abilities.description')">
-          <el-input v-model="ability.description" placeholder></el-input>
+          <el-input :placeholder="$t('admin.abilities.description')" v-model="ability.description"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

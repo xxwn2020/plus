@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /*
  * +----------------------------------------------------------------------+
@@ -20,6 +20,9 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -40,31 +43,31 @@ class CertificationController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = (int) $request->get('limit');
-        $offset = (int) $request->get('offset');
+        $limit = (int)$request->get('limit');
+        $offset = (int)$request->get('offset');
         $status = $request->get('status');
         $keyword = $request->get('keyword');
         $name = $request->get('certification_name');
 
-        $query = Certification::when(! is_null($keyword), function ($query) use ($keyword) {
+        $query = Certification::when(!is_null($keyword), function ($query) use ($keyword) {
             $query->whereHas('user', function ($query) use ($keyword) {
                 $query->where('name', 'like', sprintf('%%%s%%', $keyword));
             });
         }, function ($query) {
             $query->whereHas('user');
         })
-        ->when($name, function ($query) use ($name) {
-            $query->where('certification_name', $name);
-        })
-        ->when(! is_null($status), function ($query) use ($status) {
-            $query->where('status', $status);
-        });
+            ->when($name, function ($query) use ($name) {
+                $query->where('certification_name', $name);
+            })
+            ->when(!is_null($status), function ($query) use ($status) {
+                $query->where('status', $status);
+            });
 
         $total = $query->count('id');
         $items = $query->orderBy('updated_at', 'desc')
-        ->limit($limit)
-        ->offset($offset)
-        ->get();
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
 
         $items->load('user');
 
@@ -90,17 +93,17 @@ class CertificationController extends Controller
     }
 
     /**
-     * certifiction pass.
+     * certification pass.
      *
      * @param certification $certification
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function passCertification(Request $request, Certification $certification)
     {
         $desc = $request->input('desc');
 
-        if (! $desc) {
-            return response()->json(['message' => ['请填写通过描述']], 422);
+        if (!$desc) {
+            return response()->json(['message' => '请填写通过描述'], 422);
         }
 
         $data = $certification->data;
@@ -118,21 +121,21 @@ class CertificationController extends Controller
             ]));
         }
 
-        return response()->json(['message' => ['通过认证成功']], 201);
+        return response()->json(['message' => '通过认证成功'], 201);
     }
 
     /**
-     * certifiction reject.
+     * certification reject.
      *
-     * @param Request $request
+     * @param Request       $request
      * @param Certification $certification
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function rejectCertification(Request $request, Certification $certification)
     {
         $content = $request->input('reject_content');
 
-        if ($content === null || ! $content) {
+        if ($content === null || !$content) {
             return response()->json(['message' => ['请填写驳回理由']], 422);
         }
 
@@ -169,53 +172,48 @@ class CertificationController extends Controller
     /**
      * update user certification.
      *
-     * @param UserCertification $request
+     * @param Request       $request
      * @param Certification $certification
      * @param FileWithModel $fileWithModel
      * @return mixed
+     * @throws ValidationException
+     * @throws Throwable
      */
     public function update(
         Request $request,
-        Certification $certification,
-        FileWithModel $fileWithModel
-    ) {
+        Certification $certification
+        // FileWithModel $fileWithModel
+    )
+    {
         $this->validate($request, $this->rules($request), $this->messages($request));
 
         $request->all();
         $type = $request->input('type');
-        $certification = $certification;
 
         $updateData = $request->only(['name', 'phone', 'number', 'desc']);
         if ($type === 'org') {
             $updateData = array_merge($updateData, $request->only(['org_name', 'org_address']));
         }
 
-        $files = $this->findNotWithFileModels($request, $fileWithModel);
-        $fileIds = array_values(
-            array_filter((array) $request->input('files', []))
+        // $files = $this->findNotWithFileModels($request, $fileWithModel);
+        $files = array_values(
+            array_filter((array)$request->input('files', []))
         );
-
-        if (! empty($fileIds)) {
-            $updateData['files'] = $fileIds;
-        }
 
         $certification->data = array_merge($certification->data, array_filter($updateData));
         $certification->status = 1;
         $certification->certification_name = $type;
-
-        return $certification->getConnection()->transaction(function () use ($files, $type, $certification) {
-            $files->each(function ($file) use ($certification) {
-                $file->channel = 'certification:file';
-                $file->raw = $certification->user_id;
-                $file->save();
-            });
+        isset($files[0]) && $certification->front = $files[0];
+        isset($files[1]) && $certification->back = $files[1];
+        return $certification->getConnection()->transaction(function () use ($type, $certification) {
             $certification->save();
 
             return response()->json(['message' => ['修改成功']], 201);
         });
     }
 
-    public function rules(Request $request): array
+    public function rules(Request $request)
+    : array
     {
         if (strtolower($request->getMethod()) === 'patch') {
             return $this->updateRules($request);
@@ -226,10 +224,10 @@ class CertificationController extends Controller
             'type' => ['bail', 'required', 'string', 'in:user,org'],
             'name' => ['bail', 'required', 'string'],
             'phone' => ['bail', 'required', 'string', 'cn_phone'],
-            'number' =>['bail', 'required', 'string'],
+            'number' => ['bail', 'required', 'string'],
             'desc' => ['bail', 'required', 'string'],
             'files' => 'bail|required|array',
-            'files.*' => 'bail|required_with:files|integer|exists:file_withs,id,channel,NULL,raw,NULL',
+            //            'files.*' => 'bail|required_with:files|integer|exists:file_withs,id,channel,NULL,raw,NULL',
         ];
 
         if ($request->input('type') === 'org') {
@@ -242,16 +240,17 @@ class CertificationController extends Controller
         return $baseRules;
     }
 
-    public function updateRules(Request $request): array
+    public function updateRules(Request $request)
+    : array
     {
         $baseRules = [
             'type' => ['bail', 'required', 'nullable', 'string', 'in:user,org'],
             'name' => ['bail', 'required', 'nullable', 'string'],
             'phone' => ['bail', 'required', 'nullable', 'string', 'cn_phone'],
-            'number' =>['bail', 'required', 'nullable', 'string'],
+            'number' => ['bail', 'required', 'nullable', 'string'],
             'desc' => ['bail', 'required', 'nullable', 'string'],
             'files' => 'bail|required|nullable|array',
-            'files.*' => 'bail|required_with:files|integer|exists:file_withs,id',
+            //            'files.*' => 'bail|required_with:files|integer|exists:file_withs,id',
         ];
 
         if ($request->input('type') === 'org') {
@@ -279,7 +278,7 @@ class CertificationController extends Controller
             'desc.required' => '认证描述未提供',
             'desc.max' => '认证描述长度最大250',
             'files.required' => '证件照片未提供',
-            'files.exists' => '文件不存在或已被使用',
+            // 'files.exists' => '文件不存在或已被使用',
         ];
 
         return $messages;
@@ -288,52 +287,56 @@ class CertificationController extends Controller
     /**
      * add user certification.
      *
-     * @param UserCertification $request
+     * @param Request       $request
      * @param Certification $certification
      * @param FileWithModel $fileWithModel
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse|mixed
+     * @throws Throwable
+     * @throws ValidationException
      */
-    public function store(Request $request,
-                          Certification $certification,
-                          FileWithModel $fileWithModel)
+    public function store(
+        Request $request,
+        Certification $certification
+    )
     {
         $this->validate($request, $this->rules($request), $this->messages($request));
-
-        $userId = (int) $request->input('user_id');
-        if (! $userId) {
-            return response()->json(['message' => ['用户ID不存在']], 422);
+        $files = array_filter($request->input('files', []));
+        if (!$filesCount = count($files)) {
+            return response()->json(['message' => '证件照片不能为空'], 422);
+        }
+        $userId = (int)$request->input('user_id');
+        if (!$userId) {
+            return response()->json(['message' => '用户ID不存在'], 422);
         }
 
         $count = Certification::where('user_id', $userId)->count();
         if ($count) {
-            return response()->json(['message' => ['该用户已提交过认证']], 422);
+            return response()->json(['message' => '该用户已提交过认证'], 422);
         }
 
         $type = $request->input('type');
         $data = $request->only(['name', 'phone', 'number', 'desc']);
-        $files = $this->findNotWithFileModels($request, $fileWithModel);
 
-        $data['files'] = $files->pluck('id');
         if ($type === 'org') {
             $data = array_merge($data, $request->only(['org_name', 'org_address']));
+        } else {
+            if (!isset($files[1])) {
+                return response()->json(['message' => '证件照片反面不能为空'], 422);
+            }
         }
 
         $certification->certification_name = $type;
         $certification->data = $data;
         $certification->status = 1;
-
-        return $certification->getConnection()->transaction(function () use ($userId, $files, $certification) {
-            $files->each(function ($file) use ($userId) {
-                $file->channel = 'certification:file';
-                $file->raw = $userId;
-                $file->save();
-            });
+        $certification->front = $files[0];
+        $type === 'user' && $certification->back = $files[1];
+        return $certification->getConnection()->transaction(function () use ($userId, $certification) {
 
             $user = User::find($userId);
             $user->certification()->save($certification);
 
             return response()->json([
-                'message' => ['添加认证成功'],
+                'message' => '添加认证成功',
                 'certification_id' => $user->certification->id,
             ])->setStatusCode(201);
         });
@@ -343,7 +346,7 @@ class CertificationController extends Controller
      * Search for non certification users.
      *
      * @param Request $request
-     * @return $this|\Illuminate\Http\JsonResponse
+     * @return $this|JsonResponse
      */
     public function findNoCertificationUsers(Request $request)
     {
@@ -351,7 +354,7 @@ class CertificationController extends Controller
 
         $condition = sprintf('%%%s%%', $keyword);
         $users = $keyword ? User::where('name', 'like', $condition)
-        ->get() : [];
+            ->get() : [];
 
         return response()->json($users)->setStatusCode(200);
     }
@@ -359,15 +362,16 @@ class CertificationController extends Controller
     /**
      * File not with file models.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Zhiyi\Plus\Models\FileWith $fileWithModel
-     * @return \Illuminate\Support\Collection
+     * @param Request       $request
+     * @param FileWithModel $fileWithModel
+     * @return Collection
      * @author Seven Du <shiweidu@outlook.com>
      */
-    protected function findNotWithFileModels(Request $request, FileWithModel $fileWithModel): Collection
+    protected function findNotWithFileModels(Request $request, FileWithModel $fileWithModel)
+    : Collection
     {
         $files = new Collection(
-            array_filter((array) $request->input('files', []))
+            array_filter((array)$request->input('files', []))
         );
 
         if ($files->isEmpty()) {
