@@ -48,6 +48,8 @@ class CurrencyNewsTest extends TestCase
             'certification_name' => 'user',
             'data' => 'verifed',
             'status' => 1,
+            'front' => 'public:front.jpeg',
+            'back' => 'public:back.jpeg',
         ]);
 
         $response = $this
@@ -175,7 +177,7 @@ class CurrencyNewsTest extends TestCase
         ]);
 
         $comment = factory(CommentModel::class)->create([
-            'user_id' =>    $user->id,
+            'user_id' => $user->id,
             'target_user' => 0,
             'body' => 'test',
             'commentable_id' => $news->id,
@@ -223,7 +225,7 @@ class CurrencyNewsTest extends TestCase
         ]);
 
         $comment = factory(CommentModel::class)->create([
-            'user_id' =>    $user->id,
+            'user_id' => $user->id,
             'target_user' => 0,
             'body' => 'test',
             'commentable_id' => $news->id,

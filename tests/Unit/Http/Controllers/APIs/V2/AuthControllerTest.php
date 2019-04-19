@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Tests\Unit\Http\Controllers\APIs\V2;
 
-use stdClass;
 use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Http\Request;
+use Zhiyi\Plus\Models\User;
 use Zhiyi\Plus\Tests\TestCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Auth\Guard;
@@ -30,6 +30,16 @@ use Zhiyi\Plus\Http\Controllers\APIs\V2\AuthController;
 
 class AuthControllerTest extends TestCase
 {
+
+    protected $user;
+
+    protected function setUp()
+    : void
+    {
+        parent::setUp();
+        $this->user = factory(User::class)->create();
+    }
+
     /**
      * Test AuthController::class guard method.
      *
@@ -39,8 +49,8 @@ class AuthControllerTest extends TestCase
     public function testGuard()
     {
         $controller = $this->getMockBuilder(AuthController::class)
-                           ->setMethods(null)
-                           ->getMock();
+            ->setMethods(null)
+            ->getMock();
 
         // Test the AuthController::guard return instalce of Guard::class
         $this->assertInstanceOf(Guard::class, $controller->guard());
@@ -65,16 +75,16 @@ class AuthControllerTest extends TestCase
 
         // Create a AuthController::class mock
         $controller = $this->getMockBuilder(AuthController::class)
-                           ->setMethods(['guard', 'response', 'respondWithToken'])
-                           ->getMock();
+            ->setMethods(['guard', 'response', 'respondWithToken'])
+            ->getMock();
 
         // Create a Request::class mock
         $request = $this->createMock(Request::class);
 
         // Create a JsonResponse::class mock.
         $response = $this->getMockBuilder(JsonResponse::class)
-                         ->setMethods(['json'])
-                         ->getMock();
+            ->setMethods(['json'])
+            ->getMock();
 
         // Create a JWTGuard::class mock
         $guard = $this->createMock(JWTGuard::class);
@@ -85,42 +95,42 @@ class AuthControllerTest extends TestCase
             ['password', '', 'password'],
         ];
         $request->expects($this->exactly(6))
-                ->method('input')
-                ->withConsecutive(
-                    [$this->equalTo('login')],
-                    [$this->equalTo('verifiable_code')],
-                    [$this->equalTo('password')]
-                )
-                ->will($this->returnValueMap($map));
+            ->method('input')
+            ->withConsecutive(
+                [$this->equalTo('login')],
+                [$this->equalTo('verifiable_code')],
+                [$this->equalTo('password')]
+            )
+            ->will($this->returnValueMap($map));
 
         // Mock JsonResponse::json method
         $json = ['message' => '账号或密码不正确'];
         $status = 422;
         $response->expects($this->exactly(1))
-                 ->method('json')
-                 ->with($this->equalTo($json), $this->equalTo($status))
-                 ->will($this->returnSelf());
+            ->method('json')
+            ->with($this->equalTo($json), $this->equalTo($status))
+            ->will($this->returnSelf());
 
         // Mock JWTGuard::attempt method
         $guard->expects($this->exactly(2))
-              ->method('attempt')
-              ->with($this->equalTo($credentials))
-              ->will($this->onConsecutiveCalls($token, false));
+            ->method('attempt')
+            ->with($this->equalTo($credentials))
+            ->will($this->onConsecutiveCalls($token, false));
 
         // Mock AuthController::guard method
         $controller->expects($this->exactly(2))
-                   ->method('guard')
-                   ->will($this->returnValue($guard));
+            ->method('guard')
+            ->will($this->returnValue($guard));
 
         // Mock AuthController::respondWithToken method
         $controller->expects($this->exactly(1))
-                   ->method('respondWithToken')
-                   ->with($this->equalTo($token));
+            ->method('respondWithToken')
+            ->with($this->equalTo($token));
 
         // Mock AuthController::response method
         $controller->expects($this->exactly(1))
-                   ->method('response')
-                   ->will($this->returnValue($response));
+            ->method('response')
+            ->will($this->returnValue($response));
 
         // Test an "token" create success
         $controller->login($request);
@@ -142,30 +152,30 @@ class AuthControllerTest extends TestCase
 
         // Create a AuthController::class mock
         $controller = $this->getMockBuilder(AuthController::class)
-                           ->setMethods(['guard', 'response'])
-                           ->getMock();
+            ->setMethods(['guard', 'response'])
+            ->getMock();
 
         // Create a JsonResponse::class mock.
         $response = $this->getMockBuilder(JsonResponse::class)
-                         ->setMethods(['json'])
-                         ->getMock();
+            ->setMethods(['json'])
+            ->getMock();
 
         // Mock JsonResponse::json method
         $json = ['message' => '退出成功'];
         $response->expects($this->exactly(1))
-                 ->method('json')
-                 ->with($this->equalTo($json))
-                 ->will($this->returnSelf());
+            ->method('json')
+            ->with($this->equalTo($json))
+            ->will($this->returnSelf());
 
         // Mock AuthController::guard method
         $controller->expects($this->exactly(1))
-                   ->method('guard')
-                   ->will($this->returnValue($guard));
+            ->method('guard')
+            ->will($this->returnValue($guard));
 
         // Mock AuthController::response method
         $controller->expects($this->exactly(1))
-                   ->method('response')
-                   ->will($this->returnValue($response));
+            ->method('response')
+            ->will($this->returnValue($response));
 
         // Start the Test
         $controller->logout();
@@ -179,54 +189,13 @@ class AuthControllerTest extends TestCase
      */
     public function testRefreshAndTestRespondWithToken()
     {
-        // Create a JWTGuard::class mock
-        $guard = $this->getMockBuilder(JWTGuard::class)
-                      ->disableOriginalConstructor()
-                      ->setMethods(['refresh', 'factory'])
-                      ->getMock();
+        $token = \Auth::guard('api')->login($this->user);
+        $response = $this->getJson('/api/v2/auth/refresh', [
+            'Authorization' => 'Bearer '.$token,
+        ]);
 
-        // Create a stdClass::class mock
-        $stdClass = $this->getMockBuilder(stdClass::class)
-                         ->setMethods(['getTTL'])
-                         ->getMock();
-
-        // Create a AuthController::class mock
-        $controller = $this->getMockBuilder(AuthController::class)
-                           ->setMethods(['guard'])
-                           ->getMock();
-        // Mock stdClass::getTTL method
-        $stdClass->expects($this->exactly(1))
-                 ->method('getTTL')
-                 ->will($this->returnValue($ttl = 60));
-
-        // Mock JWTGuard::refresh method
-        $guard->expects($this->exactly(1))
-              ->method('refresh')
-              ->will($this->returnValue($token = \Auth::guard('api')->attempt([
-                'id' => 1,
-                'password' => 'root',
-            ])));
-        // Mock JWTGuard::factory method
-        $guard->expects($this->exactly(1))
-              ->method('factory')
-              ->will($this->returnValue($stdClass));
-
-        // Mock AuthController::guard method
-        $controller->expects($this->exactly(2))
-                   ->method('guard')
-                   ->will($this->returnValue($guard));
-
-        // Start test
-        $result = $controller->refresh();
-
-        $this->assertInstanceOf(JsonResponse::class, $result);
-
-        $original = [
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => $ttl,
-            'refresh_ttl' => config('jwt.refresh_ttl'),
-        ];
-        $this->assertEquals($original, $result->getOriginalContent());
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['access_token', 'token_type', 'expires_in', 'refresh_ttl']);
     }
 }

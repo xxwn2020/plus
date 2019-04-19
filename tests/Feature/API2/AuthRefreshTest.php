@@ -53,7 +53,7 @@ class AuthRefreshTest extends TestCase
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\Guard
+     * @return Guard
      */
     protected function guard()
     : Guard
