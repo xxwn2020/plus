@@ -61,7 +61,7 @@ class Certification extends Model
      *
      * @var array
      */
-    protected $fillable = ['certification_name', 'user_id', 'data', 'status'];
+    protected $fillable = ['certification_name', 'user_id', 'data', 'status', 'front', 'back'];
 
     /**
      * Get icon url.
@@ -91,7 +91,8 @@ class Certification extends Model
      * @return array
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function getAvatarExtensions(): array
+    public function getAvatarExtensions()
+    : array
     {
         return ['png', 'jpg', 'jpeg', 'bmp'];
     }
@@ -102,7 +103,8 @@ class Certification extends Model
      * @return string
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function getAvatarPrefix(): string
+    public function getAvatarPrefix()
+    : string
     {
         return 'certifications';
     }

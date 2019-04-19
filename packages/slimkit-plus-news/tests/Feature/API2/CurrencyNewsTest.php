@@ -48,8 +48,8 @@ class CurrencyNewsTest extends TestCase
             'certification_name' => 'user',
             'data' => 'verifed',
             'status' => 1,
-            'front' => 'public:front.jpeg',
-            'back' => 'public:back.jpeg',
+            'front' => 'public:'.$user->id.'front.jpeg',
+            'back' => 'public:'.$user->id.'back.jpeg',
         ]);
 
         $response = $this
