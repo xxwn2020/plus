@@ -165,6 +165,8 @@ class CertificationController extends Controller
      */
     public function show(Certification $certification)
     {
+        $certification->load('user');
+
         return response()->json($certification)->setStatusCode(200);
     }
 
@@ -182,7 +184,8 @@ class CertificationController extends Controller
         Request $request,
         Certification $certification
         // FileWithModel $fileWithModel
-    ) {
+    )
+    {
         $this->validate($request, $this->rules($request), $this->messages($request));
 
         $request->all();
@@ -207,7 +210,7 @@ class CertificationController extends Controller
         return $certification->getConnection()->transaction(function () use ($type, $certification) {
             $certification->save();
 
-            return response()->json(['message' => ['修改成功']], 201);
+            return response()->json(['message' => '修改成功'], 201);
         });
     }
 
@@ -296,7 +299,8 @@ class CertificationController extends Controller
     public function store(
         Request $request,
         Certification $certification
-    ) {
+    )
+    {
         $this->validate($request, $this->rules($request), $this->messages($request));
         $files = array_filter($request->input('files', []));
         if (! $filesCount = count($files)) {
