@@ -47,6 +47,6 @@ class ReportController extends Controller
 
         $news->reports()->save($reportModel);
 
-        return response()->json(['message' => ['操作成功']], 201);
+        return response()->json(['message' => '操作成功'], 201);
     }
 }
