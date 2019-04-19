@@ -184,8 +184,7 @@ class CertificationController extends Controller
         Request $request,
         Certification $certification
         // FileWithModel $fileWithModel
-    )
-    {
+    ) {
         $this->validate($request, $this->rules($request), $this->messages($request));
 
         $request->all();
@@ -299,8 +298,7 @@ class CertificationController extends Controller
     public function store(
         Request $request,
         Certification $certification
-    )
-    {
+    ) {
         $this->validate($request, $this->rules($request), $this->messages($request));
         $files = array_filter($request->input('files', []));
         if (! $filesCount = count($files)) {
