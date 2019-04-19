@@ -70,7 +70,7 @@ class CurrencyController extends Controller
     /**
      * 更新积分基础配置.
      *
-     * @param  Request $request
+     * @param Request $request
      * @return mixed
      */
     public function updateConfig(Request $request)
@@ -107,7 +107,7 @@ class CurrencyController extends Controller
     /**
      * 积分流水.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param OrderModel $orderModel
      * @return mixed
      * @author BS <414606094@qq.com>
@@ -124,24 +124,24 @@ class CurrencyController extends Controller
         $query = $orderModel->when($user, function ($query) use ($user) {
             return $query->where('owner_id', $user);
         })
-        ->when($name, function ($query) use ($name) {
-            return $query->whereHas('user', function ($query) use ($name) {
-                return $query->where('name', 'like', '%'.$name.'%');
+            ->when($name, function ($query) use ($name) {
+                return $query->whereHas('user', function ($query) use ($name) {
+                    return $query->where('name', 'like', '%'.$name.'%');
+                });
+            })
+            ->when(in_array($action, [1, -1]), function ($query) use ($action) {
+                return $query->where('type', $action);
+            })
+            ->when(! is_null($state), function ($query) use ($state) {
+                return $query->where('state', $state);
             });
-        })
-        ->when(in_array($action, [1, -1]), function ($query) use ($action) {
-            return $query->where('type', $action);
-        })
-        ->when(! is_null($state), function ($query) use ($state) {
-            return $query->where('state', $state);
-        });
 
         $count = $query->count();
         $orders = $query->with('user')
-        ->limit($limit)
-        ->offset($offset)
-        ->orderBy('id', 'desc')
-        ->get();
+            ->limit($limit)
+            ->offset($offset)
+            ->orderBy('id', 'desc')
+            ->get();
 
         return response()->json($orders, 200, ['x-total' => $count]);
     }
@@ -192,14 +192,14 @@ class CurrencyController extends Controller
 
         $count = $query->count('id');
         $users = $query->with('currency')
-        ->limit($limit)
-        ->offset($offset)
-        ->get()
-        ->map(function ($item) {
-            $item->setHidden(['password']);
+            ->limit($limit)
+            ->offset($offset)
+            ->get()
+            ->map(function ($item) {
+                $item->setHidden(['password']);
 
-            return $item;
-        });
+                return $item;
+            });
 
         return response()->json($users, 200, ['x-total' => $count]);
     }
@@ -220,8 +220,8 @@ class CurrencyController extends Controller
         $num = (int) $request->input('num');
 
         $currency = User::findOrFail($request->input('user_id'))
-        ->currency()
-        ->firstOrCreate(['type' => 1], ['sum' => 0]);
+            ->currency()
+            ->firstOrCreate(['type' => 1], ['sum' => 0]);
 
         if ($num < 0 && $currency->sum < abs($num)) {
             return response()->json(['message' => '该用户积分不足不能进行减少操作'], 403);
