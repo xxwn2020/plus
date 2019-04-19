@@ -35,6 +35,8 @@ class CreateCertificationsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->text('data');
             $table->integer('examiner')->nullable()->default(0);
+            $table->string('front');
+            $table->string('back')->nullable();
             $table->tinyInteger('status')->nullable()->default(0);
             $table->timestamps();
 
