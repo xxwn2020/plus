@@ -21,8 +21,8 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Tests\Unit\Http\Controllers\APIs\V2;
 
 use Tymon\JWTAuth\JWTGuard;
-use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\User;
+use Illuminate\Http\Request;
 use Zhiyi\Plus\Tests\TestCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Auth\Guard;
@@ -30,7 +30,6 @@ use Zhiyi\Plus\Http\Controllers\APIs\V2\AuthController;
 
 class AuthControllerTest extends TestCase
 {
-
     protected $user;
 
     protected function setUp()
