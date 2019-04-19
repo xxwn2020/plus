@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /*
  * +----------------------------------------------------------------------+
@@ -20,17 +20,16 @@ declare(strict_types = 1);
 
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
 use Throwable;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Zhiyi\Plus\Models\Certification;
 use Zhiyi\Plus\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 use Zhiyi\Plus\Models\FileWith as FileWithModel;
-use Zhiyi\Plus\Http\Requests\API2\UserCertification;
 use Zhiyi\Plus\Notifications\System as SystemNotification;
 
 class CertificationController extends Controller
@@ -43,13 +42,13 @@ class CertificationController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = (int)$request->get('limit');
-        $offset = (int)$request->get('offset');
+        $limit = (int) $request->get('limit');
+        $offset = (int) $request->get('offset');
         $status = $request->get('status');
         $keyword = $request->get('keyword');
         $name = $request->get('certification_name');
 
-        $query = Certification::when(!is_null($keyword), function ($query) use ($keyword) {
+        $query = Certification::when(! is_null($keyword), function ($query) use ($keyword) {
             $query->whereHas('user', function ($query) use ($keyword) {
                 $query->where('name', 'like', sprintf('%%%s%%', $keyword));
             });
@@ -59,7 +58,7 @@ class CertificationController extends Controller
             ->when($name, function ($query) use ($name) {
                 $query->where('certification_name', $name);
             })
-            ->when(!is_null($status), function ($query) use ($status) {
+            ->when(! is_null($status), function ($query) use ($status) {
                 $query->where('status', $status);
             });
 
@@ -102,7 +101,7 @@ class CertificationController extends Controller
     {
         $desc = $request->input('desc');
 
-        if (!$desc) {
+        if (! $desc) {
             return response()->json(['message' => '请填写通过描述'], 422);
         }
 
@@ -135,7 +134,7 @@ class CertificationController extends Controller
     {
         $content = $request->input('reject_content');
 
-        if ($content === null || !$content) {
+        if ($content === null || ! $content) {
             return response()->json(['message' => ['请填写驳回理由']], 422);
         }
 
@@ -183,8 +182,7 @@ class CertificationController extends Controller
         Request $request,
         Certification $certification
         // FileWithModel $fileWithModel
-    )
-    {
+    ) {
         $this->validate($request, $this->rules($request), $this->messages($request));
 
         $request->all();
@@ -197,7 +195,7 @@ class CertificationController extends Controller
 
         // $files = $this->findNotWithFileModels($request, $fileWithModel);
         $files = array_values(
-            array_filter((array)$request->input('files', []))
+            array_filter((array) $request->input('files', []))
         );
 
         $certification->data = array_merge($certification->data, array_filter($updateData));
@@ -205,6 +203,7 @@ class CertificationController extends Controller
         $certification->certification_name = $type;
         isset($files[0]) && $certification->front = $files[0];
         isset($files[1]) && $certification->back = $files[1];
+
         return $certification->getConnection()->transaction(function () use ($type, $certification) {
             $certification->save();
 
@@ -297,15 +296,14 @@ class CertificationController extends Controller
     public function store(
         Request $request,
         Certification $certification
-    )
-    {
+    ) {
         $this->validate($request, $this->rules($request), $this->messages($request));
         $files = array_filter($request->input('files', []));
-        if (!$filesCount = count($files)) {
+        if (! $filesCount = count($files)) {
             return response()->json(['message' => '证件照片不能为空'], 422);
         }
-        $userId = (int)$request->input('user_id');
-        if (!$userId) {
+        $userId = (int) $request->input('user_id');
+        if (! $userId) {
             return response()->json(['message' => '用户ID不存在'], 422);
         }
 
@@ -320,7 +318,7 @@ class CertificationController extends Controller
         if ($type === 'org') {
             $data = array_merge($data, $request->only(['org_name', 'org_address']));
         } else {
-            if (!isset($files[1])) {
+            if (! isset($files[1])) {
                 return response()->json(['message' => '证件照片反面不能为空'], 422);
             }
         }
@@ -330,8 +328,8 @@ class CertificationController extends Controller
         $certification->status = 1;
         $certification->front = $files[0];
         $type === 'user' && $certification->back = $files[1];
-        return $certification->getConnection()->transaction(function () use ($userId, $certification) {
 
+        return $certification->getConnection()->transaction(function () use ($userId, $certification) {
             $user = User::find($userId);
             $user->certification()->save($certification);
 
@@ -371,7 +369,7 @@ class CertificationController extends Controller
     : Collection
     {
         $files = new Collection(
-            array_filter((array)$request->input('files', []))
+            array_filter((array) $request->input('files', []))
         );
 
         if ($files->isEmpty()) {
