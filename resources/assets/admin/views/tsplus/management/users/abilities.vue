@@ -19,8 +19,8 @@
           </div>
         </el-form>
       </el-main>-->
-      <el-main>
-        <el-table v-loading="listLoading" :data="abilities" border stripe>
+      <el-main v-loading="listLoading">
+        <el-table :data="abilities" border stripe>
           <el-table-column prop="id" :label="$t('admin.idField')"></el-table-column>
           <el-table-column prop="name" :label="$t('admin.abilities.name')"></el-table-column>
           <el-table-column prop="display_name" :label="$t('admin.abilities.displayName')"></el-table-column>

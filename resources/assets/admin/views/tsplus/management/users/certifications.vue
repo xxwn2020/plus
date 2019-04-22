@@ -9,8 +9,8 @@
           type="text"
         >{{$t('admin.certifications.create')}}</el-button>
       </div>
-      <el-main>
-        <el-table v-loading="listLoading" :data="certifications" border stripe>
+      <el-main v-loading="listLoading">
+        <el-table :data="certifications" border stripe>
           <el-table-column prop="id" label="#"></el-table-column>
           <el-table-column prop="data.name" :label="$t('admin.name')"></el-table-column>
           <el-table-column width="110px" prop="data.phone" :label="$t('admin.phone')"></el-table-column>
@@ -87,6 +87,7 @@ export default {
     fetchCertifications() {
       const { query, listLoading } = this;
       if (!listLoading) {
+        this.$set(this, "listLoading", true);
         this.$api.certifications
           .list(query)
           .then(({ data: { counts, items } }) => {
