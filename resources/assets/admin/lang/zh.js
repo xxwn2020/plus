@@ -88,10 +88,22 @@ export default {
         'edit': '编辑认证信息'
       }
     },
-    operation: '运营管理',
-    operationBasic: '基础设置',
-    operationSensitiveWords: '敏感词',
-    operationAreas: '地区管理',
+    operation: {
+      root: '运营管理',
+      basic: '基础设置',
+      sensitiveWords: '敏感词',
+      areas: '地区管理',
+      info: {
+        root: '基本信息'
+      },
+      site: {
+        root: '站点配置'
+      },
+      cache: {
+        root: '缓存管理'
+      }
+    },
+
     system: {
       root: '系统配置',
       info: '系统信息',
@@ -245,6 +257,18 @@ export default {
     identifyPhoto: '证件照片',
     identifyFront: '正面',
     identifyBack: '背面',
+    tags: {
+      root: '标签管理',
+      list: '标签列表',
+      category: '标签分类',
+      name: '标签名称',
+      weight: '权重(越大越靠前)',
+      add: '新增标签',
+      edit: '编辑标签',
+      addCate: '新增分类',
+      editCate: '编辑分类',
+      taggableCount: '热度'
+    },
 
     certifications: {
       root: '认 证',

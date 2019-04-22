@@ -5,3 +5,13 @@
 form.el-form {
   width: 500px;
 }
+
+.el-pagination {
+  float: right;
+  &.top {
+    margin-bottom: 15px;
+  }
+  &.bottom {
+    margin-top: 15px;;
+  }
+}
