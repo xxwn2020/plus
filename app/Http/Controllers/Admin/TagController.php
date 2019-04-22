@@ -37,8 +37,7 @@ class TagController extends Controller
      */
     public function lists(Request $request, TagModel $tag_model)
     {
-        // $page = $request->input('page', 1);
-        $limit = $request->input('per_page', 20);
+        $limit = $request->input('per_page', $request->query('limit', config('app.limit')) ?? config('app.limit'));
         $cate = $request->input('category', 0);
         $keyword = $request->input('keyword');
 
@@ -63,8 +62,7 @@ class TagController extends Controller
     // 获取有分页的tag分类
     public function categories(Request $request)
     {
-        $limit = $request->input('per_page', 20);
-        // $page = $request->input('page', 1);
+        $limit = $request->query('per_page', $request->query('limit', config('app.limit')) ?? config('app.limit'));
 
         $categories = TagCategoryModel::withCount('tags')
             ->orderBy('weight', 'desc')
@@ -183,14 +181,15 @@ class TagController extends Controller
 
     /**
      * 更新标签分类.
+     * @param Request          $request
+     * @param TagCategoryModel $cate
+     * @return \Illuminate\Http\JsonResponse
      */
     public function updateCate(Request $request, TagCategoryModel $cate)
     {
         $name = $request->input('name', '');
         $weight = $request->input('weight');
-        if ($name && TagCategoryModel::where('name', $name)->count()) {
-            return response()->json(['message' => '分类已经存在'])->setStatusCode(422);
-        }
+
 
         $weight !== null && $cate->weight = $weight;
         $name && $cate->name = $name;
