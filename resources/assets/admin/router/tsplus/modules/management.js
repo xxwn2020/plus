@@ -76,18 +76,15 @@ const managementRouter = {
       children: [
         {
           path: 'list',
+          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/tags/list'),
           name: 'Management-Tags-List',
           meta: { title: 'management.tags.list', tabs: true }
         },
         {
+          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/tags/categories'),
           path: 'categories',
           name: 'Management-Tags-Categories',
           meta: { title: 'management.tags.categories', tabs: true }
-        },
-        {
-          path: 'add',
-          name: 'Management-Tags-Addd',
-          meta: { title: 'management.tags.add', tabs: true }
         }
       ]
     },
