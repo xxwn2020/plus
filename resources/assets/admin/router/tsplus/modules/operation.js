@@ -4,24 +4,41 @@ const OperationRouter = {
   path: '/operation',
   component: Layout,
   name: 'Operation',
-  meta: { title: 'operation', icon: 'dashboard' },
+  redirect: '/operation/basic/siteInfo',
+  meta: { title: 'operation.root', icon: 'dashboard' },
   children: [
     {
       path: 'basic',
       name: 'Operation-Basic',
-      meta: { title: 'operationBasic' },
-      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/basic/index')
+      meta: { title: 'operation.basic' },
+
+      redirect: '/operation/basic/siteInfo',
+      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/basic/index'),
+      children: [
+        {
+          path: 'siteInfo',
+          component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/basic/siteInfo'),
+          meta: { title: 'operation.info.root', tabs: true },
+          name: 'Operation-Basic-SiteInfo'
+        }, {
+          path: 'setting',
+          meta: { title: 'operation.site.root', tabs: true }
+        }, {
+          path: 'configCache',
+          meta: { title: 'operation.cache.root', tabs: true }
+        }
+      ]
     },
     {
       path: 'sensitive-words',
       name: 'Operation-Sensitive-Words',
-      meta: { title: 'operationSensitiveWords' },
+      meta: { title: 'operation.sensitiveWords' },
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/sensitive-words/index')
     },
     {
       path: 'areas',
       name: 'Operation-Areas',
-      meta: { title: 'operationAreas' },
+      meta: { title: 'operation.areas' },
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/areas/index')
     }
   ]

@@ -1,12 +1,8 @@
 <template>
-  <el-main>
-    <el-card :body-style="{ padding: '0px' }">
-      <div slot="header">
-        <span>基本设置</span>
-      </div>
-      <!-- card body -->
-    </el-card>
-  </el-main>
+  <div>
+    <nav-bar-in-page/>
+    <router-view></router-view>
+  </div>
 </template>
 <script>
 export default {

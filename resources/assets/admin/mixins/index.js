@@ -38,6 +38,24 @@ export default {
     },
     serverMessage (message, defaultMessage) {
       return plueMessageBundle(message, defaultMessage).getMessage()
+    },
+    showSuccess (message) {
+      this.$message({
+        type: 'success',
+        message
+      })
+    },
+    showError (message) {
+      this.$message({
+        type: 'error',
+        message
+      })
+    },
+    showInfo (message) {
+      this.$message({
+        type: 'info',
+        message
+      })
     }
   },
 

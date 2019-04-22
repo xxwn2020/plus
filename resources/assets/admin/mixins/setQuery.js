@@ -1,6 +1,10 @@
 export default {
   data: () => ({
-    query: {}
+    query: {},
+    page: {
+      current_page: 1,
+      total: 0
+    }
   }),
   watch: {
     '$route': function (to) {
