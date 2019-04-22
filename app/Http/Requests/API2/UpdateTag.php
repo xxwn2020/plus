@@ -22,6 +22,7 @@ namespace Zhiyi\Plus\Http\Requests\API2;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Zhiyi\Plus\Models\Tag;
 
 class UpdateTag extends FormRequest
 {
@@ -40,10 +41,16 @@ class UpdateTag extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules()
+    : array
     {
+        $tag = Tag::find($this->id);
+
         return [
-            'name' => 'required_without_all:category,weight|max:10|unique:tags',
+            'name' => [
+                'required_without_all:category,weight|max:10',
+                Rule::unique('tags', 'name')->ignore($tag->id),
+            ],
             'category' => [
                 'required_without_all:name,weight',
                 Rule::exists('tag_categories', 'id'),
@@ -58,7 +65,8 @@ class UpdateTag extends FormRequest
      * @return array
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function messages(): array
+    public function messages()
+    : array
     {
         return [
             'name.required_without_all' => '没有进行任何修改1',
