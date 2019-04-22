@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Requests\API2;
 
+use Zhiyi\Plus\Models\Tag;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use Zhiyi\Plus\Models\Tag;
 
 class UpdateTag extends FormRequest
 {

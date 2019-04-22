@@ -190,7 +190,6 @@ class TagController extends Controller
         $name = $request->input('name', '');
         $weight = $request->input('weight');
 
-
         $weight !== null && $cate->weight = $weight;
         $name && $cate->name = $name;
         $cate->save();
