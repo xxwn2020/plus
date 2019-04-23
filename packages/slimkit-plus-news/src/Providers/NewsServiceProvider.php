@@ -20,8 +20,6 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Providers;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\NewsPinned;
 use Zhiyi\Plus\Models\User;
 use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +28,8 @@ use Zhiyi\Plus\Support\BootstrapAPIsEventer;
 use Zhiyi\Plus\Support\PinnedsNotificationEventer;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\News;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\NewsPinned;
 
 class NewsServiceProvider extends ServiceProvider
 {
@@ -102,7 +102,7 @@ class NewsServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('资讯', 'news:admin', [
             'route' => true,
             'icon' => asset('assets/news/news-icon.png'),
-            'key' => 'news'
+            'key' => 'news',
         ]);
 
         User::macro('newsCollections', function () {

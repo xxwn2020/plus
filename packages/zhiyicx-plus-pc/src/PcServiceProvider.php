@@ -80,7 +80,7 @@ class PcServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('PC端', 'pc:admin', [
             'route' => true,
             'icon' => asset('assets/pc/pc-icon.png'),
-            'key' => 'pc'
+            'key' => 'pc',
         ]);
 
         $this->mergeConfigFrom(

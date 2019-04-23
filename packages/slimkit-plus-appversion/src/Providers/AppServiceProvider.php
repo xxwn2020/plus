@@ -25,7 +25,6 @@ use Illuminate\Support\ServiceProvider;
 use Slimkit\PlusAppversion\Handlers\DevPackageHandler;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
-
 class AppServiceProvider extends ServiceProvider
 {
     /**

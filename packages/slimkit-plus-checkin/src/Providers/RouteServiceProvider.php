@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom(trans('plus-checkin::app.name'), 'checkin:admin-home', [
             'route' => true,
             'icon' => asset('assets/checkin/icon.svg'),
-            'key' => 'checkin'
+            'key' => 'checkin',
         ]);
     }
 }

@@ -57,7 +57,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('App版本控制', 'plus-appversion:admin-home', [
             'route' => true,
             'icon' => '版',
-            'key' => 'clientVersion'
+            'key' => 'clientVersion',
         ]);
     }
 }

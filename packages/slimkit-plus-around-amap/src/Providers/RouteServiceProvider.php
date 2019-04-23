@@ -48,7 +48,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('附近的人', 'around-amap:admin-home', [
             'route' => true,
             'icon' => '人',
-            'key' => 'around'
+            'key' => 'around',
         ]);
     }
 }
