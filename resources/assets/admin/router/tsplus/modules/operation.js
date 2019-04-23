@@ -22,7 +22,9 @@ const OperationRouter = {
           name: 'Operation-Basic-SiteInfo'
         }, {
           path: 'setting',
-          meta: { title: 'operation.site.root', tabs: true }
+          component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/basic/setting'),
+          meta: { title: 'operation.site.root', tabs: true },
+          name: 'Operation-Basic-Setting'
         }, {
           path: 'configCache',
           meta: { title: 'operation.cache.root', tabs: true }
