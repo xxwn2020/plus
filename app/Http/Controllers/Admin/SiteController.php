@@ -24,7 +24,6 @@ use Carbon\Carbon;
 use Zhiyi\Plus\Models\Area;
 use Illuminate\Http\Request;
 use function Zhiyi\Plus\setting;
-use Illuminate\Support\Facades\DB;
 use Zhiyi\Plus\Models\CommonConfig;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Facades\Cache;
@@ -49,6 +48,7 @@ class SiteController extends Controller
      * Construct handle.
      *
      * @param \Illuminate\Contracts\Foundation\Application $app
+     *
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function __construct(Application $app, CommonConfig $config)
@@ -59,6 +59,10 @@ class SiteController extends Controller
 
     /**
      * Get the website info.
+     *
+     * @param Request         $request
+     * @param Repository      $config
+     * @param ResponseFactory $response
      *
      * @return mixed
      *
@@ -73,17 +77,13 @@ class SiteController extends Controller
             ])->setStatusCode(403);
         }
 
-        $name = $config->get('app.name', 'ThinkSNS+');
-        $keywords = $config->get('app.keywords');
-        $description = $config->get('app.description');
-        $icp = $config->get('app.icp');
+        $baseInfo = Cache::rememberForever('site:config:baseInfo', function () use ($config) {
+            return collect($config->get('app'))
+                ->only('name', 'keywords', 'description', 'icp', 'technical', 'copyright', 'stateCode', 'pc')
+                ->all();
+        });
 
-        return $response->json([
-            'name' => $name,
-            'keywords' => $keywords,
-            'description' => $description,
-            'icp' => $icp,
-        ])->setStatusCode(200);
+        return $response->json($baseInfo)->setStatusCode(200);
     }
 
     /**
@@ -104,14 +104,14 @@ class SiteController extends Controller
             ])->setStatusCode(403);
         }
 
-        $keys = ['name', 'keywords', 'description', 'icp'];
-        // $requestSites = array_filter($request->only($keys));
+        $keys = ['name', 'keywords', 'description', 'icp', 'technical', 'copyright', 'stateCode', 'pc'];
 
         $site = [];
         foreach ($request->only($keys) as $key => $value) {
             $site['app.'.$key] = $value;
         }
         $config->set($site);
+        Cache::forget('site:config:baseInfo');
 
         return $response->json([
             'message' => '更新成功',
@@ -301,8 +301,8 @@ class SiteController extends Controller
 
         $hots = [];
         $items = $this->commonCinfigModel->byNamespace('common')
-                ->byName('hots_area')
-                ->value('value');
+            ->byName('hots_area')
+            ->value('value');
         if ($items) {
             $hots = json_decode($items, true);
         }
@@ -345,8 +345,9 @@ class SiteController extends Controller
     /**
      * 删除热门城市.
      *
-     * @param  array  &$hotAreas   [description]
+     * @param array  &$hotAreas [description]
      * @param  [type] $hotAreaName [description]
+     *
      * @return [type]              [description]
      */
     protected function unsetHotArea(array &$hotAreas, $hotAreaName)
@@ -480,6 +481,7 @@ class SiteController extends Controller
      * 更新站点设置.
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateSiteConfigure(Request $request)
@@ -509,6 +511,7 @@ class SiteController extends Controller
      * 获取后台页面配置.
      *
      * @param Configuration $config [description]
+     *
      * @return [type] [description]
      * @author BS <414606094@qq.com>
      */
