@@ -3,6 +3,7 @@ import { admin, Resource } from './http'
 const tags = new Resource('/site/tags', admin)
 const categories = new Resource('/site/tags/tag_categories', admin)
 
+/* 标签相关 */
 export default {
   ...tags.map({
     tagList: 'list',

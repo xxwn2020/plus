@@ -6,6 +6,7 @@ import abilities from './ability'
 import storage from './storage'
 import certifications from './certificate'
 import tags from './tag'
+import baseinfo from './baseinfo'
 
 const api = {
   normError,
@@ -16,7 +17,8 @@ const api = {
   abilities,
   storage,
   certifications,
-  tags
+  tags,
+  baseinfo
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
