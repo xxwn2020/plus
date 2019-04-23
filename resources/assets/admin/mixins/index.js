@@ -42,19 +42,19 @@ export default {
     showSuccess (message) {
       this.$message({
         type: 'success',
-        message
+        message: this.serverMessage(message)
       })
     },
     showError (message) {
       this.$message({
         type: 'error',
-        message
+        message: this.serverMessage(message)
       })
     },
     showInfo (message) {
       this.$message({
         type: 'info',
-        message
+        message: this.serverMessage(message)
       })
     }
   },
