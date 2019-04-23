@@ -52,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('音乐', 'music:list', [
             'route' => true,
             'icon' => 'MU',
+            'key' => 'music'
         ]);
     }
 }

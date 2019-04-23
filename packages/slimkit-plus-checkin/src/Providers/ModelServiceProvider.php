@@ -22,8 +22,12 @@ namespace SlimKit\PlusCheckIn\Providers;
 
 use Zhiyi\Plus\Models\User;
 use Illuminate\Support\ServiceProvider;
+use SlimKit\PlusCheckIn\Models\CheckinLog;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * @method hasMany(string $class, string $string, string $string1)
+ */
 class ModelServiceProvider extends ServiceProvider
 {
     /**
@@ -49,7 +53,7 @@ class ModelServiceProvider extends ServiceProvider
     {
         // User check-in logs.
         User::macro('checkinLogs', function () {
-            return $this->hasMany(\SlimKit\PlusCheckIn\Models\CheckinLog::class, 'user_id', 'id');
+            return $this->hasMany(CheckinLog::class, 'user_id', 'id');
         });
     }
 
@@ -61,7 +65,7 @@ class ModelServiceProvider extends ServiceProvider
     protected function registerMorphMap()
     {
         $this->morphMap([
-            'checkin-logs' => \SlimKit\PlusCheckIn\Models\CheckinLog::class,
+            'checkin-logs' => CheckinLog::class,
         ]);
     }
 
@@ -69,10 +73,12 @@ class ModelServiceProvider extends ServiceProvider
      * Set or get the morph map for polymorphic relations.
      *
      * @param array|null $map
-     * @param bool $merge
+     * @param bool       $merge
+     *
      * @return array
      */
-    protected function morphMap(array $map = null, bool $merge = true): array
+    protected function morphMap(array $map = null, bool $merge = true)
+    : array
     {
         return Relation::morphMap($map, $merge);
     }

@@ -29,6 +29,7 @@ class RouteServiceProvider extends ServiceProvider
      * Bootstrap the service provider.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function boot()
     {

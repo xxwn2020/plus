@@ -48,6 +48,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('Plus ID', 'plus-id:admin-home', [
             'route' => true,
             'icon' => '🔌',
+            'key' => 'plusId'
         ]);
     }
 }

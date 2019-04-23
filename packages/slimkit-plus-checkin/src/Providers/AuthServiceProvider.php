@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace SlimKit\PlusCheckIn\Providers;
 
+use SlimKit\PlusCheckIn\Models\CheckinLog;
+use SlimKit\PlusCheckIn\Policies\CheckInPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -30,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        \SlimKit\PlusCheckIn\Models\CheckinLog::class => \SlimKit\PlusCheckIn\Policies\CheckInPolicy::class,
+        CheckinLog::class => CheckInPolicy::class,
     ];
 
     /**

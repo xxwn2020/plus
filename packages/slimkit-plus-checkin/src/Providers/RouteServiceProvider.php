@@ -24,6 +24,7 @@ use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,7 @@ class RouteServiceProvider extends ServiceProvider
      * Bootstrap the service provider.
      *
      * @return void
+     * @throws BindingResolutionException
      */
     public function boot()
     {
@@ -38,7 +40,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->app->make('path.checkin').'/router.php'
         );
 
-        // Register Bootstraper API event.
+        // Register Bootstrapper API event.
         $this->app->make(BootstrapAPIsEventer::class)->listen('v2', function () {
             return [
                 'checkin' => [
@@ -56,6 +58,7 @@ class RouteServiceProvider extends ServiceProvider
      * Register manage menu.
      *
      * @return void
+     * @throws BindingResolutionException
      */
     public function registerManageMenu()
     {
@@ -63,6 +66,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom(trans('plus-checkin::app.name'), 'checkin:admin-home', [
             'route' => true,
             'icon' => asset('assets/checkin/icon.svg'),
+            'key' => 'checkin'
         ]);
     }
 }

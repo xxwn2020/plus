@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Providers;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\NewsPinned;
 use Zhiyi\Plus\Models\User;
 use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
@@ -35,6 +37,7 @@ class NewsServiceProvider extends ServiceProvider
      * Bootstrap the provider.
      *
      * @return void
+     * @throws BindingResolutionException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function boot()
@@ -55,7 +58,7 @@ class NewsServiceProvider extends ServiceProvider
             dirname(__DIR__).'/../router.php'
         );
 
-        // Register Bootstraper API event.
+        // Register Bootstrapper API event.
         $this->app->make(BootstrapAPIsEventer::class)->listen('v2', function () {
             return [
                 'news' => [
@@ -72,7 +75,7 @@ class NewsServiceProvider extends ServiceProvider
         $this->app->make(PinnedsNotificationEventer::class)->listen(function () {
             return [
                 'name' => 'news-comments',
-                'namespace' => \Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\NewsPinned::class,
+                'namespace' => NewsPinned::class,
                 'owner_prefix' => 'target_user',
                 'wherecolumn' => function ($query) {
                     return $query->where('expires_at', null)->where('channel', 'news:comment')->whereExists(function ($query) {
@@ -91,6 +94,7 @@ class NewsServiceProvider extends ServiceProvider
      * register provided to provider.
      *
      * @return void
+     * @throws BindingResolutionException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function register()
@@ -98,6 +102,7 @@ class NewsServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('资讯', 'news:admin', [
             'route' => true,
             'icon' => asset('assets/news/news-icon.png'),
+            'key' => 'news'
         ]);
 
         User::macro('newsCollections', function () {

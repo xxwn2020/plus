@@ -29,7 +29,8 @@ class ManageRepository
      *
      * @param string $name
      * @param string $uri
-     * @param array $option
+     * @param array  $option
+     *
      * @return void
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -48,7 +49,8 @@ class ManageRepository
      * @return array
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function getManages(): array
+    public function getManages()
+    : array
     {
         $manages = [];
         foreach (static::$manages as $item) {
@@ -60,12 +62,10 @@ class ManageRepository
             $parameters = (array) ($option['parameters'] ?? []);
             $absolute = $option['absolute'] ?? true;
             $icon = $option['icon'] ?? null;
+            $key = $option['key'] ?? null;
+            $uri = ! $isRoute ? $uri : route($uri, $parameters, $absolute);
 
-            $manages[] = [
-                'name' => $name,
-                'icon' => $icon,
-                'uri' => ! $isRoute ? $uri : route($uri, $parameters, $absolute),
-            ];
+            $manages[$key] = compact('name', 'icon', 'uri', 'key');
         }
 
         return $manages;

@@ -21,13 +21,15 @@ declare(strict_types=1);
 namespace SlimKit\PlusCheckIn\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Boorstrap the service provider.
+     * Bootstrap the service provider.
      *
      * @return void
+     * @throws BindingResolutionException
      */
     public function boot()
     {

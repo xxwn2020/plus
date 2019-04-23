@@ -21,6 +21,7 @@ namespace Zhiyi\Component\ZhiyiPlus\PlusComponentPc;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class PcServiceProvider extends ServiceProvider
 {
@@ -71,6 +72,7 @@ class PcServiceProvider extends ServiceProvider
      * register provided to provider.
      *
      * @return void
+     * @throws BindingResolutionException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function register()
@@ -78,6 +80,7 @@ class PcServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)->loadManageFrom('PC端', 'pc:admin', [
             'route' => true,
             'icon' => asset('assets/pc/pc-icon.png'),
+            'key' => 'pc'
         ]);
 
         $this->mergeConfigFrom(
@@ -89,6 +92,7 @@ class PcServiceProvider extends ServiceProvider
      * Register route.
      *
      * @return void
+     * @throws BindingResolutionException
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function routeMap()
