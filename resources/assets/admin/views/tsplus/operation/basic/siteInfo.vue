@@ -41,7 +41,7 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"/>
               </div>
               <el-progress v-else type="circle" :percentage="logoPercentage"/>
-              <div slot="tip" class="el-upload__tip">上传PC的站点logo</div>
+              <div slot="tip" class="el-upload__tip">上传PC的站点logo, 宽高比例为1:1</div>
             </el-upload>
           </el-form-item>
           <el-form-item label="PC 登录背景" prop="loginbg">
@@ -61,7 +61,7 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"/>
               </div>
               <el-progress v-else type="circle" :percentage="loginBgPercentage"/>
-              <div slot="tip" class="el-upload__tip">上传PC的站点登录背景图</div>
+              <div slot="tip" class="el-upload__tip">上传PC的站点登录背景图, 宽高比例为2:3</div>
             </el-upload>
           </el-form-item>
           <el-form-item label="PC 统计代码" prop="stats_code">
@@ -237,15 +237,19 @@ export default {
     this.getList();
   },
   computed: {
+    /* 表单验证规则 */
     rules() {
       return {
         name: [{ required: true, message: "站点名称必填", trigger: "blur" }]
       };
     },
+    /* 获取扩展包后台入口 */
     ...mapGetters(["manageList"]),
+    /* 判断是否有pc包 */
     hasPc() {
       return Object.keys(this.manageList).includes("pc");
     },
+    /* pc logo */
     logoUrl() {
       const {
         form: {
@@ -257,6 +261,7 @@ export default {
       }
       return File.url(logo, { w: 100, h: 100 });
     },
+    /* pc 登录页面背景 */
     loginBgUrl() {
       const {
         form: {
