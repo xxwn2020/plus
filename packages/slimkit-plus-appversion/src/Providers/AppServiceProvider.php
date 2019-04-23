@@ -22,13 +22,17 @@ namespace Slimkit\PlusAppversion\Providers;
 
 use Zhiyi\Plus\Support\PackageHandler;
 use Illuminate\Support\ServiceProvider;
+use Slimkit\PlusAppversion\Handlers\DevPackageHandler;
+use Illuminate\Contracts\Container\BindingResolutionException;
+
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Boorstrap the service provider.
+     * Bootstrap the service provider.
      *
      * @return void
+     * @throws BindingResolutionException
      */
     public function boot()
     {
@@ -72,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
         // Merge config.
         $this->mergeConfigFrom($configPath.'/plus-appversion.php', 'plus-appversion');
 
-        // register cntainer aliases
+        // register container aliases
         $this->registerContainerAliases();
 
         // Register singletons.
@@ -91,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Develop handler.
         $this->app->singleton('plus-appversion:dev-handler', function ($app) {
-            return new \Slimkit\PlusAppversion\Handlers\DevPackageHandler($app);
+            return new DevPackageHandler($app);
         });
     }
 
@@ -102,11 +106,13 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerContainerAliases()
     {
-        foreach ([
-            'plus-appversion:dev-handler' => [
-                \Slimkit\PlusAppversion\Handlers\DevPackageHandler::class,
-            ],
-        ] as $abstract => $aliases) {
+        foreach (
+            [
+                'plus-appversion:dev-handler' => [
+                    DevPackageHandler::class,
+                ],
+            ] as $abstract => $aliases
+        ) {
             foreach ($aliases as $alias) {
                 $this->app->alias($abstract, $alias);
             }
@@ -126,8 +132,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register handler.
      *
-     * @param string $name
-     * @param \Zhiyi\Plus\Support\PackageHandler|string $handler
+     * @param string                $name
+     * @param PackageHandler|string $handler
+     *
      * @return void
      */
     private function loadHandleFrom(string $name, $handler)

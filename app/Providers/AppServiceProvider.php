@@ -20,13 +20,17 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Providers;
 
+use Zhiyi\Plus\Cdn\UrlManager;
+use Zhiyi\Plus\AtMessage\Message;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Zhiyi\Plus\AtMessage\ResourceManager;
 use function Zhiyi\Plus\validateUsername;
 use Zhiyi\Plus\Packages\Wallet\TypeManager;
 use Illuminate\Http\Resources\Json\Resource;
 use function Zhiyi\Plus\validateChinaPhoneNumber;
 use Zhiyi\Plus\Packages\Wallet\TargetTypeManager;
+use Zhiyi\Plus\AtMessage\ResourceManagerInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('cdn', function ($app) {
-            return new \Zhiyi\Plus\Cdn\UrlManager($app);
+            return new UrlManager($app);
         });
 
         $this->app->singleton(TypeManager::class, function ($app) {
@@ -50,13 +54,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('at-message', function ($app) {
-            $manager = $app->make(\Zhiyi\Plus\AtMessage\ResourceManagerInterface::class);
+            $manager = $app->make(ResourceManagerInterface::class);
 
-            return new \Zhiyi\Plus\AtMessage\Message($manager);
+            return new Message($manager);
         });
 
         $this->app->singleton('at-resource-manager', function ($app) {
-            return new \Zhiyi\Plus\AtMessage\ResourceManager($app);
+            return new ResourceManager($app);
         });
     }
 
@@ -111,11 +115,13 @@ class AppServiceProvider extends ServiceProvider
      * 验证显示长度计算.
      *
      * @param string|int $value
-     * @param array $parameters
+     * @param array      $parameters
+     *
      * @return bool
      * @author Seven Du <shiweidu@outlook.com>
      */
-    protected function validateDisplayLength(string $value, array $parameters): bool
+    protected function validateDisplayLength(string $value, array $parameters)
+    : bool
     {
         preg_match_all('/[a-zA-Z0-9_]/', $value, $single);
         $length = count($single[0]) / 2 + mb_strlen(preg_replace('([a-zA-Z0-9_])', '', $value));
@@ -127,10 +133,12 @@ class AppServiceProvider extends ServiceProvider
      * 验证中英文显示宽度.
      *
      * @param string $value
-     * @param array $parameters
+     * @param array  $parameters
+     *
      * @return bool
      */
-    protected function validateDisplayWidth(string $value, array $parameters): bool
+    protected function validateDisplayWidth(string $value, array $parameters)
+    : bool
     {
         $number = strlen(mb_convert_encoding($value, 'GB18030', 'UTF-8'));
 
@@ -142,9 +150,11 @@ class AppServiceProvider extends ServiceProvider
      *
      * @param float $number
      * @param array $parameters
+     *
      * @return bool
      */
-    private function validateBetween(float $number, array $parameters): bool
+    private function validateBetween(float $number, array $parameters)
+    : bool
     {
         if (empty($parameters)) {
             throw new \InvalidArgumentException('Parameters must be passed');
