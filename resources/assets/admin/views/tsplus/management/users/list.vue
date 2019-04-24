@@ -9,7 +9,13 @@
       >{{$t('admin.users.create')}}</el-button>
     </div>
     <el-main>
-      <el-form :inline="true" :model="query" ref="userFilterForm" label-width="80px">
+      <el-form
+        style="width: auto;"
+        :inline="true"
+        :model="query"
+        ref="userFilterForm"
+        label-width="80px"
+      >
         <div class="form-item" v-for="field in formFileds.fields" :key="field.id">
           <el-input
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
@@ -54,6 +60,17 @@
           >{{ $t('admin.search.root') }}</el-button>
         </div>
       </el-form>
+
+      <el-pagination
+        class="top"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
       <el-table
         :default-sort="defaultSort"
         @sort-change="sortChange"
@@ -156,6 +173,16 @@
           @size-change="handleSizeChange"
         />
       </el-table>
+      <el-pagination
+        class="bottom"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
     </el-main>
   </el-card>
 </template>

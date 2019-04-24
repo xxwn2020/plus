@@ -1,6 +1,5 @@
 <template>
   <el-main v-loading="getLoading">
-    <el-alert class="setting-alert" :closable="false" title="修改配置后,别忘了保存哦" type="warning" show-icon></el-alert>
     <el-form :model="setting" ref="setting" label-width="80px">
       <el-alert
         class="setting-alert"

@@ -23,6 +23,9 @@ import configures from './configure'
 /* 缓存信息管理, 对应 /operation/basic/cache */
 import caches from './cache'
 
+/* 敏感词管理, 对应 /operation/sensitive-words */
+import sensitiveWords from './sensitive-word'
+
 const api = {
   normError,
   http,
@@ -35,7 +38,8 @@ const api = {
   tags,
   baseinfo,
   configures,
-  caches
+  caches,
+  sensitiveWords
 }
 
 api.install = Vue => (Vue.prototype.$api = api)

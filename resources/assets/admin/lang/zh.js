@@ -236,6 +236,7 @@ export default {
     delete: '删 除',
     status: '状 态',
     all: '全 部',
+    category: '类 型',
     createdAt: '时间',
     upload: '请上传',
     startDateTime: '开始日期',
@@ -288,6 +289,10 @@ export default {
       description: '描 述',
       deleteAbility: '此操作将永久删除该权限, 是否继续?',
       add: '添加权限'
+    },
+    sensitive: {
+      root: '敏感词',
+      add: '新增敏感词'
     },
     roles: {
       root: '角色',

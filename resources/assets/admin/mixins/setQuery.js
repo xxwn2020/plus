@@ -30,7 +30,7 @@ export default {
     * 页面数量更改
     */
     handleSizeChange (limit) {
-      this.setQuery({ limit })
+      this.setQuery({ limit, page: 1 })
     },
     /**
     * 分页切换
