@@ -20,7 +20,8 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Artisan;
+use Artisan;
+use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Http\Controllers\Controller;
 
 class AuxiliaryController extends Controller
@@ -34,6 +35,30 @@ class AuxiliaryController extends Controller
     public function cleanCache()
     {
         Artisan::call('cache:clear');
+
+        return response()->json([], 200);
+    }
+
+    /**
+     * 重新缓存配置
+     *
+     * @return JsonResponse
+     */
+    public function cleanConfigCache()
+    {
+        Artisan::call('config:cache');
+
+        return response()->json([], 200);
+    }
+
+    /**
+     * 重新缓存路由列表
+     *
+     * @return JsonResponse
+     */
+    public function cleanRouteCache()
+    {
+        Artisan::call('route:cache');
 
         return response()->json([], 200);
     }

@@ -20,6 +20,9 @@ import baseinfo from './baseinfo'
 /* 站点配置 对应 /operation/basic/setting */
 import configures from './configure'
 
+/* 缓存信息管理, 对应 /operation/basic/cache */
+import caches from './cache'
+
 const api = {
   normError,
   http,
@@ -31,7 +34,8 @@ const api = {
   certifications,
   tags,
   baseinfo,
-  configures
+  configures,
+  caches
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
