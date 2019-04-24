@@ -40,7 +40,7 @@ class AuxiliaryController extends Controller
     }
 
     /**
-     * 重新缓存配置
+     * 重新缓存配置.
      *
      * @return JsonResponse
      */
@@ -52,7 +52,7 @@ class AuxiliaryController extends Controller
     }
 
     /**
-     * 重新缓存路由列表
+     * 重新缓存路由列表.
      *
      * @return JsonResponse
      */
