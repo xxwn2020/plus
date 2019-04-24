@@ -42,6 +42,7 @@ class UserController extends Controller
      * 获取用户列表数据.
      *
      * @param Request $request
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -59,7 +60,8 @@ class UserController extends Controller
         $name = $request->query('name');
         $phone = $request->query('phone');
         $role = $request->query('role');
-        $perPage = $request->query('perPage', 20);
+        //$perPage = $request->query('perPage', 20);
+        $perPage = $request->query('limit', $request->query('perPage', config('app.limit_data')));
         $showRole = $request->has('show_role');
         $follow = $request->query('follow', 0);
         $registStartDate = $request->query('regist_start_date');
@@ -105,28 +107,30 @@ class UserController extends Controller
             return response()->json($datas)->setStatusCode(200);
         }
 
-        foreach ([
-            'email' => [
-                'operator' => 'like',
-                'value' => sprintf('%%%s%%', $email),
-                'condition' => boolval($email),
-            ],
-            'name' => [
-                'operator' => 'like',
-                'value' => sprintf('%%%s%%', $name),
-                'condition' => boolval($name),
-            ],
-            'phone' => [
-                'operator' => 'like',
-                'value' => sprintf('%%%s%%', $phone),
-                'condition' => boolval($phone),
-            ],
-            'location' => [
-                'operator' => 'like',
-                'value' => sprintf('%%%s%%', end($location)),
-                'condition' => boolval(end($location)),
-            ],
-        ] as $key => $data) {
+        foreach (
+            [
+                'email' => [
+                    'operator' => 'like',
+                    'value' => sprintf('%%%s%%', $email),
+                    'condition' => boolval($email),
+                ],
+                'name' => [
+                    'operator' => 'like',
+                    'value' => sprintf('%%%s%%', $name),
+                    'condition' => boolval($name),
+                ],
+                'phone' => [
+                    'operator' => 'like',
+                    'value' => sprintf('%%%s%%', $phone),
+                    'condition' => boolval($phone),
+                ],
+                'location' => [
+                    'operator' => 'like',
+                    'value' => sprintf('%%%s%%', end($location)),
+                    'condition' => boolval(end($location)),
+                ],
+            ] as $key => $data
+        ) {
             if ($data['condition']) {
                 $builder->where($key, $data['operator'], $data['value']);
             }
@@ -173,8 +177,10 @@ class UserController extends Controller
 
     /**
      * 设置注册时关注.
+     *
      * @param Request $request [description]
      * @param Famous  $famous
+     *
      * @return JsonResponse [type]           [description]
      */
     public function handleFamous(Request $request, Famous $famous)
@@ -200,8 +206,10 @@ class UserController extends Controller
 
     /**
      * 取消注册时关注.
+     *
      * @param User   $user
      * @param Famous $famous
+     *
      * @return JsonResponse [type]           [description]
      */
     public function handleUnFamous(User $user, Famous $famous)
@@ -259,15 +267,15 @@ class UserController extends Controller
             $sourceUsers = User::when($name, function ($query) use ($name) {
                 return $query->where('name', 'like', "%{$name}%");
             })
-            ->when($email, function ($query) use ($email) {
-                return $query->where('email', '=', $email);
-            })
-            ->when($phone, function ($query) use ($phone) {
-                return $query->where('phone', 'like', "%{$phone}%");
-            })
-            ->select('id')
-            ->get()
-            ->pluck('id');
+                ->when($email, function ($query) use ($email) {
+                    return $query->where('email', '=', $email);
+                })
+                ->when($phone, function ($query) use ($phone) {
+                    return $query->where('phone', 'like', "%{$phone}%");
+                })
+                ->select('id')
+                ->get()
+                ->pluck('id');
         }
 
         $users = UserRecommended::with('user')
@@ -295,6 +303,7 @@ class UserController extends Controller
     /**
      * @param Request $request
      * @param User    $user
+     *
      * @return mixed
      * @throws ValidationException
      * @throws Throwable
@@ -372,6 +381,7 @@ class UserController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return mixed
      * @throws ValidationException
      */
@@ -435,6 +445,7 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param User    $user
+     *
      * @return mixed
      * @throws \Exception
      * @author Seven Du <shiweidu@outlook.com>
@@ -456,6 +467,7 @@ class UserController extends Controller
      * 获取用户资料.
      *
      * @param User $user
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -500,6 +512,7 @@ class UserController extends Controller
      * 储存用户基本设置.
      *
      * @param Request $request
+     *
      * @return mixed
      * @throws ValidationException
      * @author Seven Du <shiweidu@outlook.com>
@@ -527,8 +540,10 @@ class UserController extends Controller
 
     /**
      * 增加推荐用户.
+     *
      * @param Request         $request [description]
      * @param UserRecommended $recommend
+     *
      * @return JsonResponse [type]           [description]
      */
     public function handleRecommend(Request $request, UserRecommended $recommend)
@@ -547,8 +562,10 @@ class UserController extends Controller
 
     /**
      * 取消用户推荐.
-     * @param  Request $request [description]
-     * @param  User    $user    [description]
+     *
+     * @param Request $request [description]
+     * @param User    $user    [description]
+     *
      * @return [type]           [description]
      */
     public function handleUnRecommend(User $user, UserRecommended $recommend)
@@ -565,7 +582,9 @@ class UserController extends Controller
 
     /**
      * 注册配置，暂时存放于配置文件.
+     *
      * @param Request $request [description]
+     *
      * @return JsonResponse [type]           [description]
      */
     public function updateRegisterSetting(Request $request)
@@ -583,6 +602,7 @@ class UserController extends Controller
 
     /**
      * 获取注册配置.
+     *
      * @return JsonResponse [type] [description]
      */
     public function getRegisterSetting()
