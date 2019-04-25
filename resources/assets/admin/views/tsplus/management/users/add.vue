@@ -24,10 +24,10 @@
               v-for="role in roles"
               :key="role.id"
               :label="role.id"
-            >{{role.display_name}}</el-checkbox>
+            >{{ role.display_name }}
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-
         <el-form-item>
           <el-button type="primary" @click="saveUser">{{$t('admin.submit')}}</el-button>
           <el-button @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
@@ -37,36 +37,40 @@
   </el-card>
 </template>
 <script>
-export default {
-  name: "ManagementUserAdd",
-  data: () => ({
-    user: {
-      phone: null,
-      email: null,
+  export default {
+    name: 'ManagementUserAdd',
+    data: () => ({
+      user: {
+        phone: null,
+        email: null,
+        roles: []
+      },
       roles: []
-    },
-    roles: []
-  }),
-  methods: {
-    saveUser() {
-      const { user } = this;
-      this.$api.users.save(user).then(({ data }) => {
-        this.$notify({
-          title: this.$t("admin.success"),
-          type: "success",
-          message: this.serverMessage(data)
+    }),
+    methods: {
+      saveUser() {
+        const {user} = this;
+        this.$api.users.save(user)
+        .then(({data}) => {
+          this.$notify({
+            title: this.$t('admin.success'),
+            type: 'success',
+            message: this.serverMessage(data)
+          });
+          this.goBack();
         });
-        this.goBack();
-      });
+      },
+
+      fetchRoles() {
+        this.$api.roles.list()
+        .then(({data}) => {
+          this.$set(this, 'roles', data);
+        });
+      }
     },
-    fetchRoles() {
-      this.$api.roles.list().then(({ data }) => {
-        this.$set(this, "roles", data);
-      });
+
+    beforeMount() {
+      this.fetchRoles();
     }
-  },
-  beforeMount() {
-    this.fetchRoles();
-  }
-};
+  };
 </script>

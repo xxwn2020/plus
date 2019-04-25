@@ -6,8 +6,10 @@
         <el-button
           @click="showEditDialog = true"
           style="float: right; padding: 3px 0"
+
           type="text"
-        >{{$t('admin.tags.add')}}</el-button>
+        >{{$t('admin.tags.add')}}
+        </el-button>
       </div>
       <el-main v-loading="listLoading">
         <el-pagination
@@ -28,8 +30,10 @@
           <el-table-column prop="weight" :label="$t('admin.tags.weight')"></el-table-column>
           <el-table-column :label="$t('admin.operation')">
             <template slot-scope="{row: tag}">
-              <el-button size="mini" type="primary" @click="editTag(tag)">{{ $t('admin.edit') }}</el-button>
-              <el-button size="mini" type="danger" @click="deleteTag(tag)">{{ $t('admin.delete') }}</el-button>
+              <el-button size="mini" type="primary" @click="editTag(tag)">{{ $t('admin.edit') }}
+              </el-button>
+              <el-button size="mini" type="danger" @click="deleteTag(tag)">{{ $t('admin.delete') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -61,7 +65,8 @@
               :key="category.id"
               :label="category.name"
               :true-label="category.id"
-            >{{ category.name }}</el-checkbox>
+            >{{ category.name }}
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item :label="$t('admin.tags.weight')" prop="weight">
@@ -76,149 +81,150 @@
   </div>
 </template>
 <script>
-import setQuery from "@/mixins/setQuery";
-export default {
-  name: "tagList",
-  mixins: [setQuery],
-  data: () => ({
-    query: {
-      limit: 15,
-      page: 1,
-      category: null,
-      keyword: null
+  import setQuery from '@/mixins/setQuery';
+
+  export default {
+    name: 'tagList',
+    mixins: [setQuery],
+    data: () => ({
+      query: {
+        limit: 15,
+        page: 1,
+        category: null,
+        keyword: null
+      },
+      tag: {
+        id: null,
+        name: null,
+        weight: 0,
+        category: null
+      },
+      tags: [],
+      categories: [],
+      showEditDialog: false,
+      saveLoading: false,
+      listLoading: false
+    }),
+    computed: {
+      rules() {
+        return {
+          name: [
+            {
+              required: true,
+              message: '请填写标签名称',
+              trigger: 'blur'
+            }
+          ],
+          category: [
+            {
+              required: true,
+              message: '请选择标签分类',
+              trigger: 'blur'
+            }
+          ],
+          weight: [
+            {
+              type: 'number',
+              message: '权重为整数',
+              trigger: 'blur'
+            }
+          ]
+        };
+      }
     },
-    tag: {
-      id: null,
-      name: null,
-      weight: 0,
-      category: null
-    },
-    tags: [],
-    categories: [],
-    showEditDialog: false,
-    saveLoading: false,
-    listLoading: false
-  }),
-  computed: {
-    rules() {
-      return {
-        name: [
-          {
-            required: true,
-            message: "请填写标签名称",
-            trigger: "blur"
-          }
-        ],
-        category: [
-          {
-            required: true,
-            message: "请选择标签分类",
-            trigger: "blur"
-          }
-        ],
-        weight: [
-          {
-            type: "number",
-            message: "权重为整数",
-            trigger: "blur"
-          }
-        ]
-      };
-    }
-  },
-  methods: {
-    /* 保存标签 */
-    saveTag() {
-      const { saveLoading, tag } = this;
-      if (saveLoading) return;
-      this.$refs.tag.validate(valid => {
-        if (valid) {
-          this.$set(this, "saveLoading", true);
-          this.$api.tags
+    methods: {
+      /* 保存标签 */
+      saveTag() {
+        const {saveLoading, tag} = this;
+        if (saveLoading) return;
+        this.$refs.tag.validate(valid => {
+          if (valid) {
+            this.$set(this, 'saveLoading', true);
+            this.$api.tags
             .tagSave(tag, tag.id)
-            .then(({ data }) => {
+            .then(({data}) => {
               this.showSuccess(this.serverMessage(data));
               this.fetchTags();
             })
             .catch(this.showApiError)
             .finally(() => {
-              this.$set(this, "saveLoading", false);
-              this.$set(this, "showEditDialog", false);
+              this.$set(this, 'saveLoading', false);
+              this.$set(this, 'showEditDialog', false);
             });
-        }
-      });
-    },
-    /* 关闭dialog */
-    cleanForm(done = null) {
-      const { tag } = this;
-      typeof done === "function"
-        ? done()
-        : this.$set(this, "showEditDialog", false);
+          }
+        });
+      },
+      /* 关闭dialog */
+      cleanForm(done = null) {
+        const {tag} = this;
+        typeof done === 'function'
+          ? done()
+          : this.$set(this, 'showEditDialog', false);
 
-      this.$set(this, "tag", {
-        id: null,
-        name: null,
-        weight: 0,
-        category: null
-      });
-    },
-    deleteTag(tag) {
-      this.$confirm("此操作将删除此标签,并且不能恢复,是否继续?", "提示", {
-        type: "warning"
-      })
+        this.$set(this, 'tag', {
+          id: null,
+          name: null,
+          weight: 0,
+          category: null
+        });
+      },
+      deleteTag(tag) {
+        this.$confirm('此操作将删除此标签,并且不能恢复,是否继续?', '提示', {
+          type: 'warning'
+        })
         .then(() => {
           this.$api.tags
-            .tagDel(tag.id)
-            .then(() => {
-              this.showSuccess(this.$t("admin.success"));
-              this.fetchTags();
-            })
-            .catch(this.showApiError);
+          .tagDel(tag.id)
+          .then(() => {
+            this.showSuccess(this.$t('admin.success'));
+            this.fetchTags();
+          })
+          .catch(this.showApiError);
         })
         .catch(() => {
-          this.showInfo("操作已取消");
+          this.showInfo('操作已取消');
         });
-    },
-    /* 编辑标签 */
-    editTag(tag) {
-      let editTag = Object.assign({}, tag);
-      editTag.category = tag.category.id;
-      this.$set(this, "tag", editTag);
-      this.$set(this, "showEditDialog", true);
-    },
-    /* tag列表 */
-    fetchTags() {
-      const { query, listLoading } = this;
-      if (!listLoading) {
-        this.$set(this, "listLoading", true);
-        this.$api.tags
+      },
+      /* 编辑标签 */
+      editTag(tag) {
+        let editTag = Object.assign({}, tag);
+        editTag.category = tag.category.id;
+        this.$set(this, 'tag', editTag);
+        this.$set(this, 'showEditDialog', true);
+      },
+      /* tag列表 */
+      fetchTags() {
+        const {query, listLoading} = this;
+        if (! listLoading) {
+          this.$set(this, 'listLoading', true);
+          this.$api.tags
           .tagList(query)
-          .then(({ data: { data, total } }) => {
-            this.$set(this, "tags", data);
-            this.$set(this.page, "total", total);
+          .then(({data: {data, total}}) => {
+            this.$set(this, 'tags', data);
+            this.$set(this.page, 'total', total);
           })
           .catch(this.showApiError)
           .finally(() => {
-            this.$set(this, "listLoading", false);
+            this.$set(this, 'listLoading', false);
           });
-      }
-    },
-    /* 获取标签分类 */
-    fetchCategories() {
-      this.$api.tags
+        }
+      },
+      /* 获取标签分类 */
+      fetchCategories() {
+        this.$api.tags
         .tagCategories()
-        .then(({ data }) => {
-          this.$set(this, "categories", data);
+        .then(({data}) => {
+          this.$set(this, 'categories', data);
         })
         .catch(this.showApiError);
+      },
+      /* for mixin */
+      fetchData() {
+        this.fetchTags();
+      }
     },
-    /* for mixin */
-    fetchData() {
-      this.fetchTags();
+    beforeMount() {
+      this.fetchCategories();
     }
-  },
-  beforeMount() {
-    this.fetchCategories();
-  }
-};
+  };
 </script>

@@ -26,6 +26,8 @@ import caches from './cache'
 /* 敏感词管理, 对应 /operation/sensitive-words */
 import sensitiveWords from './sensitive-word'
 
+import sms from './sms'
+
 const api = {
   normError,
   http,
@@ -39,7 +41,8 @@ const api = {
   baseinfo,
   configures,
   caches,
-  sensitiveWords
+  sensitiveWords,
+  sms
 }
 
 api.install = Vue => (Vue.prototype.$api = api)

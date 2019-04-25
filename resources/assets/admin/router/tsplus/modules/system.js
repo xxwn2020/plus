@@ -32,7 +32,23 @@ const SystemRouter = {
     {
       path: 'sms',
       name: 'System-Sms-Setting',
-      meta: { title: 'system.smsSetting', icon: 'message' }
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/index'),
+      meta: { title: 'system.sms.root', icon: 'message' },
+      redirect: '/system/sms/logs',
+      children: [
+        {
+          path: 'logs',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/logs/index'),
+          name: 'System-Sms-Log',
+          meta: { tabs: true, title: 'system.sms.list' }
+        },
+        {
+          path: 'configure',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/configure/index'),
+          name: 'System-Sms-Config',
+          meta: { tabs: true, title: 'system.sms.config' }
+        }
+      ]
     },
     {
       path: 'mail',

@@ -110,7 +110,11 @@ export default {
       registerSetting: '注册设置',
       certification: '认证设置',
       thirdparty: '第三方登录',
-      smsSetting: '短信配置',
+      sms: {
+        root: '短信配置',
+        list: '短信列表',
+        config: '短信配置'
+      },
       mailSetting: '邮件配置',
       payment: '支付配置'
     }

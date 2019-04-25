@@ -13,12 +13,12 @@ export default {
         ...{
           ...this.$route.query,
           ...{
-            limit: parseInt(this.$route.query.limit || 15),
-            page: parseInt(this.$route.query.page || 1),
-            role: parseInt(this.$route.query.role || 0),
-            trashed: parseInt(this.$route.query.trashed || 0),
-            follow: parseInt(this.$route.query.follow || 0),
-            recommend: parseInt(this.$route.query.recommend || 0)
+            limit: parseInt(to.query.limit || 15),
+            page: parseInt(to.query.page || 1),
+            role: parseInt(to.query.role || 0),
+            trashed: parseInt(to.query.trashed || 0),
+            follow: parseInt(to.query.follow || 0),
+            recommend: parseInt(to.query.recommend || 0)
           }
         }
       }
@@ -27,15 +27,15 @@ export default {
   },
   methods: {
     /**
-    * 页面数量更改
-    */
+     * 页面数量更改
+     */
     handleSizeChange (limit) {
       this.setQuery({ limit, page: 1 })
     },
     /**
-    * 分页切换
-    * @param page
-    */
+     * 分页切换
+     * @param page
+     */
     pageChange (page) {
       this.setQuery({ page })
     },
@@ -46,18 +46,19 @@ export default {
       this.setQuery({ page: 1 })
     },
     /**
-    * 设置query
-    * @param {*} query
-    */
+     * 设置query
+     * @param {*} query
+     */
     setQuery (query = {}, routeName = this.routeName) {
       let oldQ = Object.assign({}, this.query)
       let oldQuery = JSON.parse(JSON.stringify(oldQ))
       query = { ...oldQuery, ...query }
-      Object.keys(query).map(key => {
-        if (!query[key]) {
-          delete query[key]
-        }
-      })
+      Object.keys(query)
+        .map(key => {
+          if (!query[key] && !['state'].includes(key)) {
+            delete query[key]
+          }
+        })
       this.$router.push({
         name: routeName,
         query
