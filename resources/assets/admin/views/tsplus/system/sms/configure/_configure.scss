@@ -1,14 +1,19 @@
 .configure {
-    // Vars
+  // Vars
 
-    // Support
+  // Support
 
-    // Module
-    & {
-        //
+  // Module
+  & .box-card {
+    margin-top: 20px;
+
+    .el-alert {
+      line-height: 14px;
+      margin-bottom: 5px;
     }
+  }
 
-    // Facets
+  // Facets
 
-    // States
+  // States
 }

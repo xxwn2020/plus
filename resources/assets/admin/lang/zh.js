@@ -274,6 +274,21 @@ export default {
       editCate: '编辑分类',
       taggableCount: '热度'
     },
+    sms: {
+      root: '短信配置',
+      configure: {
+        app_key: 'App Key',
+        app_secret: 'App ',
+        sign_name: '短信签名',
+        api_key: 'Api Key',
+        api_id: 'Api Id',
+        template: '模版',
+        content_tip: '输入应用 content 信息,例:你的短信验证是：:code，注:code为变量',
+        access_key_id: 'App Key',
+        access_key_secret: 'App Secret',
+        content: '短信模板'
+      }
+    },
 
     certifications: {
       root: '认 证',
