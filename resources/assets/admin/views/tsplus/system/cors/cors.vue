@@ -113,16 +113,12 @@
         const { cors, saveLoading } = this
         if (!saveLoading) {
           this.$set(this, 'saveLoading', true)
-          this.$api.cors.save(cors)
-            .then(() => {
-              this.showSuccess(this.$t('admin.success'))
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'saveLoading', false)
-            })
+          this.$api.cors.save(cors).then(() => {
+            this.showSuccess(this.$t('admin.success'))
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'saveLoading', false)
+          })
         }
-
       },
       /* 添加选项 */
       addOption (inputName, field) {
@@ -142,14 +138,11 @@
         const { getLoading } = this
         if (!getLoading) {
           this.$set(this, 'getLoading', true)
-          this.$api.cors.list()
-            .then(({ data }) => {
-              this.$set(this, 'cors', data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'getLoading', false)
-            })
+          this.$api.cors.list().then(({ data }) => {
+            this.$set(this, 'cors', data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'getLoading', false)
+          })
         }
       }
 
