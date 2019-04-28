@@ -115,6 +115,13 @@ export default {
         list: '短信列表',
         config: '短信配置'
       },
+      user: {
+        root: '用户设置'
+
+      },
+      cors: {
+        root: '跨域设置'
+      },
       mailSetting: '邮件配置',
       payment: '支付配置'
     }
@@ -240,6 +247,7 @@ export default {
     delete: '删 除',
     status: '状 态',
     all: '全 部',
+    add: '添 加',
     category: '类 型',
     createdAt: '时间',
     upload: '请上传',
@@ -288,6 +296,17 @@ export default {
         access_key_secret: 'App Secret',
         content: '短信模板'
       }
+    },
+
+    mail: {
+      root: '邮件配置',
+      smtpAddress: 'SMTP主机地址',
+      smtpPort: 'SMTP主机端口',
+      mailAddress: '发件箱地址',
+      mailName: '发件人名称',
+      protocol: '传输协议加密方式',
+      mailAccount: 'SMTP服务器用户名',
+      mailPassword: 'SMTP服务器密码'
     },
 
     certifications: {

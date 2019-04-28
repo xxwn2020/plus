@@ -1,8 +1,6 @@
-const Layout = () => import(/* webpackChunkName: 'system' */ '@/layout')
-
 const SystemRouter = {
   path: '/system',
-  component: Layout,
+  component: () => import(/* webpackChunkName: 'system' */ '@/layout'),
   name: 'System',
   meta: { title: 'system.root', icon: 'tree' },
   redirect: '/system/info',
@@ -12,6 +10,11 @@ const SystemRouter = {
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/systemInfo'),
       name: 'System-Info',
       meta: { title: 'system.info', icon: 'example' }
+    },
+    {
+      path: 'user',
+      name: 'System-Payment-User-Setting',
+      meta: { title: 'system.user.root', icon: 'people' }
     },
     {
       path: 'register',
@@ -53,12 +56,19 @@ const SystemRouter = {
     {
       path: 'mail',
       name: 'System-Mail-Setting',
-      meta: { title: 'system.mailSetting', icon: 'email' }
+      meta: { title: 'system.mailSetting', icon: 'email' },
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/mail/configure')
     },
     {
       path: 'payment',
       name: 'System-Payment-Setting',
       meta: { title: 'system.payment', icon: 'money' }
+    },
+    {
+      path: 'cors',
+      name: 'System-Cors',
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/cors/cors'),
+      meta: { title: 'system.cors.root', icon: 'lock' }
     }
   ]
 }

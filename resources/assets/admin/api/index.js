@@ -27,6 +27,9 @@ import caches from './cache'
 import sensitiveWords from './sensitive-word'
 
 import sms from './sms'
+import mail from './mail'
+/* 跨域设置，对应 /system/cors */
+import cors from './cors'
 
 const api = {
   normError,
@@ -42,7 +45,9 @@ const api = {
   configures,
   caches,
   sensitiveWords,
-  sms
+  sms,
+  mail,
+  cors
 }
 
 api.install = Vue => (Vue.prototype.$api = api)

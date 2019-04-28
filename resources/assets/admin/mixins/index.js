@@ -1,5 +1,6 @@
 import file from '../api/file'
-import plueMessageBundle from 'plus-message-bundle'
+import plusMessageBundle from 'plus-message-bundle'
+
 export default {
   methods: {
     showApiError (error, defaultMessage = null) {
@@ -13,7 +14,8 @@ export default {
       }
 
       if (!canceled && message) {
-        this.$message.error(message)
+        // this.$message.error(message)
+        this.showErrorUnClosable(message)
       }
     },
     /* 返回上一页 */
@@ -36,26 +38,42 @@ export default {
     goTo (params) {
       this.$router.push(params)
     },
+    /* 获取服务端信息 */
     serverMessage (message, defaultMessage) {
-      return plueMessageBundle(message, defaultMessage).getMessage()
+      return plusMessageBundle(message, defaultMessage).getMessage()
     },
+    /* 展示成功信息 */
     showSuccess (message) {
       this.$message({
         type: 'success',
         message: this.serverMessage(message)
       })
     },
+    /* 展示错误信息 */
     showError (message) {
       this.$message({
         type: 'error',
         message: this.serverMessage(message)
       })
     },
+    showErrorUnClosable (message) {
+      this.$notify({
+        title: '出错了',
+        message: this.serverMessage(message),
+        duration: 0,
+        type: 'error'
+      })
+    },
+    /* 展示提示信息 */
     showInfo (message) {
       this.$message({
         type: 'info',
         message: this.serverMessage(message)
       })
+    },
+    /* 重置表单 */
+    resetForm (formRef) {
+      this.$refs[formRef].resetFields()
     }
   },
 
