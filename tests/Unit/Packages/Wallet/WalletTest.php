@@ -57,14 +57,14 @@ class WalletTest extends TestCase
 
         // Create a wallet mock.
         $wallet = $this->getMockBuilder(TestWalletSetUser::class)
-                       ->setMethods(['userFindOrFail', 'resolveWallet'])
-                       ->getMock();
+            ->setMethods(['userFindOrFail', 'resolveWallet'])
+            ->getMock();
         $wallet->expects($this->exactly(1))
-               ->method('userFindOrFail')
-               ->will($this->returnValue($user));
+            ->method('userFindOrFail')
+            ->will($this->returnValue($user));
         $wallet->expects($this->exactly(2))
-               ->method('resolveWallet')
-               ->will($this->returnArgument(0));
+            ->method('resolveWallet')
+            ->will($this->returnArgument(0));
 
         $wallet->setUser($user->id);
         $this->assertInstanceOf(UserModel::class, $wallet->getUser());
@@ -92,11 +92,11 @@ class WalletTest extends TestCase
 
         // Create a wallet mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['walletFind'])
-                       ->getMock();
+            ->setMethods(['walletFind'])
+            ->getMock();
         $wallet->expects($this->exactly(1))
-               ->method('walletFind')
-               ->willReturn(null);
+            ->method('walletFind')
+            ->willReturn(null);
 
         $wallet->setUser($user);
         $this->assertInstanceOf(WalletModel::class, $wallet->getWalletModel());
@@ -116,19 +116,19 @@ class WalletTest extends TestCase
     {
         // Create a wallet model mock.
         $model = $this->getMockBuilder(WalletModel::class)
-                      ->setMethods(['save'])
-                      ->getMock();
+            ->setMethods(['save'])
+            ->getMock();
         $model->expects($this->once())
-              ->method('save')
-              ->willReturn($model);
+            ->method('save')
+            ->willReturn($model);
 
         // Create a Wallet mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['getWalletModel'])
-                       ->getMock();
+            ->setMethods(['getWalletModel'])
+            ->getMock();
         $wallet->expects($this->exactly(3))
-               ->method('getWalletModel')
-               ->willReturn($model);
+            ->method('getWalletModel')
+            ->willReturn($model);
 
         $amount = 100;
         $wallet->increment($amount);
@@ -147,19 +147,19 @@ class WalletTest extends TestCase
     {
         // Create a wallet model mock.
         $model = $this->getMockBuilder(WalletModel::class)
-                      ->setMethods(['save'])
-                      ->getMock();
+            ->setMethods(['save'])
+            ->getMock();
         $model->expects($this->once())
-              ->method('save')
-              ->willReturn($model);
+            ->method('save')
+            ->willReturn($model);
 
         // Create a Wallet mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['getWalletModel'])
-                       ->getMock();
+            ->setMethods(['getWalletModel'])
+            ->getMock();
         $wallet->expects($this->exactly(3))
-               ->method('getWalletModel')
-               ->willReturn($model);
+            ->method('getWalletModel')
+            ->willReturn($model);
 
         $amount = 100;
         $wallet->decrement($amount);
@@ -181,11 +181,11 @@ class WalletTest extends TestCase
 
         // Create a Wallet::class mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['getWalletModel'])
-                       ->getMock();
+            ->setMethods(['getWalletModel'])
+            ->getMock();
         $wallet->expects($this->exactly(2))
-               ->method('getWalletModel')
-               ->willReturn($model);
+            ->method('getWalletModel')
+            ->willReturn($model);
 
         $this->assertTrue($wallet->enough(100));
         $this->assertFalse($wallet->enough(200));
@@ -203,19 +203,19 @@ class WalletTest extends TestCase
 
         // Create a WalletModel::class mock.
         $model = $this->getMockBuilder(WalletModel::class)
-                      ->setMethods(['toArray'])
-                      ->getMock();
+            ->setMethods(['toArray'])
+            ->getMock();
         $model->expects($this->exactly(1))
-              ->method('toArray')
-              ->willReturn($array);
+            ->method('toArray')
+            ->willReturn($array);
 
         // Create a Wallet::class mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['getWalletModel'])
-                       ->getMock();
+            ->setMethods(['getWalletModel'])
+            ->getMock();
         $wallet->expects($this->exactly(1))
-               ->method('getWalletModel')
-               ->willReturn($model);
+            ->method('getWalletModel')
+            ->willReturn($model);
 
         $this->assertArraySubset($array, $wallet->toArray());
     }
@@ -232,11 +232,11 @@ class WalletTest extends TestCase
 
         // Create a Wallet::class mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['toArray'])
-                       ->getMock();
+            ->setMethods(['toArray'])
+            ->getMock();
         $wallet->expects($this->exactly(1))
-               ->method('toArray')
-               ->willReturn($array);
+            ->method('toArray')
+            ->willReturn($array);
 
         $this->assertArraySubset($array, $wallet->jsonSerialize());
     }
@@ -258,11 +258,11 @@ class WalletTest extends TestCase
 
         // Create a Wallet::class mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['jsonSerialize'])
-                       ->getMock();
+            ->setMethods(['jsonSerialize'])
+            ->getMock();
         $wallet->expects($this->exactly(2))
-               ->method('jsonSerialize')
-               ->will($this->onConsecutiveCalls($array, $text));
+            ->method('jsonSerialize')
+            ->will($this->onConsecutiveCalls($array, $text));
 
         $result = $wallet->toJson(0);
         // dd($result);
@@ -283,11 +283,11 @@ class WalletTest extends TestCase
         $text = 'ThinkSNS Plus';
         // Create a Wallet::class mock.
         $wallet = $this->getMockBuilder(Wallet::class)
-                       ->setMethods(['toJson'])
-                       ->getMock();
+            ->setMethods(['toJson'])
+            ->getMock();
         $wallet->expects($this->exactly(1))
-               ->method('toJson')
-               ->willReturn($text);
+            ->method('toJson')
+            ->willReturn($text);
 
         $this->assertSame($text, (string) $wallet);
     }

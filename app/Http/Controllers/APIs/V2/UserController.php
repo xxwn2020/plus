@@ -26,11 +26,11 @@ use Tymon\JWTAuth\JWTAuth;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Taggable;
-use function Zhiyi\Plus\setting;
-use function Zhiyi\Plus\username;
 use Zhiyi\Plus\Models\VerificationCode;
 use Zhiyi\Plus\Http\Requests\API2\StoreUserPost;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
+use function Zhiyi\Plus\setting;
+use function Zhiyi\Plus\username;
 
 class UserController extends Controller
 {
@@ -49,7 +49,8 @@ class UserController extends Controller
         Request $request,
         ResponseFactoryContract $response,
         User $model
-    ) {
+    )
+    {
         $user = $request->user('api');
         $ids = array_filter(explode(',', $request->query('id', '')));
         $limit = max(min($request->query('limit', 15), 50), 1);
@@ -147,7 +148,8 @@ class UserController extends Controller
         StoreUserPost $request,
         ResponseFactoryContract $response,
         JWTAuth $auth
-    ) {
+    )
+    {
         $phone = $request->input('phone');
         $email = $request->input('email');
         $name = $request->input('name');
