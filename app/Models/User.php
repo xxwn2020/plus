@@ -34,23 +34,23 @@ class User extends Authenticatable implements JWTSubject
 {
     // 功能性辅助相关。
     use Notifiable,
-    SoftDeletes,
-    Concerns\UserHasAbility,
-    Concerns\UserHasNotifiable,
-    Concerns\Macroable;
+        SoftDeletes,
+        Concerns\UserHasAbility,
+        Concerns\UserHasNotifiable,
+        Concerns\Macroable;
     // 关系数据相关
     use Relations\UserHasWallet,
-    Relations\UserHasWalletCash,
-    Relations\UserHasWalletCharge,
-    Relations\UserHasFilesWith,
-    Relations\UserHasFollow,
-    Relations\UserHasComment,
-    Relations\UserHasReward,
-    Relations\UserHasRole,
-    Relations\UserHasLike,
-    Relations\UserHasCurrency,
-    Relations\UserHasNewWallet,
-    Relations\UserHasBlackList;
+        Relations\UserHasWalletCash,
+        Relations\UserHasWalletCharge,
+        Relations\UserHasFilesWith,
+        Relations\UserHasFollow,
+        Relations\UserHasComment,
+        Relations\UserHasReward,
+        Relations\UserHasRole,
+        Relations\UserHasLike,
+        Relations\UserHasCurrency,
+        Relations\UserHasNewWallet,
+        Relations\UserHasBlackList;
     use FileStorageEloquentAttributeTrait;
     /**
      * The attributes that are mass assignable.
@@ -58,18 +58,19 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable
-    = [
-      'name', 'email', 'phone', 'password', 'last_login_ip', 'register_ip',
-    ];
+        = [
+            'name', 'email', 'phone', 'password', 'last_login_ip',
+            'register_ip',
+        ];
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden
-    = [
-      'password', 'remember_token', 'phone', 'email', 'pivot',
-    ];
+        = [
+            'password', 'remember_token', 'phone', 'email', 'pivot',
+        ];
     /**
      * The accessors to append to the model's array form.
      *
@@ -91,11 +92,11 @@ class User extends Authenticatable implements JWTSubject
     protected function routeNotificationForJpush()
     {
         return new Sender([
-      'platform' => 'all',
-      'audience' => [
-        'alias' => sprintf('user_%d', $this->id),
-      ],
-    ]);
+            'platform' => 'all',
+            'audience' => [
+                'alias' => sprintf('user_%d', $this->id),
+            ],
+        ]);
     }
 
     /**
@@ -121,9 +122,8 @@ class User extends Authenticatable implements JWTSubject
     }
 
     protected function getAvatarAttribute(?string $resource)
-  : ?FileMetaInterface
-    {
-        if (! $resource) {
+    : ?FileMetaInterface {
+        if ( ! $resource) {
             return null;
         }
 
@@ -131,9 +131,8 @@ class User extends Authenticatable implements JWTSubject
     }
 
     protected function getBgAttribute(?string $resource)
-  : ?FileMetaInterface
-    {
-        if (! $resource) {
+    : ?FileMetaInterface {
+        if ( ! $resource) {
             return null;
         }
 
@@ -150,15 +149,15 @@ class User extends Authenticatable implements JWTSubject
     {
         $certification = $this->certification;
 
-        if (! $certification || $certification->status !== 1) {
+        if ( ! $certification || $certification->status !== 1) {
             return null;
         }
 
         return [
-      'type'        => $certification->certification_name,
-      'icon'        => $certification->icon,
-      'description' => $certification->data['desc'] ?? '',
-    ];
+            'type'        => $certification->certification_name,
+            'icon'        => $certification->icon,
+            'description' => $certification->data['desc'] ?? '',
+        ];
     }
 
     /**
@@ -192,7 +191,7 @@ class User extends Authenticatable implements JWTSubject
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable', 'taggables')
-      ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
@@ -227,8 +226,7 @@ class User extends Authenticatable implements JWTSubject
      * @homepage http://medz.cn
      */
     public function scopeByPhone(Builder $query, string $phone)
-  : Builder
-    {
+    : Builder {
         return $query->where('phone', $phone);
     }
 
@@ -244,8 +242,7 @@ class User extends Authenticatable implements JWTSubject
      * @homepage http://medz.cn
      */
     public function scopeByName(Builder $query, string $name)
-  : Builder
-    {
+    : Builder {
         return $query->where('name', $name);
     }
 
@@ -259,8 +256,7 @@ class User extends Authenticatable implements JWTSubject
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function scopeByEmail(Builder $query, string $email)
-  : Builder
-    {
+    : Builder {
         return $query->where('email', $email);
     }
 
@@ -276,8 +272,7 @@ class User extends Authenticatable implements JWTSubject
      * @homepage http://medz.cn
      */
     public function createPassword(string $password)
-  : self
-    {
+    : self {
         $this->password = app('hash')->make($password);
 
         return $this;
@@ -294,9 +289,9 @@ class User extends Authenticatable implements JWTSubject
      * @return bool 验证结果true or false
      */
     public function verifyPassword(string $password)
-  : bool
-    {
-        return $this->password && app('hash')->check($password, $this->password);
+    : bool {
+        return $this->password
+            && app('hash')->check($password, $this->password);
     }
 
     /**
@@ -332,12 +327,12 @@ class User extends Authenticatable implements JWTSubject
      * @return BelongsToMany
      */
     public function feedTopics()
-  : BelongsToMany
+    : BelongsToMany
     {
         $table = (new FeedTopicUserLink)->getTable();
 
         return $this
-      ->belongsToMany(FeedTopic::class, $table, 'user_id', 'topic_id')
-      ->using(FeedTopicUserLink::class);
+            ->belongsToMany(FeedTopic::class, $table, 'user_id', 'topic_id')
+            ->using(FeedTopicUserLink::class);
     }
 }

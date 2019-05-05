@@ -26,11 +26,11 @@ use Tymon\JWTAuth\JWTAuth;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Taggable;
-use function Zhiyi\Plus\setting;
-use function Zhiyi\Plus\username;
 use Zhiyi\Plus\Models\VerificationCode;
 use Zhiyi\Plus\Http\Requests\API2\StoreUserPost;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
+use function Zhiyi\Plus\setting;
+use function Zhiyi\Plus\username;
 
 class UserController extends Controller
 {
@@ -46,49 +46,59 @@ class UserController extends Controller
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function index(
-    Request $request,
-    ResponseFactoryContract $response,
-    User $model
-  ) {
+        Request $request,
+        ResponseFactoryContract $response,
+        User $model
+    ) {
         $user = $request->user('api');
         $ids = array_filter(explode(',', $request->query('id', '')));
         $limit = max(min($request->query('limit', 15), 50), 1);
         $order = in_array($order = $request->query('order', 'desc'),
-      ['asc', 'desc']) ? $order : 'desc';
+            ['asc', 'desc']) ? $order : 'desc';
         $since = $request->query('since', false);
         $name = $request->query('name', false);
         $fetchBy = $request->query('fetch_by', 'id');
         $tags = $request->query('tags', []);
 
         $users = $model
-      ->when($since, function ($query) use ($since, $order) {
-          return $query->where('id', $order === 'asc' ? '>' : '<', $since);
-      })
-      ->when($name && $fetchBy !== 'username', function ($query) use ($name) {
-          return $query->where('name', 'like', sprintf('%%%s%%', $name));
-      })
-      ->when(! empty($ids) && $fetchBy === 'id', function ($query) use ($ids) {
-          return $query->whereIn('id', $ids)->withTrashed();
-      })
-      ->when($name && $fetchBy === 'username', function ($query) use ($name) {
-          return $query->whereIn('name', array_filter(explode(',', $name)));
-      })
-      ->when(is_array($tags) && ! empty($tags), function ($query) use ($tags) {
-          return $query->whereHas('tags', function ($query) use ($tags) {
-              $taggableTable = (new Taggable)->getTable();
+            ->when($since, function ($query) use ($since, $order) {
+                return $query->where('id', $order === 'asc' ? '>' : '<',
+                    $since);
+            })
+            ->when($name && $fetchBy !== 'username',
+                function ($query) use ($name) {
+                    return $query->where('name', 'like',
+                        sprintf('%%%s%%', $name));
+                })
+            ->when(! empty($ids) && $fetchBy === 'id',
+                function ($query) use ($ids) {
+                    return $query->whereIn('id', $ids)->withTrashed();
+                })
+            ->when($name && $fetchBy === 'username',
+                function ($query) use ($name) {
+                    return $query->whereIn('name',
+                        array_filter(explode(',', $name)));
+                })
+            ->when(is_array($tags) && ! empty($tags),
+                function ($query) use ($tags) {
+                    return $query->whereHas('tags',
+                        function ($query) use ($tags) {
+                            $taggableTable = (new Taggable)->getTable();
 
-              return $query->whereIn($taggableTable.'.tag_id', $tags);
-          });
-      })
-      ->limit($limit)
-      ->orderby('id', $order)
-      ->get();
+                            return $query->whereIn($taggableTable.'.tag_id',
+                                $tags);
+                        });
+                })
+            ->limit($limit)
+            ->orderby('id', $order)
+            ->get();
         $users->load(['certification']);
 
-        return $response->json($model->getConnection()->transaction(function () use (
-      $users,
-      $user
-    ) {
+        return $response->json($model->getConnection()->transaction(function (
+        ) use (
+            $users,
+            $user
+        ) {
             return $users->map(function (User $item) use ($user) {
                 $item->following = $item->hasFollwing($user->id ?? 0);
                 $item->follower = $item->hasFollower($user->id ?? 0);
@@ -112,8 +122,8 @@ class UserController extends Controller
     {
         $field = username($user);
         $user = User::withTrashed()
-      ->where($field, $user)
-      ->firstOrFail();
+            ->where($field, $user)
+            ->firstOrFail();
 
         $user->makeVisible($field);
 
@@ -134,10 +144,10 @@ class UserController extends Controller
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function store(
-    StoreUserPost $request,
-    ResponseFactoryContract $response,
-    JWTAuth $auth
-  ) {
+        StoreUserPost $request,
+        ResponseFactoryContract $response,
+        JWTAuth $auth
+    ) {
         $phone = $request->input('phone');
         $email = $request->input('email');
         $name = $request->input('name');
@@ -146,18 +156,18 @@ class UserController extends Controller
         $code = $request->input('verifiable_code');
         $role = setting('user', 'register-role');
 
-        if (! $role) {
+        if ( ! $role) {
             throw new RuntimeException('Failed to get the defined user group.');
         }
 
         $verify = VerificationCode::where('account',
-      $channel == 'mail' ? $email : $phone)
-      ->where('channel', $channel)
-      ->where('code', $code)
-      ->orderby('id', 'desc')
-      ->first();
+            $channel == 'mail' ? $email : $phone)
+            ->where('channel', $channel)
+            ->where('code', $code)
+            ->orderby('id', 'desc')
+            ->first();
 
-        if (! $verify) {
+        if ( ! $verify) {
             return $response->json(['message' => ['验证码错误或者已失效']], 422);
         }
 
@@ -172,17 +182,17 @@ class UserController extends Controller
         }
 
         $verify->delete();
-        if (! $user->save()) {
+        if ( ! $user->save()) {
             return $response->json(['message' => '注册失败'], 500);
         }
 
         $user->roles()->sync($role);
 
         return $response->json([
-      'token'       => $auth->fromUser($user),
-      'ttl'         => config('jwt.ttl'),
-      'refresh_ttl' => config('jwt.refresh_ttl'),
-    ])->setStatusCode(201);
+            'token'       => $auth->fromUser($user),
+            'ttl'         => config('jwt.ttl'),
+            'refresh_ttl' => config('jwt.refresh_ttl'),
+        ])->setStatusCode(201);
     }
 
     /**
@@ -198,7 +208,7 @@ class UserController extends Controller
     {
         $currentUser = $request->user('api');
         $hasUser = (int) $request->query('following',
-      $currentUser ? $currentUser->id : 0);
+            $currentUser ? $currentUser->id : 0);
         $user['following'] = $user->hasFollwing($hasUser);
     }
 
@@ -215,7 +225,7 @@ class UserController extends Controller
     {
         $currentUser = $request->user('api');
         $hasUser = (int) $request->query('follower',
-      $currentUser ? $currentUser->id : 0);
+            $currentUser ? $currentUser->id : 0);
         $user['follower'] = $user->hasFollower($hasUser);
     }
 
