@@ -26,11 +26,11 @@ use Tymon\JWTAuth\JWTAuth;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Taggable;
+use function Zhiyi\Plus\setting;
+use function Zhiyi\Plus\username;
 use Zhiyi\Plus\Models\VerificationCode;
 use Zhiyi\Plus\Http\Requests\API2\StoreUserPost;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
-use function Zhiyi\Plus\setting;
-use function Zhiyi\Plus\username;
 
 class UserController extends Controller
 {
@@ -156,7 +156,7 @@ class UserController extends Controller
         $code = $request->input('verifiable_code');
         $role = setting('user', 'register-role');
 
-        if ( ! $role) {
+        if (! $role) {
             throw new RuntimeException('Failed to get the defined user group.');
         }
 
@@ -167,7 +167,7 @@ class UserController extends Controller
             ->orderby('id', 'desc')
             ->first();
 
-        if ( ! $verify) {
+        if (! $verify) {
             return $response->json(['message' => ['验证码错误或者已失效']], 422);
         }
 
@@ -182,7 +182,7 @@ class UserController extends Controller
         }
 
         $verify->delete();
-        if ( ! $user->save()) {
+        if (! $user->save()) {
             return $response->json(['message' => '注册失败'], 500);
         }
 
