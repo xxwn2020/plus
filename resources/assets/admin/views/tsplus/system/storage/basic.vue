@@ -1,7 +1,7 @@
 <template>
   <el-main class="storage-basic">
     <file-size/>
-    <mimes></mimes>
+    <mimes/>
     <pictureControl/>
   </el-main>
 </template>

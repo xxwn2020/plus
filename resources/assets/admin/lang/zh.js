@@ -289,11 +289,19 @@ export default {
         minHeight: '最小高度'
       },
       filesystems: {
-        root: '基本文件系统',
+        root: '文件系统',
+        basic: '基础文件系统',
         local: '本地存储',
         AliOss: 'Ali OSS'
       },
-      channels: {}
+      channels: {
+        root: '频道设置',
+        publicChannel: '公开频道',
+        locate: '本地存储',
+        AliOss: '阿里云 OSS',
+        channelIntro: '所有的频道文件系统不建议频繁修改，如果你需要修改，请将文件全部迁移到对应的文件系统后再进行修改！ 如果没有进行文件迁移就进行了文件系统切换，则切换完成后文件系统会抛出文件找不到的错误（仅非正式环境下，正式环境模式则返回 NULL）。',
+        publicIntro: '公开频道关键词为 public，公开频道中 所存储的文件均为公开免费文件！主要适用场景为用户头像、背景图片以及系统文件 等场景。'
+      }
     },
     tags: {
       root: '标签管理',

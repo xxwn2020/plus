@@ -32,5 +32,15 @@ export default {
     admin.patch('/file-storage/image-dimension', params, {
       validateStatus: s => (s === 204)
     })
+  ),
+  getPublicChannel: () => (
+    admin.get('/file-storage/channels/public', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  savePublicChannel: params => (
+    admin.patch('/file-storage/channels/public', params, {
+      validateStatus: s => (s === 204)
+    })
   )
 }
