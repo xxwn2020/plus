@@ -22,5 +22,15 @@ export default {
     admin.patch('/file-storage/file-mime-types', params, {
       validateStatus: s => (s === 204)
     })
+  ),
+  getImageDimension: () => (
+    admin.get('/file-storage/image-dimension', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  saveImageDimension: params => (
+    admin.patch('/file-storage/image-dimension', params, {
+      validateStatus: s => (s === 204)
+    })
   )
 }
