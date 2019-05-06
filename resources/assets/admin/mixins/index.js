@@ -3,6 +3,12 @@ import plusMessageBundle from 'plus-message-bundle'
 
 export default {
   methods: {
+    gLoading (status) {
+      this.$set(this, 'getLoading', status)
+    },
+    sLoading (status) {
+      this.$set(this, 'saveLoading', status)
+    },
     showApiError (error, defaultMessage = null) {
       error = this.$api.normError(error)
 
@@ -25,11 +31,9 @@ export default {
           confirmButtonText: this.$t('admin.confirm'),
           cancelButtonText: this.$t('admin.cancel'),
           type: 'warning'
-        })
-          .then(() => {
-            this.$router.back()
-          })
-          .catch(this.showApiError)
+        }).then(() => {
+          this.$router.back()
+        }).catch(this.showApiError)
       } else {
         this.$router.back()
       }
@@ -79,10 +83,9 @@ export default {
 
   filters: {
     localTime (value) {
-      return value ? (new Date(`${value}Z`))
-        .toLocaleString(
-          navigator.language, { hour12: false }
-        ) : '-'
+      return value ? (new Date(`${value}Z`)).toLocaleString(
+        navigator.language, { hour12: false }
+      ) : '-'
     },
 
     fileUrl (id, params = {}) {

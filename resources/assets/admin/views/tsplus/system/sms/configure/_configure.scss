@@ -7,6 +7,10 @@
   & .box-card {
     margin-top: 20px;
 
+    &:first-child {
+      margin-top: 0;
+    }
+
     .el-alert {
       line-height: 14px;
       margin-bottom: 5px;

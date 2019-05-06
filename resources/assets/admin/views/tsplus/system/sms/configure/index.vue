@@ -1,9 +1,9 @@
 <template>
-  <div class="configure">
+  <el-main class="configure">
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>短信配置</span>
-        <el-button :loading="saveLoading" @click="saveSmsConfigure" style="float: right; padding: 3px 0" type="text">
+        <el-button :loading="saveLoading" @click="saveSmsConfigure" style="padding: 3px 0" type="text">
           保存设置
         </el-button>
       </div>
@@ -15,12 +15,12 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card v-for="allowGateWay in allowed_gateways" :key="allowGateWay" class="box-card">
+    <el-card v-for="allowGateWay in allowed_gateways" shadow="never" :key="allowGateWay" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{allowGateWay}}</span>
       </div>
       <el-form :ref="`form-${allowGateWay}`" :model="gatewaysConfig[allowGateWay]">
-        <template v-for="(key, index) in getConfigureKey(gatewaysConfig[allowGateWay])">
+        <template v-for="key in getConfigureKey(gatewaysConfig[allowGateWay])">
           <template v-if="key !== 'template'">
             <el-form-item :label="$t(`admin.sms.configure.${key}`)">
               <el-input v-model="gatewaysConfig[allowGateWay][key]"></el-input>
@@ -43,7 +43,7 @@
         </template>
       </el-form>
     </el-card>
-  </div>
+  </el-main>
 
 </template>
 
@@ -75,19 +75,14 @@
         if (!saveLoading) {
           this.$confirm('请确认打开的网关设置了相应的短信设置!!', '提示', {
             type: 'warning'
-          })
-            .then(() => {
-              this.$set(this, 'saveLoading', true)
-              this.$api.sms.saveSmsConfigure({ allowed_gateways, gatewaysConfig })
-                .then(({ data }) => {
-                  this.showSuccess(data)
-                })
-                .catch(this.showApiError)
-                .finally(() => {
-                  this.$set(this, 'saveLoading', false)
-                })
+          }).then(() => {
+            this.$set(this, 'saveLoading', true)
+            this.$api.sms.saveSmsConfigure({ allowed_gateways, gatewaysConfig }).then(({ data }) => {
+              this.showSuccess(data)
+            }).catch(this.showApiError).finally(() => {
+              this.$set(this, 'saveLoading', false)
             })
-            .catch()
+          }).catch()
         }
 
       },
@@ -96,17 +91,14 @@
         const { listLoading } = this
         if (!listLoading) {
           this.$set(this, 'listLoading', true)
-          this.$api.sms.list()
-            .then(({ data }) => {
-              this.$set(this, 'allowed_gateways', data.allowed_gateways)
-              this.$set(this, 'default_gateways', data.default_gateways)
-              this.$set(this, 'gateways', data.gateways)
-              this.$set(this, 'gatewaysConfig', data.gatewaysConfig)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'listLoading', false)
-            })
+          this.$api.sms.list().then(({ data }) => {
+            this.$set(this, 'allowed_gateways', data.allowed_gateways)
+            this.$set(this, 'default_gateways', data.default_gateways)
+            this.$set(this, 'gateways', data.gateways)
+            this.$set(this, 'gatewaysConfig', data.gatewaysConfig)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'listLoading', false)
+          })
         }
       }
     },

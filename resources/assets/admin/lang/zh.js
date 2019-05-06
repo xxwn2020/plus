@@ -123,7 +123,13 @@ export default {
         root: '跨域设置'
       },
       mailSetting: '邮件配置',
-      payment: '支付配置'
+      payment: '支付配置',
+      storage: {
+        root: '存储设置',
+        basic: '基础设置',
+        filesystems: '文件系统',
+        channels: '频道设置'
+      }
     }
     /** TSPlus */
   },
@@ -270,6 +276,20 @@ export default {
     identifyPhoto: '证件照片',
     identifyFront: '正面',
     identifyBack: '背面',
+    storage: {
+      root: '存储设置',
+      basic: {
+        size: '文件大小控制',
+        mime: '文件MIME类型控制',
+        picture: '图片尺寸控制'
+      },
+      filesystems: {
+        root: '基本文件系统',
+        local: '本地存储',
+        AliOss: 'Ali OSS'
+      },
+      channels: {}
+    },
     tags: {
       root: '标签管理',
       list: '标签列表',

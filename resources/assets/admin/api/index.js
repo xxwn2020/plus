@@ -16,13 +16,10 @@ import certifications from './certificate'
 import tags from './tag'
 /* 基本设置 对应: /operation/basic/baseinfo */
 import baseinfo from './baseinfo'
-
 /* 站点配置 对应 /operation/basic/setting */
 import configures from './configure'
-
 /* 缓存信息管理, 对应 /operation/basic/cache */
 import caches from './cache'
-
 /* 敏感词管理, 对应 /operation/sensitive-words */
 import sensitiveWords from './sensitive-word'
 
@@ -30,6 +27,8 @@ import sms from './sms'
 import mail from './mail'
 /* 跨域设置，对应 /system/cors */
 import cors from './cors'
+
+import storageConfig from './storageConfig'
 
 const api = {
   normError,
@@ -47,7 +46,8 @@ const api = {
   sensitiveWords,
   sms,
   mail,
-  cors
+  cors,
+  storageConfig
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
