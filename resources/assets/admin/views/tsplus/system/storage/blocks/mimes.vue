@@ -2,9 +2,15 @@
   <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>{{ $t('admin.storage.basic.mime') }}</span>
-      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
     </div>
-    <el-form ref="mimeForm" label-width="150px">
+    <el-form v-loading="getLoading" ref="mimeForm" label-width="150px">
+      <el-alert
+        title="新增和删除MIME类型后，都需要提交才能生效"
+        type="warning"
+        :closable="false"
+        :show-icon="true"
+      >
+      </el-alert>
       <el-form-item label="允许的MIME-TYPE">
         <el-tag
           class="el-tag-custom"
@@ -26,7 +32,7 @@
           placeholder="输入完成后，直接回车"
         >
         </el-input>
-        <el-button v-else class="button-new-tag" size="mini" @click="showInput">+ New Tag</el-button>
+        <el-button v-else class="button-new-tag" size="mini" @click="showInput">+ New Mime</el-button>
       </el-form-item>
       <el-form-item>
         <el-button @click="saveMimes" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
@@ -49,6 +55,11 @@
       showInput () {
         this.$set(this, 'inputVisible', true)
       },
+      /* 删除 */
+      handleClose (index) {
+        this.mimes.splice(index, 1)
+      },
+      /* 输入框事件 */
       handleInputConfirm () {
         let inputValue = this.inputValue
         let mimes = Object.assign([], this.mimes)
@@ -60,6 +71,7 @@
         this.inputVisible = false
         this.inputValue = ''
       },
+      /* 获取服务端存储的MIME类型 */
       getMimes () {
         const { getLoading } = this
         if (!getLoading) {
@@ -71,6 +83,7 @@
           })
         }
       },
+      /* 保存MIME */
       saveMimes () {
         const { mimes, saveLoading } = this
         if (!saveLoading) {
