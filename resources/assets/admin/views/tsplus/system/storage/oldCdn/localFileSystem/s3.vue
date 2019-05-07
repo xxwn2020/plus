@@ -1,5 +1,5 @@
 <template>
-  <el-form v-loading="getLoading" ref="form" :model="form" label-width="80px">
+  <el-form v-loading="getLoading" ref="form" :model="form" label-width="120px">
     <el-alert
       title="在使用 AWS S3 之前，你需要使用 Composer 安装相应的支持软件包： league/flysystem-aws-s3-v3"
       :show-icon="true"
