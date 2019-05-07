@@ -73,27 +73,41 @@ const SystemRouter = {
     {
       path: 'storage',
       name: 'System-Storage',
-      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/index'),
       meta: { title: 'system.storage.root', icon: 'lock' },
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/firstWrap'),
       redirect: '/system/storage/basic',
       children: [
         {
-          path: 'basic',
-          name: 'System-Storage-Basic',
-          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/basic'),
-          meta: { title: 'system.storage.basic', tabs: true }
+          path: 'cdn',
+          name: 'System-Storage-Cdn',
+          meta: { title: 'system.cdn.root' }
         },
         {
-          path: 'filesystems',
-          name: 'System-Storage-FileSystems',
-          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/filesystems'),
-          meta: { title: 'system.storage.filesystems', tabs: true }
-        },
-        {
-          path: 'channels',
-          name: 'System-Storage-Channels',
-          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/channels'),
-          meta: { title: 'system.storage.channels', tabs: true }
+          path: 'new-store',
+          name: 'System-Storage-Storage',
+          meta: { title: 'system.storage.new' },
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/index'),
+          redirect: '/system/storage/new-store/basic',
+          children: [
+            {
+              path: 'basic',
+              name: 'System-Storage-Basic',
+              component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/basic'),
+              meta: { title: 'system.storage.basic', tabs: true }
+            },
+            {
+              path: 'filesystems',
+              name: 'System-Storage-FileSystems',
+              component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/filesystems'),
+              meta: { title: 'system.storage.filesystems', tabs: true }
+            },
+            {
+              path: 'channels',
+              name: 'System-Storage-Channels',
+              component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/channels'),
+              meta: { title: 'system.storage.channels', tabs: true }
+            }
+          ]
         }
       ]
     }

@@ -125,10 +125,14 @@ export default {
       mailSetting: '邮件配置',
       payment: '支付配置',
       storage: {
+        new: '新存储',
         root: '存储设置',
         basic: '基础设置',
         filesystems: '文件系统',
         channels: '频道设置'
+      },
+      cdn: {
+        root: 'CDN管理'
       }
     }
     /** TSPlus */
@@ -276,6 +280,9 @@ export default {
     identifyPhoto: '证件照片',
     identifyFront: '正面',
     identifyBack: '背面',
+    cdn: {
+      root: 'CDN管理'
+    },
     storage: {
       root: '存储设置',
       basic: {
