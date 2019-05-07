@@ -290,9 +290,15 @@ export default {
       },
       filesystems: {
         root: '文件系统',
-        basic: '基础文件系统',
+        basic: '默认文件系统',
+        basicIntro: '默认文件系统是用于在频道没有指定文件系统时候使用的默认文件系统。',
         local: '本地存储',
-        AliOss: 'Ali OSS'
+        AliOss: 'Ali OSS',
+        disk: '使用磁盘',
+        diskIntro: '如果不知道选什么，就选 「local」',
+        expiresTime: '过期时间',
+        eTIntro: '上传会话的有限时间，基本可以不用修改',
+        expiresTimePlaceholder: '过期时间，单位秒'
       },
       channels: {
         root: '频道设置',
