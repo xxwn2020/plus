@@ -79,6 +79,7 @@ const SystemRouter = {
       children: [
         {
           path: 'cdn',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/oldCdn'),
           name: 'System-Storage-Cdn',
           meta: { title: 'system.cdn.root' }
         },
@@ -86,7 +87,7 @@ const SystemRouter = {
           path: 'new-store',
           name: 'System-Storage-Storage',
           meta: { title: 'system.storage.new' },
-          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/index'),
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/newStorage'),
           redirect: '/system/storage/new-store/basic',
           children: [
             {

@@ -79,5 +79,38 @@ export default {
     admin.patch('/file-storage/filesystems/aliyun-oss', params, {
       validateStatus: s => (s === 204)
     })
+  ),
+  /* 旧版的cdn设置 */
+  /* 选中的cdn系统 */
+  getSelectedCdn: () => (
+    admin.get('/cdn/selected', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /* 保存cdn设置 */
+  getCdnConfiguration: cdn => (
+    admin.get(`/cdn/${cdn}`, {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  saveCdnConfiguration: (params, cdn) => (
+    admin.post(`/cdn/${cdn}`, params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  getLocalConfiguration: () => (
+    admin.get('/cdn/filesystem/disk', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  getLocalFileSystemConfiguration: filesystem => (
+    admin.get(`/cdn/filesystems/${filesystem}`, {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  saveLocalFileSystemConfiguration: (params, fileSystem) => (
+    admin.post(`/cdn/filesystems/${fileSystem}`, params, {
+      validateStatus: s => (s === 201)
+    })
   )
 }
