@@ -79,11 +79,11 @@ class AuthController extends Controller
 
             $verify->delete();
 
-            if ($user = User::where($field, $login)->first()) {
-                return $user->deleted_at ?
+            if ($user = User::withTrashed()->where($field, $login)->first()) {
+                return ! $user->deleted_at ?
                     $this->respondWithToken($this->guard()->login($user)) :
                     $this->response()->json([
-                        'message' => '账号已被锁定，请联系管理员',
+                        'message' => '账号已被禁用，请联系管理员',
                     ], 403);
             }
 
@@ -91,25 +91,29 @@ class AuthController extends Controller
                 'message' => sprintf('%s还没有注册', $field == 'phone' ? '手机号' : '邮箱'),
             ], 422);
         }
-        $user = User::withTrashed()
+        if ($user = User::withTrashed()
             ->where($field, $login)
-            ->whereNotNull('deleted_at')
-            ->first();
-        if ($user) {
+            ->first()) {
+            if ($user->deleted_at) {
+                return $this->response()->json([
+                    'message' => '账号已被禁用，请联系管理员',
+                ], 403);
+            }
+            $credentials = [
+                $field => $login,
+                'password' => $request->input('password', ''),
+            ];
+
+            if ($token = $this->guard()->attempt($credentials)) {
+                return $this->respondWithToken($token);
+            }
+
+            return $this->response()->json(['message' => '账号或密码不正确'], 422);
+        } else {
             return $this->response()->json([
-                'message' => '账号已被禁用，请联系管理员',
-            ], 403);
+                'message' => sprintf('%s还没有注册', $field == 'phone' ? '手机号' : '邮箱'),
+            ], 422);
         }
-        $credentials = [
-            $field => $login,
-            'password' => $request->input('password', ''),
-        ];
-
-        if ($token = $this->guard()->attempt($credentials)) {
-            return $this->respondWithToken($token);
-        }
-
-        return $this->response()->json(['message' => '账号或密码不正确'], 422);
     }
 
     /**
