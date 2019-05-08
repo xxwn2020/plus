@@ -67,7 +67,6 @@
     "@vue/cli-service": "3.5.3",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
     "babel-jest": "23.6.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-component": "^1.1.1",
@@ -103,6 +102,7 @@
     "svgo": "1.2.0",
     "svgo-loader": "^2.2.0",
     "vue-template-compiler": "2.6.10",
+    "vuepress": "^0.14.11",
     "webpack-cli": "^3.3.0"
   },
   "collective": {
