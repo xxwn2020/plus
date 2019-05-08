@@ -63,6 +63,12 @@ export default {
     i18n: '国际化',
     externalLink: '外链',
     /** TSPlust */
+    finance: {
+      root: '财务管理',
+      wallet: '钱包管理',
+      flow: '钱包流水',
+      statistics: '统计'
+    },
     management: {
       root: '管理',
       users: {

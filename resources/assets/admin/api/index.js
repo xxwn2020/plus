@@ -27,8 +27,10 @@ import sms from './sms'
 import mail from './mail'
 /* 跨域设置，对应 /system/cors */
 import cors from './cors'
-
+/* 对应存储配置 */
 import storageConfig from './storageConfig'
+/* 对应财务管理 */
+import finance from './finance'
 
 const api = {
   normError,
@@ -47,7 +49,8 @@ const api = {
   sms,
   mail,
   cors,
-  storageConfig
+  storageConfig,
+  finance
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
