@@ -1,9 +1,9 @@
 let mix = require('laravel-mix')
 let path = require('path')
 
-mix.setPublicPath(path.join('public', 'assets'))
-  .setResourceRoot(mix.config.hmr ? '' : 'assets/')
-  .webpackConfig({
+mix.setPublicPath(path.join('public', 'assets')).
+  setResourceRoot(mix.config.hmr ? '' : 'assets/').
+  webpackConfig({
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
@@ -39,11 +39,11 @@ if (!mix.config.hmr) {
   })
 }
 
-mix.js('resources/assets/admin/main.js', path.join('public', 'assets', 'js', 'admin.js'))
+mix.js('resources/assets/admin/main.js',
+  path.join('public', 'assets', 'js', 'admin.js'))
 
 if (mix.inProduction()) {
   mix.version()
 } else {
-  mix.disableNotifications()
-    .sourceMaps(true)
+  mix.disableNotifications().sourceMaps(true)
 }
