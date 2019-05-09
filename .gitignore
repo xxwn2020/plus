@@ -1,9 +1,7 @@
 .DS_Store
 
 .idea
-/.idea
 .vscode
-/.vscode
 .vagrant
 /.vagrant
 
@@ -19,8 +17,6 @@ yarn-error.log
 
 composer.lock
 yarn.lock
-yarn-error.log
-npm-debug.log
 jpush.log
 
 /config/
@@ -34,13 +30,6 @@ jpush.log
 /public/hot
 /public/storage
 /public/assets/*
-/public/assets/fonts/vendor/*
-/public/assets/fonts/*
-/public/assets/js/*
 
 /resources/views/vendor
-/resources/views/errors/
-
-/storage/*.key
-
 /vendor
