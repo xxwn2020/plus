@@ -328,8 +328,6 @@ class HomeController extends Controller
                 return $paidNode;
             });
         }
-
-        return null;
     }
 
     /**
@@ -349,8 +347,6 @@ class HomeController extends Controller
 
             return $paidNode;
         }
-
-        return null;
     }
 
     /**
@@ -370,8 +366,6 @@ class HomeController extends Controller
 
             return $paidNode;
         }
-
-        return null;
     }
 
     /**

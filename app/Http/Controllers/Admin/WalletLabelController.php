@@ -88,7 +88,7 @@ class WalletLabelController extends Controller
         $labels = setting('wallet', 'labels', []);
         $labels = array_map(function ($item) use ($label) {
             if ($item === $label) {
-                return null;
+                return;
             }
 
             return $item;

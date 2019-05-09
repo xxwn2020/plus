@@ -98,7 +98,7 @@ class AreasTableSeeder extends Seeder
     private function advance(OutputStyle $output, bool $condition, int $parentId, string $name)
     {
         if (! $condition) {
-            return null;
+            return;
         }
 
         $area = Area::where('name', $name)->where('pid', $parentId)->first();

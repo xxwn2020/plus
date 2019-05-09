@@ -195,7 +195,7 @@ class AdvertisingController extends Controller
         $this->validate($request, $rules, $messages);
     }
 
-    protected function formatData(AdvertisingSpace $space, array $data = [], string $type)
+    protected function formatData(AdvertisingSpace $space, array $data, string $type)
     {
         $format = collect($space->format[$type])->map(function ($value) {
             return explode('|', $value);

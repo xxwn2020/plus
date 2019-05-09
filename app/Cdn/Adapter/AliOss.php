@@ -22,9 +22,9 @@ namespace Zhiyi\Plus\Cdn\Adapter;
 
 use OSS\OssClient;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Arr;
 use Zhiyi\Plus\Cdn\Refresh;
 use Zhiyi\Plus\Models\File;
-use Illuminate\Support\Arr;
 use Zhiyi\Plus\Contracts\Cdn\UrlGenerator as FileUrlGeneratorContract;
 
 class AliOss implements FileUrlGeneratorContract
@@ -198,7 +198,7 @@ class AliOss implements FileUrlGeneratorContract
                 ],
             ])->map(function ($value, $key) {
                 if (! $value['confirm']) {
-                    return null;
+                    return;
                 }
 
                 return sprintf($key, ...$value['params']);

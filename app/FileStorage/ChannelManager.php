@@ -56,7 +56,6 @@ class ChannelManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return null;
     }
 
     /**

@@ -152,7 +152,7 @@ class User extends Authenticatable implements JWTSubject
         $certification = $this->certification;
 
         if (! $certification || $certification->status !== 1) {
-            return null;
+            return;
         }
 
         return [

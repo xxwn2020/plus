@@ -22,7 +22,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Cache;
 use function Zhiyi\Component\ZhiyiPlus\PlusComponentPc\api;
 
-class CheckIn
+class Checkin
 {
     public function compose(View $view)
     {

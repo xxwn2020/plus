@@ -74,7 +74,7 @@ trait HasAvatar
         $path = $this->avatarPath($prefix);
 
         if (! $path) {
-            return null;
+            return;
         }
 
         return app(CdnUrlFactoryContract::class)->generator()->url($path, $size ? [
@@ -102,8 +102,6 @@ trait HasAvatar
                 return $filename;
             }
         }
-
-        return null;
     }
 
     /**
