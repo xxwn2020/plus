@@ -21,19 +21,20 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\WalletCash;
 use Illuminate\Support\Facades\DB;
 use Zhiyi\Plus\Models\WalletCharge;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Plus\Notifications\System as SystemNotification;
+use function Zhiyi\Plus\setting;
 
 class WalletCashController extends Controller
 {
     /**
      * 获取提现列表.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -58,19 +59,14 @@ class WalletCashController extends Controller
         $paginate = $query->paginate($limit);
         $items = $paginate->items();
 
-        if (empty($items)) {
-            return response()
-                ->json(['message' => ['没有检索到数据']])
-                ->setStatusCode(404);
-        }
-
         return response()
             ->json([
-                'last_page' => $paginate->lastPage(),
+                'last_page'    => $paginate->lastPage(),
                 'current_page' => $paginate->currentPage(),
-                'first_page' => 1,
-                'cashes' => $items,
-                'ratio' => setting('wallet', 'ratio', 100),
+                'total'        => $paginate->total(),
+                'first_page'   => 1,
+                'data'         => $items,
+                'ratio'        => setting('wallet', 'ratio', 100),
             ])
             ->setStatusCode(200);
     }
@@ -78,8 +74,9 @@ class WalletCashController extends Controller
     /**
      * 通过审批.
      *
-     * @param Request $request
-     * @param WalletCash $cash
+     * @param  Request  $request
+     * @param  WalletCash  $cash
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -108,13 +105,14 @@ class WalletCashController extends Controller
         $charge->status = 1;
         $charge->user_id = $user->id;
 
-        DB::transaction(function () use ($cash, $charge) {
+        DB::transaction(function () use ($cash, $charge)
+        {
             $charge->save();
             $cash->save();
         });
 
         $cash->user->notify(new SystemNotification('你的提现申请已通过', [
-            'type' => 'user-cash',
+            'type'  => 'user-cash',
             'state' => 'passed',
         ]));
 
@@ -126,8 +124,9 @@ class WalletCashController extends Controller
     /**
      * 提现驳回.
      *
-     * @param Request $request
-     * @param WalletCash $cash
+     * @param  Request  $request
+     * @param  WalletCash  $cash
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -156,15 +155,16 @@ class WalletCashController extends Controller
         $charge->status = 2;
         $charge->user_id = $user->id;
 
-        DB::transaction(function () use ($cash, $charge) {
+        DB::transaction(function () use ($cash, $charge)
+        {
             $cash->user->newWallet()->increment('balance', $cash->value);
             $charge->save();
             $cash->save();
         });
 
         $cash->user->notify(new SystemNotification('你的提现申请已通过', [
-            'type' => 'user-cash',
-            'state' => 'rejected',
+            'type'     => 'user-cash',
+            'state'    => 'rejected',
             'contents' => $remark,
         ]));
 

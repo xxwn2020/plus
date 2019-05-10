@@ -1,10 +1,10 @@
 <template>
-  <el-card shadow="never" class="box-card">
+  <el-card :body-style="{ padding: '0px' }" shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>资金流水</span>
     </div>
     <el-main>
-      <el-form :inline="true" ref="form" :model="query" label-width="80px">
+      <el-form class="el-form" :inline="true" ref="form" :model="query" label-width="80px">
         <el-autocomplete
           :fetch-suggestions="queryUsers"
           v-model="query.username"
@@ -25,88 +25,84 @@
         <el-button @click="doSearch" :loading="getLoading" size="mini" type="primary">{{$t('admin.search.root')}}
         </el-button>
       </el-form>
-    </el-main>
 
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
-    <el-table
-      v-loading="getLoading"
-      :data="page.data"
-      style="width: 100%">
-      <el-table-column
-        prop="id"
-        label="#">
-      </el-table-column>
-      <el-table-column
-        prop="owner_id"
-        label="用户ID">
-      </el-table-column>
-      <el-table-column
-        label="操作">
-        <template slot-scope="{row}">
-          {{row.target_type | targetType }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="title"
-        label="标题"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="body"
-        label="内容"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="type"
-        label="增减"
-      >
-        <template slot-scope="{row}">
-          {{ row.type | actions }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="amount"
-        label="金额"
-      >
-      </el-table-column>
-      <el-table-column
-        label="状态"
-      >
-        <template slot-scope="{row}">
-          {{row.state | state}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="时间"
-      >
-        <template slot-scope="{row}">
-          {{row.created_at | localTime }}
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      v-if="page.total"
-      class="pagination"
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :current-page="parseInt(page.current_page) || 1"
-      :page-size="query.limit"
-      :page-sizes="[15, 30, 50, 100]"
-      :total="page.total"
-      @prev-click="pageChange"
-      @next-click="pageChange"
-      @current-change="pageChange"
-      @size-change="handleSizeChange">
-    </el-pagination>
+      <el-pagination
+        class="top"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
+      <el-table
+        v-loading="getLoading"
+        :data="page.data"
+        style="width: 100%">
+        <el-table-column
+          prop="id"
+          label="#">
+        </el-table-column>
+        <el-table-column
+          prop="owner_id"
+          label="用户ID">
+        </el-table-column>
+        <el-table-column
+          label="操作">
+          <template slot-scope="{row}">
+            {{row.target_type | targetType }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="title"
+          label="标题"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="body"
+          label="内容"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="type"
+          label="增减"
+        >
+          <template slot-scope="{row}">
+            {{ row.type | actions }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="amount"
+          label="金额"
+        >
+        </el-table-column>
+        <el-table-column
+          label="状态"
+        >
+          <template slot-scope="{row}">
+            {{row.state | state}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="时间"
+        >
+          <template slot-scope="{row}">
+            {{row.created_at | localTime }}
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        class="bottom"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
+    </el-main>
   </el-card>
 </template>
 
@@ -190,7 +186,7 @@
       }
     },
     watch: {
-      username (to, from) {
+      'query.username' (to) {
         if (!to) {
           this.$set(this, 'searchedUsername', null)
           this.$set(this.query, 'user', null)
@@ -214,8 +210,7 @@
             })
           }
         })
-      }
-      ,
+      },
       /* 远程搜索用户 */
       handleUserSelect (user) {
         const { id, name } = user
@@ -257,6 +252,8 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .el-form {
+    margin-bottom: 20px;
+  }
 </style>

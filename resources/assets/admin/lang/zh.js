@@ -67,7 +67,8 @@ export default {
       root: '财务管理',
       wallet: '钱包管理',
       flow: '钱包流水',
-      statistics: '统计'
+      statistics: '统 计',
+      cashes: '提现审批'
     },
     management: {
       root: '管理',
@@ -262,6 +263,12 @@ export default {
     uname: '用户名',
     delete: '删 除',
     status: '状 态',
+    state: {
+      success: '成 功',
+      error: '失 败',
+      unknown: '未 知',
+      waiting: '待审核'
+    },
     all: '全 部',
     add: '添 加',
     category: '类 型',
@@ -286,6 +293,13 @@ export default {
     identifyPhoto: '证件照片',
     identifyFront: '正面',
     identifyBack: '背面',
+    finance: {
+      root: '财务管理',
+      wallet: '钱包管理',
+      flow: '钱包流水',
+      statistics: '统计',
+      cashes: '提现审批'
+    },
     cdn: {
       root: 'CDN管理'
     },

@@ -13,5 +13,23 @@ export default {
       params,
       validateStatus: s => (s === 200)
     })
+  ),
+  /* 提现审批 */
+  getWalletCashes: params => (
+    admin.get('/wallet/cashes', {
+      params,
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /**
+   *
+   * @param cashId
+   * @param type [passed, refuse]
+   * @returns {AxiosPromise<any>}
+   */
+  auditCash: ({ cashId, type }) => (
+    admin.patch(`wallet/cashes/${cashId}/${type}`, {}, {
+      validateStatus: s => (s === 201)
+    })
   )
 }

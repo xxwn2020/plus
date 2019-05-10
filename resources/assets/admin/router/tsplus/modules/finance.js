@@ -26,6 +26,12 @@ const FinanceRouter = {
           component: () => import(/* webpackChunkName: 'finance' */ '@/views/tsplus/finance/wallet/flow'),
           name: 'Finance-Wallet-Flow',
           meta: { title: 'finance.flow', tabs: true }
+        },
+        {
+          path: 'cashes',
+          component: () => import(/* webpackChunkName: 'finance' */ '@/views/tsplus/finance/wallet/cashes'),
+          name: 'Finance-Wallet-Cashes',
+          meta: { title: 'finance.cashes', tabs: true }
         }
       ]
     }

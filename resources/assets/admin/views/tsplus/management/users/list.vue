@@ -1,5 +1,5 @@
 <template>
-  <el-card :body-style="{ padding: '0px' }" class="user-list-page">
+  <el-card class="user-list-page">
     <div slot="header">
       <span>{{$t('admin.users.userList')}}</span>
       <el-button
@@ -169,21 +169,6 @@
             </el-button>
           </template>
         </el-table-column>
-
-        <el-pagination
-          v-if="page.total"
-          class="pagination"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :current-page="parseInt(page.current_page) || 1"
-          :page-size="query.limit"
-          :page-sizes="[15, 30, 50, 100]"
-          :total="page.total"
-          @prev-click="pageChange"
-          @next-click="pageChange"
-          @current-change="pageChange"
-          @size-change="handleSizeChange"
-        />
       </el-table>
       <el-pagination
         class="bottom"
@@ -360,17 +345,14 @@
       },
       /* 取消用户禁用 */
       handleRestore (user) {
-        this.$api.users
-          .restoreUser(user.id)
-          .then(() => {
-            this.$notify({
-              type: 'success',
-              message: '用户已经启用！',
-              title: '成功'
-            })
-            this.fetchData()
+        this.$api.users.restoreUser(user.id).then(() => {
+          this.$notify({
+            type: 'success',
+            message: '用户已经启用！',
+            title: '成功'
           })
-          .catch(this.showApiError)
+          this.fetchData()
+        }).catch(this.showApiError)
       },
       /* 禁用用户 */
       handleTrash (user) {
@@ -382,25 +364,20 @@
             cancelButtonText: this.$t('admin.cancel'),
             type: 'warning'
           }
-        )
-          .then(() => {
-            this.$api.users
-              .del(user.id)
-              .then(() => {
-                this.$message({
-                  type: 'success',
-                  message: '用户已被禁用！'
-                })
-                this.fetchData()
-              })
-              .catch(this.showApiError)
-          })
-          .catch(() => {
+        ).then(() => {
+          this.$api.users.del(user.id).then(() => {
             this.$message({
-              type: 'info',
-              message: '已取消'
+              type: 'success',
+              message: '用户已被禁用！'
             })
+            this.fetchData()
+          }).catch(this.showApiError)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
           })
+        })
       },
       /* 给mixin用的公共方法 */
       fetchData () {
@@ -423,51 +400,45 @@
           query.show_role = true
         }
         this.loading = true
-        this.$api.users
-          .list(query)
-          .then(({ data }) => {
-            const { users, roles: serverRoles, page } = data
-            this.$set(this, 'users', users || [])
-            this.$set(this, 'page', page)
-            this.$set(this.query, 'show_role', false)
-            if (roles.length === 0) {
-              // 根据老的接口处理角色处理
-              this.$set(this, 'roles', serverRoles)
-              const roleField = this.formFormatter.fields.find(
-                field => field.id === 'role'
-              )
-              let options = [{ label: '全部', value: 0 }]
-              serverRoles.map(role => {
-                options.push({
-                  label: role.display_name,
-                  value: role.id
-                })
+        this.$api.users.list(query).then(({ data }) => {
+          const { users, roles: serverRoles, page } = data
+          this.$set(this, 'users', users || [])
+          this.$set(this, 'page', page)
+          this.$set(this.query, 'show_role', false)
+          if (roles.length === 0) {
+            // 根据老的接口处理角色处理
+            this.$set(this, 'roles', serverRoles)
+            const roleField = this.formFormatter.fields.find(
+              field => field.id === 'role'
+            )
+            let options = [{ label: '全部', value: 0 }]
+            serverRoles.map(role => {
+              options.push({
+                label: role.display_name,
+                value: role.id
               })
-              roleField.options = Array.from(new Set(options))
-            }
-          })
-          .catch(this.show)
-          .finally(() => {
-            this.$set(this, 'loading', false)
-          })
+            })
+            roleField.options = Array.from(new Set(options))
+          }
+        }).catch(this.show).finally(() => {
+          this.$set(this, 'loading', false)
+        })
       },
       /**
        * 推荐用户
        */
       handleRecommend (user) {
-        this.$api.users.recommend(user.id)
-          .then(() => {
-            this.$set(user, 'recommended', true)
-          })
+        this.$api.users.recommend(user.id).then(() => {
+          this.$set(user, 'recommended', true)
+        })
       },
       /**
        * 取消推荐
        */
       handleUnRecommend (user) {
-        this.$api.users.unRecommend(user.id)
-          .then(() => {
-            this.$set(user, 'recommended', null)
-          })
+        this.$api.users.unRecommend(user.id).then(() => {
+          this.$set(user, 'recommended', null)
+        })
       },
       /**
        * 设置用户是否在新用户注册时被新用户关注,或双向关注
@@ -475,33 +446,24 @@
        * @type 类型 1: 单向, 2: 双向
        */
       handleFollowedFamous (user, type) {
-        this.$api.users
-          .followedFamous(user.id, type)
-          .then(() => {
-            this.$set(user, 'famous', true)
-          })
-          .catch(this.showApiError)
+        this.$api.users.followedFamous(user.id, type).then(() => {
+          this.$set(user, 'famous', true)
+        }).catch(this.showApiError)
       },
       /**
        * 取消关注设置
        */
       handleUnFamous (user) {
-        this.$api.users
-          .unFamous(user.id)
-          .then(() => {
-            this.$set(user, 'famous', null)
-          })
-          .catch(this.showApiError)
+        this.$api.users.unFamous(user.id).then(() => {
+          this.$set(user, 'famous', null)
+        }).catch(this.showApiError)
       },
 
       deleteUser (user) {
         if (window.confirm('确定要禁止用户吗？')) {
-          this.$api.users
-            .del(user.id)
-            .then(() => {
-              this.doSearch()
-            })
-            .catch(this.showApiError)
+          this.$api.users.del(user.id).then(() => {
+            this.doSearch()
+          }).catch(this.showApiError)
         }
       }
     }
