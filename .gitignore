@@ -31,5 +31,4 @@ jpush.log
 /public/storage
 /public/assets/*
 
-/resources/views/vendor
-/vendor
+vendor
