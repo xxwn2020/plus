@@ -53,12 +53,11 @@ export default {
       let oldQ = Object.assign({}, this.query)
       let oldQuery = JSON.parse(JSON.stringify(oldQ))
       query = { ...oldQuery, ...query }
-      Object.keys(query)
-        .map(key => {
-          if (!query[key] && !['state'].includes(key)) {
-            delete query[key]
-          }
-        })
+      Object.keys(query).map(key => {
+        if (!query[key] && !['state'].includes(key)) {
+          delete query[key]
+        }
+      })
       this.$router.push({
         name: routeName,
         query

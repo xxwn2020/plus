@@ -439,7 +439,7 @@ export default {
     },
     /* 搜索翻译 */
     search: {
-      root: '搜索',
+      root: '搜 索',
       perPage: '每页数据',
       limit: '每页数据',
       page: '当前页数'

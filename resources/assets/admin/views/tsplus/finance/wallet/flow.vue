@@ -1,11 +1,32 @@
 <template>
-  <el-card class="box-card">
+  <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>资金流水</span>
     </div>
-    <el-form :inline="true" ref="form" :model="query" label-width="80px">
-      <el-input v-model="uname" placeholder="英文,并且唯一" autocomplete="off"></el-input>
-    </el-form>
+    <el-main>
+      <el-form :inline="true" ref="form" :model="query" label-width="80px">
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="可模糊搜索用户名"
+          @select="handleUserSelect"
+          value-key="name"
+          :debounce="500"
+          size="mini"
+        ></el-autocomplete>
+        <el-select v-model="query.state" size="mini">
+          <el-option
+            v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-button @click="doSearch" :loading="getLoading" size="mini" type="primary">{{$t('admin.search.root')}}
+        </el-button>
+      </el-form>
+    </el-main>
+
     <el-pagination
       class="top"
       @size-change="handleSizeChange"
@@ -17,21 +38,59 @@
       :total="page.total"
     ></el-pagination>
     <el-table
+      v-loading="getLoading"
       :data="page.data"
       style="width: 100%">
       <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
+        prop="id"
+        label="#">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="姓名"
-        width="180">
+        prop="owner_id"
+        label="用户ID">
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="地址">
+        label="操作">
+        <template slot-scope="{row}">
+          {{row.target_type | targetType }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="title"
+        label="标题"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="body"
+        label="内容"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="type"
+        label="增减"
+      >
+        <template slot-scope="{row}">
+          {{ row.type | actions }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="amount"
+        label="金额"
+      >
+      </el-table-column>
+      <el-table-column
+        label="状态"
+      >
+        <template slot-scope="{row}">
+          {{row.state | state}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="时间"
+      >
+        <template slot-scope="{row}">
+          {{row.created_at | localTime }}
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
@@ -46,8 +105,8 @@
       @prev-click="pageChange"
       @next-click="pageChange"
       @current-change="pageChange"
-      @size-change="handleSizeChange"
-    />
+      @size-change="handleSizeChange">
+    </el-pagination>
   </el-card>
 </template>
 
@@ -65,13 +124,111 @@
         limit: 15,
         page: 1,
         user: null,
-        state: null
-      }
+        state: null,
+        username: null
+      },
+      searchedUsername: null
     }),
+
+    filters: {
+      state (val) {
+        switch (val) {
+          case 0:
+            return '等待'
+            break
+          case 1:
+            return '成功'
+            break
+          case -1:
+            return '失败'
+            break
+          default:
+            return '未知'
+            break
+        }
+      },
+      targetType (val) {
+        switch (val) {
+          case 'user':
+            return '用户之间转账'
+            break
+          case 'recharge_ping_p_p':
+            return 'Ping ++ 充值'
+            break
+          case 'Wechat-Native':
+            return '微信充值'
+            break
+          case 'Alipay-Native':
+            return '支付宝充值'
+            break
+          case 'reward':
+            return '打赏'
+            break
+          case 'widthdraw':
+            return '提现'
+            break
+          case 'transform':
+            return '兑换货币、积分'
+            break
+          default:
+            return '未知'
+            break
+        }
+      },
+      action (val) {
+        switch (val) {
+          case 1:
+            return '增加'
+            break
+          case -1:
+            return '减少'
+            break
+          default:
+            return '未知'
+            break
+        }
+      }
+    },
+    watch: {
+      username (to, from) {
+        if (!to) {
+          this.$set(this, 'searchedUsername', null)
+          this.$set(this.query, 'user', null)
+        }
+      }
+    },
     methods: {
+      /* 远程搜索用户 */
+      queryUsers (queryString, cb) {
+        const { searchedUsername } = this
+        if (!queryString || queryString === searchedUsername) {
+          cb([])
+          return false
+        }
+        this.$api.users.list({ name: queryString }).then(({ data: { users } }) => {
+          cb(users)
+          if (!users.length) {
+            this.$message({
+              type: 'info',
+              message: '没有找到用户'
+            })
+          }
+        })
+      }
+      ,
+      /* 远程搜索用户 */
+      handleUserSelect (user) {
+        const { id, name } = user
+        this.$set(this.query, 'user', id)
+        this.$set(this, 'searchedUsername', name)
+      }
+      ,
+      /* mixins */
       fetchData () {
         this.getFlow()
-      },
+      }
+      ,
+      /* 获取流水数据 */
       getFlow () {
         const { getLoading, query } = this
         if (!getLoading) {
@@ -92,7 +249,8 @@
             })
         }
       }
-    },
+    }
+    ,
     beforeMount () {
       this.getFlow()
     }
