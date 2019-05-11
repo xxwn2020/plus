@@ -61,13 +61,11 @@ class NewWalletController extends Controller
 
         $query = (new WalletOrder)->newQuery();
 
-        $query->when($user, function ($query) use ($user)
-        {
+        $query->when($user, function ($query) use ($user) {
             return $query->where('owner_id', $user);
         })
             ->when($request->has('state') && ! is_null($state),
-                function ($query) use ($state)
-                {
+                function ($query) use ($state) {
                     return $query->where('state', $state);
                 });
 
