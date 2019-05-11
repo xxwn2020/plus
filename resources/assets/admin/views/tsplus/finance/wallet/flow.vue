@@ -171,7 +171,7 @@
             break
         }
       },
-      action (val) {
+      actions (val) {
         switch (val) {
           case 1:
             return '增加'
@@ -228,8 +228,8 @@
         const { getLoading, query } = this
         if (!getLoading) {
           this.gLoading(true)
-          this.$api.finance.getFlow(query).
-            then(({ data: { data = [], current_page = 1, last_page = 1, total = 0 } }) => {
+          this.$api.finance.getFlow(query)
+            .then(({ data: { data = [], current_page = 1, last_page = 1, total = 0 } }) => {
               this.$set(this, 'page', {
                 data,
                 last_page,
@@ -237,9 +237,9 @@
                 current_page
               })
               this.$set(this.query, 'page', current_page)
-            }).
-            catch(this.showApiError).
-            finally(() => {
+            })
+            .catch(this.showApiError)
+            .finally(() => {
               this.gLoading(false)
             })
         }
