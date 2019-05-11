@@ -25,10 +25,11 @@ export default {
    *
    * @param cashId
    * @param type [passed, refuse]
+   * @param params
    * @returns {AxiosPromise<any>}
    */
-  auditCash: ({ cashId, type }) => (
-    admin.patch(`wallet/cashes/${cashId}/${type}`, {}, {
+  auditCash: ({ cashId, type, params }) => (
+    admin.patch(`wallet/cashes/${cashId}/${type}`, params, {
       validateStatus: s => (s === 201)
     })
   )

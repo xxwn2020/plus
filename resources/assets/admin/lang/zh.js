@@ -267,7 +267,9 @@ export default {
       success: '成 功',
       error: '失 败',
       unknown: '未 知',
-      waiting: '待审核'
+      waiting: '待审核',
+      refuse: '已拒绝',
+      accept: '已通过'
     },
     all: '全 部',
     add: '添 加',

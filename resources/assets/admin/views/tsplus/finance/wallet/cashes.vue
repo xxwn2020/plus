@@ -38,6 +38,7 @@
         :total="page.total"
       ></el-pagination>
       <el-table
+        class="el-table"
         v-loading="getLoading"
         :data="page.data"
         style="width: 100%">
@@ -49,7 +50,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="金额"
+          label="金额[元]"
         >
           <template slot-scope="{row}">
             {{row.value / 100}}
@@ -66,9 +67,53 @@
         <el-table-column
           label="状态">
           <template slot-scope="{row}">
-            <el-button v-if="row.status === 1" type="success">{{$t('admin.state.success')}}</el-button>
-            <el-button v-else-if="row.status === 2" type="error">{{$t('admin.state.error')}}</el-button>
-            <el-button v-else type="info">{{$t('admin.state.waiting')}}</el-button>
+            <template v-if="row.status === 1">
+              <el-button disabled size="mini" type="success">{{$t('admin.state.accept')}}
+              </el-button>
+              <el-alert
+                class="remark"
+                :title="row.remark"
+                type="success"
+                :closable="false"
+              >
+              </el-alert>
+            </template>
+            <template v-else-if="row.status === 2">
+              <el-button disabled size="mini" type="danger">{{$t('admin.state.refuse')}}
+              </el-button>
+              <el-alert
+                class="remark"
+                :title="row.remark"
+                type="error"
+                :closable="false"
+              >
+              </el-alert>
+            </template>
+            <template v-else>
+              <el-button disabled size="mini" type="info">{{$t('admin.state.waiting')}}</el-button>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="申请时间">
+          <template slot-scope="{row}">
+            {{row.created_at | localTime }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :label="$t('admin.operation')"
+        >
+          <template slot-scope="{row}">
+            <template v-if="row.status === 0">
+              <el-button :loading="loadingItem === row.id" @click="operation(row.id, 'passed')"
+                         type="primary"
+                         size="mini">同意
+              </el-button>
+              <el-button :loading="loadingItem === row.id" @click="operation(row.id, 'refuse')"
+                         type="danger"
+                         size="mini">拒绝
+              </el-button>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -104,7 +149,8 @@
         status: 'all',
         order: 'desc'
       },
-      searchedUsername: null
+      searchedUsername: null,
+      loadingItem: null
     }),
     watch: {
       'query.username' (to) {
@@ -115,6 +161,39 @@
       }
     },
     methods: {
+      /* 审核操作 */
+      operation (id, type) {
+        this.$prompt('请填写备注', '提示', {
+          inputPlaceholder: '请填写备注',
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValidator: (x = '') => {
+            if (x === null) {
+              return '请填写备注'
+            }
+            const s = x.replace(/(^\s*)|(\s*$)/g, '')
+            return s.length > 0
+          },
+          inputErrorMessage: '请填写备注'
+        })
+          .then(({ value }) => {
+            this.$set(this, 'loadingItem', id)
+            this.$api.finance.auditCash({ cashId: id, type, params: { remark: value } })
+              .then(({ data }) => {
+                this.showSuccess(data)
+                const item = this.page.data.find(i => (i.id === id))
+                this.$set(item, 'remark', value)
+                this.$set(item, 'status', type === 'passed' ? 1 : 2)
+              })
+              .catch(this.showApiError)
+              .finally(() => {
+                this.$set(this, 'loadingItem', null)
+              })
+          })
+          .catch(() => {
+            this.showInfo('已放弃审核')
+          })
+      },
       /* mixins */
       fetchData () {
         this.getWalletCashes()
@@ -164,5 +243,11 @@
 <style scoped lang="scss">
   .el-form {
     margin-bottom: 20px;
+  }
+
+  .el-table {
+    .remark {
+      margin-top: 10px;
+    }
   }
 </style>
