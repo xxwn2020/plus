@@ -32,5 +32,36 @@ export default {
     admin.patch(`wallet/cashes/${cashId}/${type}`, params, {
       validateStatus: s => (s === 201)
     })
+  ),
+  /* 钱包设置 */
+  // 钱包相关的开关
+  getWalletSwitch: () => (
+    admin.get('/wallet/switch', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存钱包开关
+  saveWalletSwitch: params => (
+    admin.patch('/wallet/switch', params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  // 获取钱包充值选项
+  getWalletPayOption: () => (
+    admin.get('/wallet/labels', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存钱包充值选项
+  saveWalletPayOption: params => (
+    admin.post('/wallet/labels', params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  // 删除钱包充值选项
+  deleteWalletPayOption: option => (
+    admin.delete(`/wallet/labels/${option}`, {
+      validateStatus: s => (s === 204)
+    })
   )
 }

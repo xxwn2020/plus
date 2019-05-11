@@ -22,8 +22,9 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
+use function Zhiyi\Plus\setting;
 
 class WalletLabelController extends Controller
 {
@@ -43,8 +44,10 @@ class WalletLabelController extends Controller
     /**
      * Create a recharge option tab.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
+     * @throws ValidationException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function storeLabel(Request $request)
@@ -60,11 +63,11 @@ class WalletLabelController extends Controller
         $labels = setting('wallet', 'labels', []);
         $label = intval($request->input('label'));
         if (count($labels) === 6) {
-            return response()->json(['message' => ['最多只能设置6个选项']], 422);
+            return response()->json(['message' => '最多只能设置6个选项'], 422);
         }
         if (in_array($label, $labels)) {
             return response()
-                ->json(['messages' => ['选项已经存在，请输入新的选项']])
+                ->json(['messages' => '选项已经存在，请输入新的选项'])
                 ->setStatusCode(422);
         }
 
@@ -72,14 +75,15 @@ class WalletLabelController extends Controller
         setting('wallet')->set('labels', $labels);
 
         return response()
-            ->json(['messages' => ['创建成功']])
+            ->json(['messages' => '创建成功'])
             ->setStatusCode(201);
     }
 
     /**
      * Remove the recharge option.
      *
-     * @param int $label
+     * @param  int  $label
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */

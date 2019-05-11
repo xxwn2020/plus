@@ -68,7 +68,8 @@ export default {
       wallet: '钱包管理',
       flow: '钱包流水',
       statistics: '统 计',
-      cashes: '提现审批'
+      cashes: '提现审批',
+      setting: '基础设置'
     },
     management: {
       root: '管理',
@@ -300,7 +301,11 @@ export default {
       wallet: '钱包管理',
       flow: '钱包流水',
       statistics: '统计',
-      cashes: '提现审批'
+      cashes: '提现审批',
+      setting: '基础设置',
+      rechargeSwitch: '余额充值',
+      cashSwitch: '余额提现',
+      walletTransform: '余额转积分'
     },
     cdn: {
       root: 'CDN管理'

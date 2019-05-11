@@ -22,6 +22,12 @@ const FinanceRouter = {
           meta: { title: 'finance.statistics', tabs: true }
         },
         {
+          path: 'setting',
+          component: () => import(/* webpackChunkName: 'finance' */ '@/views/tsplus/finance/wallet/setting'),
+          name: 'Finance-Wallet-Setting',
+          meta: { title: 'finance.setting', tabs: true }
+        },
+        {
           path: 'flow',
           component: () => import(/* webpackChunkName: 'finance' */ '@/views/tsplus/finance/wallet/flow'),
           name: 'Finance-Wallet-Flow',
