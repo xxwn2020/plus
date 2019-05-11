@@ -21,12 +21,12 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\WalletCash;
 use Illuminate\Support\Facades\DB;
 use Zhiyi\Plus\Models\WalletCharge;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Plus\Notifications\System as SystemNotification;
-use function Zhiyi\Plus\setting;
 
 class WalletCashController extends Controller
 {
@@ -105,8 +105,7 @@ class WalletCashController extends Controller
         $charge->status = 1;
         $charge->user_id = $user->id;
 
-        DB::transaction(function () use ($cash, $charge)
-        {
+        DB::transaction(function () use ($cash, $charge) {
             $charge->save();
             $cash->save();
         });
@@ -155,8 +154,7 @@ class WalletCashController extends Controller
         $charge->status = 2;
         $charge->user_id = $user->id;
 
-        DB::transaction(function () use ($cash, $charge)
-        {
+        DB::transaction(function () use ($cash, $charge) {
             $cash->user->newWallet()->increment('balance', $cash->value);
             $charge->save();
             $cash->save();
