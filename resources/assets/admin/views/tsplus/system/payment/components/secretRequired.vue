@@ -1,9 +1,9 @@
 <template>
-  <el-card class="box-card">
+  <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>支付密码</span>
     </div>
-    <el-form ref="form" label-width="120px">
+    <el-form v-loading="getLoading" ref="form" label-width="120px">
       <el-alert
         title="默认关闭，如果开启那么用户发生付款行为需要用户输入登录密码进行安全验证，关闭后则不需要输入密码验证！"
         type="warning"

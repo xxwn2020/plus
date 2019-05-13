@@ -1,10 +1,7 @@
 <template>
-  <el-card shadow="never" class="box-card">
-    <div slot="header" class="clearfix">
-      <span>基础设置</span>
-    </div>
+  <div>
     <secret-required></secret-required>
-  </el-card>
+  </div>
 </template>
 
 <script>

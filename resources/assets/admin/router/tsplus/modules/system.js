@@ -33,7 +33,7 @@ const SystemRouter = {
           path: 'native',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/native'),
           name: 'System-Payment-Setting-Native',
-          meta: { title: 'native', tabs: true }
+          meta: { title: 'system.payment.native', tabs: true }
         }
       ]
     },

@@ -98,5 +98,17 @@ export default {
     admin.put('/setting/security/pay-validate-password', params, {
       validateStatus: s => (s === 204)
     })
+  ),
+  // 获取原生支付设置
+  getNativePaymentSetting: () => (
+    admin.get('/wallet/newPaySetting', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存原生支付配置
+  saveNativePaymentSetting: params => (
+    admin.post('/wallet/newPaySetting', params, {
+      validateStatus: s => (s === 201)
+    })
   )
 }
