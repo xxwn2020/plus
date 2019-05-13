@@ -3,7 +3,7 @@
     <div slot="header" class="clearfix">
       <span>充值选项</span>
     </div>
-    <el-form :inline="true" ref="form" :model="form" label-width="80px">
+    <el-form v-loading="getLoading" :inline="true" ref="form" :model="form" label-width="80px">
       <el-alert
         title="设置充值选项可以让用户在充值页面快速选择充值金额(只能输入整数)，用户也可以选择输入自定义金额进行充值。最多6个选项"
         type="info"

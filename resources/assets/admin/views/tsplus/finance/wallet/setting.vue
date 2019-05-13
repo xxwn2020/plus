@@ -2,19 +2,23 @@
   <div class="setting">
     <wallet-switch class="setting-child"/>
     <pay-option class="setting-child"/>
+    <wallet-rule class="setting-child"/>
+    <wallet-ratio class="setting-child"/>
   </div>
 </template>
 
 <script>
   import WalletSwitch from '../components/walletSwitch'
   import PayOption from '../components/payOption'
-  import CashSetting from '../components/cashSetting'
+  import WalletRule from '../components/walletRule'
+  import WalletRatio from '../components/walletRatio'
 
   export default {
     components: {
-      CashSetting,
+      WalletRule,
       PayOption,
-      WalletSwitch
+      WalletSwitch,
+      WalletRatio
     },
     name: 'FinanceWalletSetting'
   }

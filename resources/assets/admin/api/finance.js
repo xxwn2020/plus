@@ -63,5 +63,29 @@ export default {
     admin.delete(`/wallet/labels/${option}`, {
       validateStatus: s => (s === 204)
     })
+  ),
+  // 获取钱包使用规则
+  getWalletRule: () => (
+    admin.get('/wallet/rule', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存钱包使用规则
+  saveWalletRule: params => (
+    admin.patch('/wallet/rule', params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  // 获取钱包充值比例
+  getWalletRatio: () => (
+    admin.get('/wallet/ratio', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存钱包充值比例
+  saveWalletRatio: params => (
+    admin.patch('/wallet/ratio', params, {
+      validateStatus: s => (s === 201)
+    })
   )
 }
