@@ -13,8 +13,29 @@ const SystemRouter = {
     },
     {
       path: 'user',
-      name: 'System-Payment-User-Setting',
+      name: 'System-User-Setting',
       meta: { title: 'system.user.root', icon: 'people' }
+    },
+    {
+      path: 'payment-setting',
+      name: 'System-Payment-Setting',
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment'),
+      meta: { title: 'system.payment.root', icon: 'money' },
+      redirect: '/system/payment-setting/basic',
+      children: [
+        {
+          path: 'basic',
+          name: 'System-Payment-Setting-Basic',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/basic'),
+          meta: { title: 'system.payment.secretRequired', tabs: true }
+        },
+        {
+          path: 'native',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/native'),
+          name: 'System-Payment-Setting-Native',
+          meta: { title: 'native', tabs: true }
+        }
+      ]
     },
     {
       path: 'register',
@@ -28,9 +49,9 @@ const SystemRouter = {
       meta: { title: 'system.certification', icon: 'people' }
     },
     {
-      path: 'thirdparty',
-      name: 'System-Thirdparty-Setting',
-      meta: { title: 'system.thirdparty', icon: 'wechat' }
+      path: 'thirdParty',
+      name: 'System-ThirdParty-Setting',
+      meta: { title: 'system.thirdParty', icon: 'wechat' }
     },
     {
       path: 'sms',
@@ -58,11 +79,6 @@ const SystemRouter = {
       name: 'System-Mail-Setting',
       meta: { title: 'system.mailSetting', icon: 'email' },
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/mail/configure')
-    },
-    {
-      path: 'payment',
-      name: 'System-Payment-Setting',
-      meta: { title: 'system.payment', icon: 'money' }
     },
     {
       path: 'cors',

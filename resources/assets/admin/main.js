@@ -3,12 +3,10 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
-
 import Element from 'element-ui'
 import './styles/element-variables.scss'
 
 import '@/styles/index.scss' // global css
-
 import App from './App'
 import store from './store'
 import router from './router'
@@ -23,7 +21,6 @@ import Api from './api'
 import mixins from './mixins'
 
 import * as filters from './filters' // error log
-import plusMessageBunld from 'plus-message-bundle'
 
 Vue.use(Api)
 Vue.mixin(mixins)
@@ -37,7 +34,7 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-Vue.prototype.$messageBundle = plusMessageBunld
+// Vue.prototype.$messageBundle = plusMessageBunld
 
 components.forEach(component => {
   Vue.component(component.name, component)

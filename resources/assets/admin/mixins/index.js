@@ -47,17 +47,17 @@ export default {
       return plusMessageBundle(message, defaultMessage).getMessage()
     },
     /* 展示成功信息 */
-    showSuccess (message) {
+    showSuccess (message = null, defaultMessage = '操作成功') {
       this.$message({
         type: 'success',
-        message: this.serverMessage(message)
+        message: this.serverMessage(message, defaultMessage)
       })
     },
     /* 展示错误信息 */
-    showError (message) {
+    showError (message = null, defaultMessage = '操作失败') {
       this.$message({
         type: 'error',
-        message: this.serverMessage(message)
+        message: this.serverMessage(message, defaultMessage)
       })
     },
     showErrorUnClosable (message) {

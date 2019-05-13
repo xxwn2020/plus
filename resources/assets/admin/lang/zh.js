@@ -117,7 +117,7 @@ export default {
       info: '系统信息',
       registerSetting: '注册设置',
       certification: '认证设置',
-      thirdparty: '第三方登录',
+      thirdParty: '第三方登录',
       sms: {
         root: '短信配置',
         list: '短信列表',
@@ -125,13 +125,16 @@ export default {
       },
       user: {
         root: '用户设置'
-
       },
       cors: {
         root: '跨域设置'
       },
       mailSetting: '邮件配置',
-      payment: '支付配置',
+      payment: {
+        root: '支付配置',
+        secretRequired: '支付密码',
+        native: '原生支付配置'
+      },
       storage: {
         new: '新存储',
         root: '存储设置',
@@ -256,6 +259,7 @@ export default {
     operation: '更多操作',
     edit: '编 辑',
     success: '操作成功',
+    error: '操作失败',
     notice: '提 示',
     confirm: '确 认',
     cancel: '取 消',

@@ -87,5 +87,16 @@ export default {
     admin.patch('/wallet/ratio', params, {
       validateStatus: s => (s === 201)
     })
+  ),
+  // 支付密码开关
+  getPayValidatePassword: () => (
+    admin.get('/setting/security/pay-validate-password', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  savePayValidatePassword: params => (
+    admin.put('/setting/security/pay-validate-password', params, {
+      validateStatus: s => (s === 204)
+    })
   )
 }
