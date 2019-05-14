@@ -30,7 +30,8 @@ use Zhiyi\Plus\Support\Setting;
  * @return bool
  */
 function validateChinaPhoneNumber(string $number)
-: bool {
+: bool
+{
     return (bool) preg_match('/^(\+?0?86\-?)?1[3-9]\d{9}$/', $number);
 }
 
@@ -42,7 +43,8 @@ function validateChinaPhoneNumber(string $number)
  * @return bool
  */
 function validateUsername(string $username)
-: bool {
+: bool
+{
     return (bool) preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/',
         $username);
 }
@@ -57,7 +59,8 @@ function validateUsername(string $username)
  * @author Seven Du <shiweidu@outlook.com>
  */
 function username(string $login, string $default = 'id')
-: string {
+: string
+{
     $map = [
         'email' => filter_var($login, FILTER_VALIDATE_EMAIL),
         'phone' => validateChinaPhoneNumber($login),
@@ -82,7 +85,8 @@ function username(string $login, string $default = 'id')
  * @author Seven Du <shiweidu@outlook.com>
  */
 function findMarkdownImageIDs(string $markdown)
-: array {
+: array
+{
     $pattern = '/\@\!\[.*?\]\((\d+?)\)/is';
     if (preg_match_all($pattern, $markdown, $matches) < 1) {
         return [];
@@ -101,7 +105,8 @@ function findMarkdownImageIDs(string $markdown)
  * @author Seven Du <shiweidu@outlook.com>
  */
 function filterUrlStringLength(string $data, int $length = 0)
-: string {
+: string
+{
     if (! $length) {
         return '';
     }

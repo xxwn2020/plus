@@ -22,10 +22,10 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Throwable;
 use Illuminate\Http\Request;
+use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Routing\ResponseFactory as ContractResponse;
-use function Zhiyi\Plus\setting;
 
 class WalletRechargeTypeController extends Controller
 {
