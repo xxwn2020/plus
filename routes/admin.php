@@ -29,151 +29,156 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
   |
   */
 
-  Route::group([
+Route::group([
     'middleware' => [
-      'auth:web', 'admin',
+        'auth:web', 'admin',
     ],
-  ], function (RouteRegisterContract $route) {
+], function (RouteRegisterContract $route) {
 
     // Admin Index.
-      // @GET /admin
-      $route->get('/', 'HomeController@index');
+    // @GET /admin
+    $route->get('/', 'HomeController@index');
 
-      // 后台导航
-      // @GET /admin/manages
-      $route->get('/manages', 'HomeController@showManages');
+    // 后台导航
+    // @GET /admin/manages
+    $route->get('/manages', 'HomeController@showManages');
 
-      // Role
-      // @Route /roles
-      $route->group(['prefix' => 'roles'], function (RouteRegisterContract $route) {
+    // Role
+    // @Route /roles
+    $route->group(['prefix' => 'roles'],
+        function (RouteRegisterContract $route) {
 
-      // Get all role.
-          // @GET /roles
-          $route->get('/', 'RoleController@roles');
+            // Get all role.
+            // @GET /roles
+            $route->get('/', 'RoleController@roles');
 
-          // Create role.
-          // @POST /roles
-          $route->post('/', 'RoleController@createRole');
+            // Create role.
+            // @POST /roles
+            $route->post('/', 'RoleController@createRole');
 
-          // Update a role.
-          // @PATCH /roles/:role
-          $route->patch('/{role}', 'RoleController@updateRole');
+            // Update a role.
+            // @PATCH /roles/:role
+            $route->patch('/{role}', 'RoleController@updateRole');
 
-          // Delete a role.
-          // @DELETE /roles/:role
-          $route->delete('/{role}', 'RoleController@delete');
+            // Delete a role.
+            // @DELETE /roles/:role
+            $route->delete('/{role}', 'RoleController@delete');
 
-          // Get a role info.
-          // @get /roles/:role
-          $route->get('/{role}', 'RoleController@showRole');
-      });
+            // Get a role info.
+            // @get /roles/:role
+            $route->get('/{role}', 'RoleController@showRole');
+        });
 
-      // Abilities.
-      // @Route /abilities
-      $route->group(['prefix' => 'abilities'], function (RouteRegisterContract $route) {
+    // Abilities.
+    // @Route /abilities
+    $route->group(['prefix' => 'abilities'],
+        function (RouteRegisterContract $route) {
 
-      // Get all abilities.
-          // @get /abilities
-          $route->get('/', 'RoleController@abilities');
+            // Get all abilities.
+            // @get /abilities
+            $route->get('/', 'RoleController@abilities');
 
-          // Create a ability.
-          // @post /abilities
-          $route->post('/', 'RoleController@createAbility');
+            // Create a ability.
+            // @post /abilities
+            $route->post('/', 'RoleController@createAbility');
 
-          // Update a ability.
-          // @patch /abilities/:ability
-          $route->patch('/{ability}', 'RoleController@updateAbility');
+            // Update a ability.
+            // @patch /abilities/:ability
+            $route->patch('/{ability}', 'RoleController@updateAbility');
 
-          // Delete a ability.
-          // @delete /abilities/:ability
-          $route->delete('/{ability}', 'RoleController@deleteAbility');
-      });
+            // Delete a ability.
+            // @delete /abilities/:ability
+            $route->delete('/{ability}', 'RoleController@deleteAbility');
+        });
 
-      // CDN
-      // @Route /admin/cdn
-      $route->group(['prefix' => 'cdn'], function (RouteRegisterContract $route) {
+    // CDN
+    // @Route /admin/cdn
+    $route->group(['prefix' => 'cdn'], function (RouteRegisterContract $route) {
 
-      // Get cdn selected
-          $route->get('/selected', 'CdnController@getCdnSelected');
+        // Get cdn selected
+        $route->get('/selected', 'CdnController@getCdnSelected');
 
-          // Local.
-          $route->get('/filesystem/disk', 'CdnController@getFilesystemDisk');
-          $route->post('/filesystems/public', 'CdnController@setPublicDisk');
-          $route->get('/filesystems/local', 'CdnController@getLocalDisk');
-          $route->post('/filesystems/local', 'CdnController@setLocalDisk');
-          $route->get('/filesystems/s3', 'CdnController@getS3Disk');
-          $route->post('/filesystems/s3', 'CdnController@setS3Disk');
+        // Local.
+        $route->get('/filesystem/disk', 'CdnController@getFilesystemDisk');
+        $route->post('/filesystems/public', 'CdnController@setPublicDisk');
+        $route->get('/filesystems/local', 'CdnController@getLocalDisk');
+        $route->post('/filesystems/local', 'CdnController@setLocalDisk');
+        $route->get('/filesystems/s3', 'CdnController@getS3Disk');
+        $route->post('/filesystems/s3', 'CdnController@setS3Disk');
 
-          // qiniu Config.
-          $route->get('/qiniu', 'CdnController@qiniu');
-          $route->post('/qiniu', 'CdnController@setQiniu');
+        // qiniu Config.
+        $route->get('/qiniu', 'CdnController@qiniu');
+        $route->post('/qiniu', 'CdnController@setQiniu');
 
-          // alioss Config.
-          $route->get('/alioss', 'CdnController@alioss');
-          $route->post('/alioss', 'CdnController@setAlioss');
-      });
+        // alioss Config.
+        $route->get('/alioss', 'CdnController@alioss');
+        $route->post('/alioss', 'CdnController@setAlioss');
+    });
 
-      // 附件部分
-      // @Route /admin/files
-      $route->group(['prefix' => 'files'], function (RouteRegisterContract $route) {
+    // 附件部分
+    // @Route /admin/files
+    $route->group(['prefix' => 'files'],
+        function (RouteRegisterContract $route) {
 
-      // 附件配置部分
-          $route->get('/setting', 'FileController@getConfig');
-          $route->patch('/setting', 'FileController@setConfig');
-      });
+            // 附件配置部分
+            $route->get('/setting', 'FileController@getConfig');
+            $route->patch('/setting', 'FileController@setConfig');
+        });
 
-      /* 敏感词路由 */
-      // @Route /admin/sensitives
-      $route->group(['prefix' => 'sensitives'], function (RouteRegisterContract $route) {
+    /* 敏感词路由 */
+    // @Route /admin/sensitives
+    $route->group(['prefix' => 'sensitives'],
+        function (RouteRegisterContract $route) {
 
-      /*
-       * 获取敏感词列表
-       *
-       * @get /admin/sensitves
-       */
-          $route->get('/', 'SensitiveController@index');
+            /*
+             * 获取敏感词列表
+             *
+             * @get /admin/sensitves
+             */
+            $route->get('/', 'SensitiveController@index');
 
-          /*
-           * 创建敏感词。
-           *
-           * @post /admin/sensitives
-           */
-          $route->post('/', 'SensitiveController@store');
+            /*
+             * 创建敏感词。
+             *
+             * @post /admin/sensitives
+             */
+            $route->post('/', 'SensitiveController@store');
 
-          /*
-           * Update a sensitive.
-           *
-           * @put /admin/sensitives/:sensitive
-           */
-          $route->patch('/{sensitive}', 'SensitiveController@update');
+            /*
+             * Update a sensitive.
+             *
+             * @put /admin/sensitives/:sensitive
+             */
+            $route->patch('/{sensitive}', 'SensitiveController@update');
 
-          /*
-           * destroy a sensitive.
-           *
-           * @delete /admin/sensitives/:sensitive
-           */
-          $route->delete('/{sensitive}', 'SensitiveController@destroy');
-      });
+            /*
+             * destroy a sensitive.
+             *
+             * @delete /admin/sensitives/:sensitive
+             */
+            $route->delete('/{sensitive}', 'SensitiveController@destroy');
+        });
 
-      // web clients
-      $route->get('settings/web-clients', 'WebClientsController@fetch');
-      $route->patch('settings/web-clients', 'WebClientsController@update');
+    // web clients
+    $route->get('settings/web-clients', 'WebClientsController@fetch');
+    $route->patch('settings/web-clients', 'WebClientsController@update');
 
-      // CORS
-      $route->get('settings/cors', 'CorsController@fetch');
-      $route->put('settings/cors', 'CorsController@update');
-  });
+    // CORS
+    $route->get('settings/cors', 'CorsController@fetch');
+    $route->put('settings/cors', 'CorsController@update');
+});
 
-  Route::middleware('auth:web')
+Route::middleware('auth:web')
     ->middleware('admin')
     ->group(function () {
 
-      // 钱包
+        // 钱包
         Route::prefix('wallet')->group(function () {
             // 充值选项
             Route::get('/labels', 'WalletLabelController@labels');
             Route::post('/labels', 'WalletLabelController@storeLabel');
-            Route::delete('/labels/{label}', 'WalletLabelController@deleteLabel');
+            Route::delete('/labels/{label}',
+                'WalletLabelController@deleteLabel');
 
             // 转换比例
             Route::get('/ratio', 'WalletRatioController@show');
@@ -189,8 +194,10 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
 
             // 提现记录
             Route::get('/cashes', 'WalletCashController@show');
-            Route::patch('/cashes/{cash}/passed', 'WalletCashController@passed');
-            Route::patch('/cashes/{cash}/refuse', 'WalletCashController@refuse');
+            Route::patch('/cashes/{cash}/passed',
+                'WalletCashController@passed');
+            Route::patch('/cashes/{cash}/refuse',
+                'WalletCashController@refuse');
 
             //  Ping++
             Route::get('/pingpp', 'WalletPingPlusPlusController@show');
@@ -198,7 +205,8 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
 
             // 支付选项
             Route::get('/recharge/types', 'WalletRechargeTypeController@show');
-            Route::patch('/recharge/types', 'WalletRechargeTypeController@update');
+            Route::patch('/recharge/types',
+                'WalletRechargeTypeController@update');
 
             // 凭据列表
             Route::get('/charges', 'WalletChargeController@show');
@@ -222,9 +230,11 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
             Route::get('/templates', 'SmsController@smsTemplate');
             Route::get('/gateways', 'SmsController@showGateway');
 
-            Route::patch('/driver/alidayu', 'SmsController@updateAlidayuOption');
+            Route::patch('/driver/alidayu',
+                'SmsController@updateAlidayuOption');
             Route::patch('/driver/aliyun', 'SmsController@updateAliyunOption');
-            Route::patch('/driver/yunpian', 'SmsController@updateYunpianOption');
+            Route::patch('/driver/yunpian',
+                'SmsController@updateYunpianOption');
             Route::patch('update/gateways', 'SmsController@updateGateway');
             Route::patch('update/templates', 'SmsController@updateTemplate');
             Route::get('/configures', 'SmsController@showSmsConfig');
@@ -249,7 +259,7 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
             // 标签列表(带分页)
             Route::get('/', 'TagController@lists');
             Route::get('/{tag}', 'TagController@tag')
-          ->where('tag', '[0-9]+');
+                ->where('tag', '[0-9]+');
 
             // 分类列表(带分页)
             Route::get('/tag_categories', 'TagController@categories');
@@ -265,11 +275,12 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
             Route::patch('/tag_categories/{cate}', 'TagController@updateCate');
 
             Route::patch('/{tag}', 'TagController@update')
-          ->where('tag', '[0-9]+');
+                ->where('tag', '[0-9]+');
 
             Route::delete('/{tag}', 'TagController@delete');
 
-            Route::delete('/tag_categories/{cate}', 'TagController@deleteCategory');
+            Route::delete('/tag_categories/{cate}',
+                'TagController@deleteCategory');
         });
 
         // 后台表单
@@ -289,14 +300,17 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
 
         // 推荐用户相关
         Route::post('/users/recommends', 'UserController@handleRecommend');
-        Route::delete('/users/recommends/{user}', 'UserController@handleUnRecommend');
+        Route::delete('/users/recommends/{user}',
+            'UserController@handleUnRecommend');
         Route::get('/users/recommends', 'UserController@recommends');
         Route::post('/users/famous', 'UserController@handleFamous');
         Route::delete('/users/famous/{user}', 'UserController@handleUnFamous');
 
         // 注册配置相关
-        Route::get('/users/register-setting', 'UserController@getRegisterSetting');
-        Route::post('/users/register-setting', 'UserController@updateRegisterSetting');
+        Route::get('/users/register-setting',
+            'UserController@getRegisterSetting');
+        Route::post('/users/register-setting',
+            'UserController@updateRegisterSetting');
 
         Route::delete('/users/{user}', 'UserController@deleteUser');
         Route::get('/users/{user}', 'UserController@showUser');
@@ -308,22 +322,32 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
         Route::any('/system/notice', 'SystemController@pushSystemNotice');
 
         // 认证类型管理
-        Route::get('certification/categories', 'CertificationCategoryController@certifications');
-        Route::get('certification/categories/{category}', 'CertificationCategoryController@show');
-        Route::put('certification/categories/{category}', 'CertificationCategoryController@update');
-        Route::post('certification/categories/{category}/icon/upload', 'CertificationCategoryController@iconUpload');
+        Route::get('certification/categories',
+            'CertificationCategoryController@certifications');
+        Route::get('certification/categories/{category}',
+            'CertificationCategoryController@show');
+        Route::put('certification/categories/{category}',
+            'CertificationCategoryController@update');
+        Route::post('certification/categories/{category}/icon/upload',
+            'CertificationCategoryController@iconUpload');
         // 认证管理
         Route::get('certifications', 'CertificationController@index');
-        Route::get('certifications/{certification}', 'CertificationController@show');
-        Route::patch('certifications/{certification}', 'CertificationController@update');
+        Route::get('certifications/{certification}',
+            'CertificationController@show');
+        Route::patch('certifications/{certification}',
+            'CertificationController@update');
         Route::post('certifications', 'CertificationController@store');
-        Route::patch('certifications/{certification}/pass', 'CertificationController@passCertification');
-        Route::patch('certifications/{certification}/reject', 'CertificationController@rejectCertification');
-        Route::get('find/nocertification/users', 'CertificationController@findNoCertificationUsers');
+        Route::patch('certifications/{certification}/pass',
+            'CertificationController@passCertification');
+        Route::patch('certifications/{certification}/reject',
+            'CertificationController@rejectCertification');
+        Route::get('find/nocertification/users',
+            'CertificationController@findNoCertificationUsers');
 
         // 会话管理
         Route::get('conversations', 'ConversationController@index');
-        Route::delete('conversations/{conversation}', 'ConversationController@delete');
+        Route::delete('conversations/{conversation}',
+            'ConversationController@delete');
 
         /* ------------- 广告管理 -----------------*/
         Route::get('ads', 'AdvertisingController@ads');
@@ -335,12 +359,15 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
 
         /* ------------- 站点管理 -----------------*/
         Route::get('site/configures', 'SiteController@siteConfigurations');
-        Route::put('update/site/configure', 'SiteController@updateSiteConfigure');
+        Route::put('update/site/configure',
+            'SiteController@updateSiteConfigure');
 
         /*-------------- 后台配置-----------------*/
 
-        Route::get('/site/background', 'SiteController@getBackGroundConfiguration');
-        Route::patch('/site/background', 'SiteController@setBackGroundConfiguration');
+        Route::get('/site/background',
+            'SiteController@getBackGroundConfiguration');
+        Route::patch('/site/background',
+            'SiteController@setBackGroundConfiguration');
 
         /* ------------- 金币管理 -----------------*/
 
@@ -376,9 +403,11 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
             /* 数据缓存清理 */
             Route::get('/clear', 'AuxiliaryController@cleanCache');
             /* 重置配置缓存 */
-            Route::get('/clearConfigCache', 'AuxiliaryController@cleanConfigCache');
+            Route::get('/clearConfigCache',
+                'AuxiliaryController@cleanConfigCache');
             /* 重置路由缓存 */
-            Route::get('/clearRouteCache', 'AuxiliaryController@cleanRouteCache');
+            Route::get('/clearRouteCache',
+                'AuxiliaryController@cleanRouteCache');
         });
 
         /* ------------- 积分设置 -----------------*/
@@ -402,7 +431,8 @@ use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
 
                 Route::get('/products', 'CurrencyAppleController@getProducts');
                 Route::post('/products', 'CurrencyAppleController@addProduct');
-                Route::delete('/products', 'CurrencyAppleController@delProduct');
+                Route::delete('/products',
+                    'CurrencyAppleController@delProduct');
             });
         });
 
