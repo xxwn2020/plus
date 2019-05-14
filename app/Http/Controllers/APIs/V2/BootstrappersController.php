@@ -21,13 +21,13 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
 use Zhiyi\Plus\Models\GoldType;
+use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Models\CommonConfig;
 use Zhiyi\Plus\Models\CurrencyType;
 use Zhiyi\Plus\Models\AdvertisingSpace;
 use Illuminate\Contracts\Support\Arrayable;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
-use function Zhiyi\Plus\setting;
 
 class BootstrappersController extends Controller
 {
@@ -146,7 +146,8 @@ class BootstrappersController extends Controller
      * @return array
      */
     protected function filterNull(array $data)
-    : array {
+    : array
+    {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $value = $this->filterNull($value);

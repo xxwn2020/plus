@@ -21,10 +21,10 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
-use function Zhiyi\Plus\setting;
 
 class CurrencyAppleController extends Controller
 {
@@ -36,7 +36,6 @@ class CurrencyAppleController extends Controller
      */
     public function getConfig()
     {
-
         return response()->json(setting('pay', 'iapConfig') ?? [], 200);
     }
 
@@ -99,7 +98,6 @@ class CurrencyAppleController extends Controller
 
         $oldProducts->push($addProductInfo);
         $config->set('appleIap', array_values($oldProducts->all()));
-
 
         return response()->json(['message' => '添加成功'], 201);
     }

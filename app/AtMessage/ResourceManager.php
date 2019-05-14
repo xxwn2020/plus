@@ -48,7 +48,8 @@ class ResourceManager implements ResourceManagerInterface
      * @throws InvalidArgumentException
      */
     public function resource($resource, UserModel $sender)
-    : ResourceInterface {
+    : ResourceInterface
+    {
         $className = $this->getClassName($resource);
         $resourceClass = static::$map[$className] ?? null;
         if (! $resourceClass) {
@@ -68,7 +69,8 @@ class ResourceManager implements ResourceManagerInterface
      * @return string
      */
     public function getClassName($resource)
-    : string {
+    : string
+    {
         return get_class($resource);
     }
 }

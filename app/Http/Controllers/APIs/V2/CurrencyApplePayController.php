@@ -21,10 +21,10 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
 use Illuminate\Http\Request;
+use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\CurrencyOrder as CurrencyOrderModel;
 use Zhiyi\Plus\Http\Requests\API2\StoreCurrencyAppleIAPRecharge;
 use Zhiyi\Plus\Packages\Currency\Processes\AppStorePay as AppStorePayProcess;
-use function Zhiyi\Plus\setting;
 
 class CurrencyApplePayController extends Controller
 {

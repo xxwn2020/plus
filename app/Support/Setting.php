@@ -57,7 +57,8 @@ class Setting
      * @return self
      */
     public function new(?string $namespace = null)
-    : self {
+    : self
+    {
         return new static($this->model,
             $namespace ? $namespace : $this->namespace);
     }
@@ -111,7 +112,8 @@ class Setting
      * @throws \Throwable
      */
     public function set($name, $contents = null)
-    : void {
+    : void
+    {
         if (is_array($name)) {
             $callbale = [$this, __METHOD__];
             $this->model->getConnection()->transaction(function () use (
