@@ -140,5 +140,17 @@ export default {
     admin.delete(`/currency/apple/products?product_id=${id}`, {
       validateStatus: s => (s === 204)
     })
+  ),
+  // 获取充值类型
+  getRechargeTypes: () => (
+    admin.get('/wallet/recharge/types', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存充值类型
+  saveRechargeTypes: params => (
+    admin.patch('/wallet/recharge/types', params, {
+      validateStatus: s => (s === 201)
+    })
   )
 }

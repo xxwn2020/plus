@@ -20,17 +20,20 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
+use Throwable;
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Routing\ResponseFactory as ContractResponse;
+use function Zhiyi\Plus\setting;
 
 class WalletRechargeTypeController extends Controller
 {
     /**
      * Get support types.
      *
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $response
+     * @param  ContractResponse  $response
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -39,7 +42,7 @@ class WalletRechargeTypeController extends Controller
         return $response
             ->json([
                 'support' => $this->getSupportTypes(),
-                'types' => setting('wallet', 'recharge-types', []),
+                'types'   => setting('wallet', 'recharge-types', []),
             ])
             ->setStatusCode(200);
     }
@@ -47,14 +50,18 @@ class WalletRechargeTypeController extends Controller
     /**
      * Update support types.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $response
+     * @param  Request  $request
+     * @param  ContractResponse  $response
+     *
      * @return mixed
+     * @throws ValidationException
+     * @throws Throwable
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function update(Request $request, ContractResponse $response)
     {
-        $this->validate($request, $this->rules(), $this->validateErrorMessages());
+        $this->validate($request, $this->rules(),
+            $this->validateErrorMessages());
         setting('wallet')->set('recharge-types', $request->input('types'));
 
         return $response
@@ -68,21 +75,22 @@ class WalletRechargeTypeController extends Controller
      * @return array
      * @author Seven Du <shiweidu@outlook.com>
      */
-    protected function getSupportTypes(): array
+    protected function getSupportTypes()
+    : array
     {
         return [
             // Apple
-            'applepay_upacp' => 'Apple Pay (仅对 iOS 有效)',
+            'applepay_upacp'   => 'Apple Pay (仅对 iOS 有效)',
 
             // Alipay
-            'alipay' => '支付宝 APP 支付',
-            'alipay_wap' => '支付宝手机网页支付',
+            'alipay'           => '支付宝 APP 支付',
+            'alipay_wap'       => '支付宝手机网页支付',
             'alipay_pc_direct' => '支付宝电脑网站支付',
-            'alipay_qr' => '支付宝扫码支付',
+            'alipay_qr'        => '支付宝扫码支付',
 
             // WeChat
-            'wx' => '微信 APP 支付',
-            'wx_wap' => '微信 WAP 支付',
+            'wx'               => '微信 APP 支付',
+            'wx_wap'           => '微信 WAP 支付',
         ];
     }
 
@@ -92,10 +100,12 @@ class WalletRechargeTypeController extends Controller
      * @return array
      * @author Seven Du <shiweidu@outlook.com>
      */
-    protected function rules(): array
+    protected function rules()
+    : array
     {
         return [
-            'types' => 'array|in:'.implode(',', array_keys($this->getSupportTypes())),
+            'types' => 'array|in:'.implode(',',
+                    array_keys($this->getSupportTypes())),
         ];
     }
 
@@ -105,11 +115,13 @@ class WalletRechargeTypeController extends Controller
      * @return array
      * @author Seven Du <shiweidu@outlook.com>
      */
-    protected function validateErrorMessages(): array
+    protected function validateErrorMessages()
+    : array
     {
         return [
             'types.array' => '发送类型错误',
-            'types.in' => '选择类型存在非法选择，目前仅支持：'.implode('、', array_values($this->getSupportTypes())),
+            'types.in'    => '选择类型存在非法选择，目前仅支持：'.implode('、',
+                    array_values($this->getSupportTypes())),
         ];
     }
 }

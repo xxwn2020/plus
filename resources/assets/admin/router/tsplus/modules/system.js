@@ -43,6 +43,7 @@ const SystemRouter = {
         },
         {
           path: 'paymentOptions',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/payType'),
           name: 'System-Payment-Setting-PaymentOptions',
           meta: { title: 'system.payment.paymentOption', tabs: true }
         }

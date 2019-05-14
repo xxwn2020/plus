@@ -273,7 +273,9 @@ export default {
     payment: {
       iapSetting: 'IAP设置',
       iapSwitch: 'IAP开关',
-      iapRule: 'IAP使用规则'
+      iapRule: 'IAP使用规则',
+      payTypes: '支付类型',
+      types: '充值选项'
     },
     state: {
       success: '成 功',
