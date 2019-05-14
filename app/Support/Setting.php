@@ -26,20 +26,22 @@ class Setting
 {
     /**
      * Storage database module.
+     *
      * @var \Zhiyi\Plus\Models\Setting
      */
     protected $model;
-
     /**
      * Storage namespace.
+     *
      * @var string
      */
     protected $namespace;
 
     /**
      * Create a setting namespace.
-     * @param \Zhiyi\Plus\Models\Setting
-     * @param string
+     *
+     * @param  \Zhiyi\Plus\Models\Setting
+     * @param  string
      */
     public function __construct(Model $model, string $namespace)
     {
@@ -49,16 +51,20 @@ class Setting
 
     /**
      * Create a new setting namespace.
-     * @param string|null $namespace
+     *
+     * @param  string|null  $namespace
+     *
      * @return self
      */
-    public function new(?string $namespace = null): self
-    {
-        return new static($this->model, $namespace ? $namespace : $this->namespace);
+    public function new(?string $namespace = null)
+    : self {
+        return new static($this->model,
+            $namespace ? $namespace : $this->namespace);
     }
 
     /**
      * Create new setting database builder.
+     *
      * @return mixed
      */
     public function query()
@@ -71,8 +77,10 @@ class Setting
 
     /**
      * Get namespace settings or name contents.
-     * @param string|null $name
-     * @param any $default
+     *
+     * @param  string|null  $name
+     * @param  any  $default
+     *
      * @return any
      */
     public function get(?string $name = null, $default = null)
@@ -95,15 +103,21 @@ class Setting
 
     /**
      * Set contents to namespace.
-     * @param array|string $name
-     * @param any $contents
+     *
+     * @param  array|string  $name
+     * @param  any  $contents
+     *
      * @return void
+     * @throws \Throwable
      */
-    public function set($name, $contents = null): void
-    {
+    public function set($name, $contents = null)
+    : void {
         if (is_array($name)) {
             $callbale = [$this, __METHOD__];
-            $this->model->getConnection()->transaction(function () use ($name, $callbale) {
+            $this->model->getConnection()->transaction(function () use (
+                $name,
+                $callbale
+            ) {
                 foreach ($name as $name => $contents) {
                     call_user_func($callbale, $name, $contents);
                 }
@@ -125,7 +139,9 @@ class Setting
 
     /**
      * The static method create a setting namespace.
-     * @param string $namespace
+     *
+     * @param  string  $namespace
+     *
      * @return self
      */
     public static function create(string $namespace)

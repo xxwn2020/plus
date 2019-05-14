@@ -21,17 +21,18 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
 use Illuminate\Http\Request;
-use Zhiyi\Plus\Models\CommonConfig;
 use Zhiyi\Plus\Models\CurrencyOrder as CurrencyOrderModel;
 use Zhiyi\Plus\Http\Requests\API2\StoreCurrencyAppleIAPRecharge;
 use Zhiyi\Plus\Packages\Currency\Processes\AppStorePay as AppStorePayProcess;
+use function Zhiyi\Plus\setting;
 
 class CurrencyApplePayController extends Controller
 {
     /**
      * 发起充值订单.
      *
-     * @param StoreCurrencyAppleIAPRecharge $request
+     * @param  StoreCurrencyAppleIAPRecharge  $request
+     *
      * @return mixed
      * @author BS <414606094@qq.com>
      */
@@ -42,19 +43,23 @@ class CurrencyApplePayController extends Controller
 
         $recharge = new AppStorePayProcess();
 
-        if (($result = $recharge->createOrder((int) $user->id, (int) $amount)) !== false) {
+        if (($result = $recharge->createOrder((int) $user->id, (int) $amount))
+            !== false
+        ) {
             return response()->json($result, 201);
         }
 
-        return response()->json(['message' => ['操作失败']], 500);
+        return response()->json(['message' => '操作失败'], 500);
     }
 
     /**
      * 主动取回凭据.
      *
-     * @param Request $request
-     * @param CurrencyOrderModel $currencyOrder
+     * @param  Request  $request
+     * @param  CurrencyOrderModel  $order
+     *
      * @return mixed
+     * @throws \Exception
      * @author BS <414606094@qq.com>
      */
     public function retrieve(Request $request, CurrencyOrderModel $order)
@@ -66,19 +71,18 @@ class CurrencyApplePayController extends Controller
             return response()->json($order, 200);
         }
 
-        return response()->json(['message' => ['操作失败']], 500);
+        return response()->json(['message' => '操作失败'], 500);
     }
 
     /**
      * apple商品列表.
      *
-     * @param CommonConfig $config
      * @return mixed
      * @author BS <414606094@qq.com>
      */
-    public function productList(CommonConfig $config)
+    public function productList()
     {
-        $products = ($datas = $config->where('name', 'product')->where('namespace', 'apple')->first()) ? array_values(json_decode($datas->value, true)) : [];
+        $products = setting('pay', 'appleIap') ?? [];
 
         return response()->json($products, 200);
     }

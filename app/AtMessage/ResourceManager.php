@@ -21,28 +21,34 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\AtMessage;
 
 use InvalidArgumentException;
+use Zhiyi\Plus\Models\Comment;
 use Zhiyi\Plus\Models\User as UserModel;
+use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
 
 class ResourceManager implements ResourceManagerInterface
 {
     /**
      * Resource map.
+     *
      * @var array
      */
-    public static $map = [
-        \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed::class => Resources\Feed::class,
-        \Zhiyi\Plus\Models\Comment::class => Resources\Comment::class,
-    ];
+    public static $map
+        = [
+            Feed::class    => Resources\Feed::class,
+            Comment::class => Resources\Comment::class,
+        ];
 
     /**
      * Get resource.
-     * @param mixed $resource
-     * @param \Zhiyi\Plus\Models\User $sender
-     * @return \Zhiyi\Plus\AtMessage\ResourceInterface
-     * @throws \InvalidArgumentException
+     *
+     * @param  mixed  $resource
+     * @param  UserModel  $sender
+     *
+     * @return ResourceInterface
+     * @throws InvalidArgumentException
      */
-    public function resource($resource, UserModel $sender): ResourceInterface
-    {
+    public function resource($resource, UserModel $sender)
+    : ResourceInterface {
         $className = $this->getClassName($resource);
         $resourceClass = static::$map[$className] ?? null;
         if (! $resourceClass) {
@@ -56,11 +62,13 @@ class ResourceManager implements ResourceManagerInterface
 
     /**
      * Get resource class name.
-     * @param mixed $resource
+     *
+     * @param  mixed  $resource
+     *
      * @return string
      */
-    public function getClassName($resource): string
-    {
+    public function getClassName($resource)
+    : string {
         return get_class($resource);
     }
 }
