@@ -133,7 +133,9 @@ export default {
       payment: {
         root: '支付配置',
         secretRequired: '支付密码',
-        native: '原生支付配置'
+        native: '原生支付配置',
+        applePay: '苹果支付设置',
+        paymentOption: '支付方式开关'
       },
       storage: {
         new: '新存储',
@@ -268,6 +270,11 @@ export default {
     uname: '用户名',
     delete: '删 除',
     status: '状 态',
+    payment: {
+      iapSetting: 'IAP设置',
+      iapSwitch: 'IAP开关',
+      iapRule: 'IAP使用规则'
+    },
     state: {
       success: '成 功',
       error: '失 败',

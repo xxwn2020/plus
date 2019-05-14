@@ -110,5 +110,35 @@ export default {
     admin.post('/wallet/newPaySetting', params, {
       validateStatus: s => (s === 201)
     })
+  ),
+  // 获取IAP配置内容
+  getAppleIapSetting: () => (
+    admin.get('/currency/apple/config', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 获取iap产品列表
+  getIapItems: () => (
+    admin.get('/currency/apple/products', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  // 保存IAP配置内容
+  saveAppleIapSetting: params => (
+    admin.patch('/currency/apple/config', params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  // 新增iap产品
+  saveIapItem: params => (
+    admin.post('/currency/apple/products', params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  // 删除iap产品
+  deleteIapItem: id => (
+    admin.delete(`/currency/apple/products?product_id=${id}`, {
+      validateStatus: s => (s === 204)
+    })
   )
 }

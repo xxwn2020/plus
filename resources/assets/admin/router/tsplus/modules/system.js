@@ -34,6 +34,17 @@ const SystemRouter = {
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/native'),
           name: 'System-Payment-Setting-Native',
           meta: { title: 'system.payment.native', tabs: true }
+        },
+        {
+          path: 'applePay',
+          name: 'System-Payment-Setting-ApplePay',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/applePay'),
+          meta: { title: 'system.payment.applePay', tabs: true }
+        },
+        {
+          path: 'paymentOptions',
+          name: 'System-Payment-Setting-PaymentOptions',
+          meta: { title: 'system.payment.paymentOption', tabs: true }
         }
       ]
     },
