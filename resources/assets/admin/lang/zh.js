@@ -475,13 +475,17 @@ export default {
     },
     /* 用户设置 */
     userConfig: {
-      config: '用户设置',
+      config: '注册设置',
       register: {
         method: '注册方式',
         fixed: '强制完善资料',
         type: '注册类型',
         showTerms: '服务条款和隐私政策',
         terms: '条款内容'
+      },
+      imHelper: {
+        root: '聊天小助手',
+        label: '选择小助手'
       }
     },
     /* 搜索翻译 */

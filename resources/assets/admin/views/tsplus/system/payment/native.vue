@@ -28,13 +28,14 @@
         <el-form-item label="支付宝AppId" prop="alipay.appId">
           <el-input v-model="form.alipay.appId" placeholder="支付宝AppId"></el-input>
         </el-form-item>
-        <el-alert
-          title="新的支付宝支付已经不再支持RSA加密方式，请使用RSA2方式，更加安全"
-          :closable="false"
-          :show-icon="true"
-          type="warning">
-        </el-alert>
+
         <el-form-item label="签名方式" prop="alipay.signType">
+          <el-alert
+            title="新的支付宝支付已经不再支持RSA加密方式，请使用RSA2方式，更加安全"
+            :closable="false"
+            :show-icon="true"
+            type="warning">
+          </el-alert>
           <el-select v-model="form.alipay.signType" placeholder="签名方式">
             <el-option
               v-for="item in [{label: 'RSA2', value: 'RSA2'},{label: 'RSA', value: 'RSA'}]"
@@ -45,21 +46,25 @@
           </el-select>
         </el-form-item>
         <el-form-item label="应用公钥" prop="alipay.publicKey">
-          <el-input v-model="form.alipay.publicKey" placeholder="应用公钥"></el-input>
+          <el-input type="textarea" :autosize="{minRows: 3, maxRows: 10}" v-model="form.alipay.publicKey"
+                    placeholder="应用公钥"></el-input>
         </el-form-item>
         <el-form-item label="应用密钥" prop="alipay.secretKey">
-          <el-input v-model="form.alipay.secretKey" placeholder="应用密钥"></el-input>
+          <el-input v-model="form.alipay.secretKey" type="textarea" :autosize="{minRows: 3, maxRows: 10}"
+                    placeholder="应用密钥"></el-input>
         </el-form-item>
         <el-form-item label="支付宝公钥" prop="alipay.alipayAlipayKey">
-          <el-input v-model="form.alipay.alipayAlipayKey" placeholder="支付宝公钥"></el-input>
+          <el-input type="textarea" :autosize="{minRows: 3, maxRows: 10}" v-model="form.alipay.alipayAlipayKey"
+                    placeholder="支付宝公钥"></el-input>
         </el-form-item>
       </el-card>
-      <el-alert
-        title="填写内部订单标识，默认是时间+4位随机字符，标识填写请参考支付宝以及微信的内部订单号标识为准"
-        :closable="false"
-        type="info">
-      </el-alert>
+
       <el-form-item label="内部订单表示">
+        <el-alert
+          title="填写内部订单标识，默认是时间+4位随机字符，标识填写请参考支付宝以及微信的内部订单号标识为准"
+          :closable="false"
+          type="info">
+        </el-alert>
         <el-input v-model="form.sign" placeholder="内部订单表示"></el-input>
       </el-form-item>
       <el-form-item>

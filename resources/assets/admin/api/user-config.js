@@ -24,5 +24,17 @@ export default {
     admin.patch('/user/setting', params, {
       validateStatus: s => (s === 201)
     })
+  ),
+  /* 获取im-helper设置 */
+  getImHelper: () => (
+    admin.get('/im/helper-user', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /* 保存im-helper设置 */
+  saveImHelper: params => (
+    admin.put('/im/helper-user', params, {
+      validateStatus: s => (s === 204)
+    })
   )
 }

@@ -1,6 +1,7 @@
 <template>
   <div>
     <user-group style="margin-bottom: 20px"></user-group>
+    <im-helper style="margin-bottom: 20px"></im-helper>
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{$t('admin.userConfig.config')}}</span>
@@ -46,9 +47,10 @@
 
 <script>
   import UserGroup from './components/userGroup'
+  import ImHelper from './components/im-helper-user'
 
   export default {
-    components: { UserGroup },
+    components: { UserGroup, ImHelper },
     name: 'config',
     data: () => ({
       form: {
