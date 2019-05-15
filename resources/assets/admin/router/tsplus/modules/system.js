@@ -14,7 +14,26 @@ const SystemRouter = {
     {
       path: 'user',
       name: 'System-User-Setting',
-      meta: { title: 'system.user.root', icon: 'people' }
+      component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user'),
+      meta: { title: 'system.user.root', icon: 'people' },
+      redirect: '/system/user/configure',
+      children: [
+        {
+          path: 'configure',
+          name: 'System-User-Setting-Configure',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user/config'),
+          meta: { title: 'system.user.config', icon: 'people', tabs: true }
+        },
+        {
+          path: 'authentication',
+          name: 'System-User-Setting-Authentication',
+          meta: {
+            title: 'system.user.authentication',
+            icon: 'people',
+            tabs: true
+          }
+        }
+      ]
     },
     {
       path: 'payment-setting',

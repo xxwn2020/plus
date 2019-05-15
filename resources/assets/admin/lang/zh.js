@@ -124,7 +124,9 @@ export default {
         config: '短信配置'
       },
       user: {
-        root: '用户设置'
+        root: '用户',
+        config: '用户设置',
+        authentication: '认证设置'
       },
       cors: {
         root: '跨域设置'
@@ -469,6 +471,17 @@ export default {
           female: '女',
           hide: '保 密'
         }
+      }
+    },
+    /* 用户设置 */
+    userConfig: {
+      config: '用户设置',
+      register: {
+        method: '注册方式',
+        fixed: '强制完善资料',
+        type: '注册类型',
+        showTerms: '服务条款和隐私政策',
+        terms: '条款内容'
       }
     },
     /* 搜索翻译 */

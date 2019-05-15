@@ -31,6 +31,8 @@ import cors from './cors'
 import storageConfig from './storageConfig'
 /* 对应财务管理 */
 import finance from './finance'
+/* 对用系统设置 -> 用户设置 */
+import userConfig from './user-config'
 
 const api = {
   normError,
@@ -50,7 +52,8 @@ const api = {
   mail,
   cors,
   storageConfig,
-  finance
+  finance,
+  userConfig
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
