@@ -32,6 +32,16 @@ const SystemRouter = {
             icon: 'people',
             tabs: true
           }
+        },
+        {
+          path: 'thirdParts',
+          name: 'System-User-Setting-ThirdParts',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user/thirdParts'),
+          meta: {
+            title: 'system.user.thirdParts.root',
+            icon: 'people',
+            tabs: true
+          }
         }
       ]
     },

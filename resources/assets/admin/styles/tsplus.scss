@@ -3,6 +3,12 @@
   line-height: 20px;
 }
 
+.setting-child {
+  & + & {
+    margin-top: 20px;
+  }
+}
+
 form.el-form {
   max-width: 500px;
 }

@@ -36,5 +36,17 @@ export default {
     admin.put('/im/helper-user', params, {
       validateStatus: s => (s === 204)
     })
+  ),
+  /* 获取三方登录设置 */
+  getVendorSetting: type => (
+    admin.get(`/setting/vendor/${type}`, {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /* 保存三方登录设置 */
+  saveVendorSetting: ({ params, type }) => (
+    admin.put(`/setting/vendor/${type}`, params, {
+      validateStatus: s => (s === 204)
+    })
   )
 }

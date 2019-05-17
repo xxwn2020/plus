@@ -126,7 +126,10 @@ export default {
       user: {
         root: '用户',
         config: '用户设置',
-        authentication: '认证设置'
+        authentication: '认证设置',
+        thirdParts: {
+          root: '三方登录配置'
+        }
       },
       cors: {
         root: '跨域设置'
@@ -448,52 +451,92 @@ export default {
       confirmDisable: '此操作将禁用该用户, 确认要继续?',
       continue: '继 续',
       name: '用户名',
-
       search: {
         userId: 'ID',
-        sort: '排序方式',
-        email: '电子邮箱',
-        phone: '手机号码',
-        role: '用户角色',
-        follow: '关注设置',
-        regist_start_date: '注册时间',
-        regist_end_date: '注册时间',
-        name: '用户昵称',
-        location: '所在地区',
-        dateTimeRange: '注册时间',
-        trashed: '是否禁用',
-        recommend: '是否推荐',
-        currency: '积 分',
-        createdAt: '注册时间',
-        sex: {
-          root: '性 别',
-          male: '男',
-          female: '女',
-          hide: '保 密'
-        }
+        sort:
+          '排序方式',
+        email:
+          '电子邮箱',
+        phone:
+          '手机号码',
+        role:
+          '用户角色',
+        follow:
+          '关注设置',
+        regist_start_date:
+          '注册时间',
+        regist_end_date:
+          '注册时间',
+        name:
+          '用户昵称',
+        location:
+          '所在地区',
+        dateTimeRange:
+          '注册时间',
+        trashed:
+          '是否禁用',
+        recommend:
+          '是否推荐',
+        currency:
+          '积 分',
+        createdAt:
+          '注册时间',
+        sex:
+          {
+            root: '性 别',
+            male:
+              '男',
+            female:
+              '女',
+            hide:
+              '保 密'
+          }
       }
     },
     /* 用户设置 */
     userConfig: {
       config: '注册设置',
-      register: {
-        method: '注册方式',
-        fixed: '强制完善资料',
-        type: '注册类型',
-        showTerms: '服务条款和隐私政策',
-        terms: '条款内容'
-      },
+      register:
+        {
+          method: '注册方式',
+          fixed:
+            '强制完善资料',
+          type:
+            '注册类型',
+          showTerms:
+            '服务条款和隐私政策',
+          terms:
+            '条款内容'
+        },
       imHelper: {
         root: '聊天小助手',
-        label: '选择小助手'
+        label:
+          '选择小助手'
+      },
+      thirdParts: {
+        qq: 'QQ登录',
+        appID: 'App ID',
+        appKEY: 'App KEY',
+        secret: 'Secret',
+        wechat: '微信开放平台',
+        weibo: '微博登录',
+        wechatMp: '微信公众平台',
+        easemob: '环信配置',
+        switch: '开关',
+        clientId: 'Client ID',
+        clientSecret: 'Client Secret',
+        registerType: '注册方式'
       }
     },
     /* 搜索翻译 */
     search: {
       root: '搜 索',
-      perPage: '每页数据',
-      limit: '每页数据',
-      page: '当前页数'
+      perPage:
+        '每页数据',
+      limit:
+        '每页数据',
+      page:
+        '当前页数'
     }
     /* 搜索翻译 */
     /** TSPlus */

@@ -23,13 +23,3 @@
     name: 'FinanceWalletSetting'
   }
 </script>
-
-<style scoped lang="scss">
-  .setting {
-    &-child {
-      & + & {
-        margin-top: 20px;
-      }
-    }
-  }
-</style>
