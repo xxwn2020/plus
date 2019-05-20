@@ -21,9 +21,8 @@ export default {
       validateStatus: s => (s === 201)
     })
   ),
-  updateIcon: ({ name, params, config }) => (
+  updateIcon: ({ name, params }) => (
     admin.post(`/certification/categories/${name}/icon/upload`, params, {
-      ...config,
       validateStatus: s => (s === 201)
     })
   )

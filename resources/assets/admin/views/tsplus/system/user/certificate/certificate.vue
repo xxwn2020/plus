@@ -43,7 +43,7 @@
         </el-form-item>
         <el-form-item class="cate-icon" :label="$t('admin.userConfig.certificate.icon')" prop="icon">
           <el-input :disabled="true" v-model="edit.icon">
-            <el-button v-if="edit.icon" class="preview" slot="prepend">预览</el-button>
+            <a :href="edit.icon" target="_blank" v-if="edit.icon" class="preview" slot="prepend">预览</a>
             <el-button type="primary" :loading="uploading" @click="triggerFileInput" class="upload" slot="append">
               {{edit.icon ? '修改' : '上传'}}
             </el-button>
@@ -78,13 +78,16 @@
       this.getCates()
     },
     methods: {
+      /* 模拟点击文件输入框事件 */
       triggerFileInput () {
         this.$refs.iconFileInput.click()
       },
+      /* 打开dialog对话框 */
       editCate (cate) {
-        this.$set(this, 'edit', cate)
+        this.$set(this, 'edit', Object.assign({}, cate))
         this.$set(this, 'dialogVisible', true)
       },
+      /* dialog关闭事件的处理 */
       handleClose (done = null) {
         if (typeof done === 'function') {
           done()
@@ -93,6 +96,7 @@
         }
         this.$set(this, 'edit', {})
       },
+      /* 获取用户认证类型列表 */
       getCates () {
         const { getLoading } = this
         if (!getLoading) {
@@ -107,14 +111,16 @@
             })
         }
       },
+      /* 更新认证分类 */
       saveCate () {
         const { edit, saveLoading } = this
         if (!saveLoading) {
           this.sLoading(true)
           this.$api.certifications.saveCate({ name: edit.name, params: edit })
             .then(({ data }) => {
-              console.log(data)
               this.handleClose()
+              this.showSuccess(data)
+              this.getCates()
             })
             .catch(this.showApiError)
             .finally(() => {
@@ -122,26 +128,19 @@
             })
         }
       },
+      /* 上传认证类型图标 */
       uploadIcon (e) {
         const { edit: { name } } = this
         let file = e.target.files[0]
         let params = new FormData()
         params.append('icon', file)
-        // 设置请求头
-        let config = {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': 'Bearer ' + window.TS.token
-          }
-        }
         let reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = () => {
           this.$set(this, 'uploading', true)
           this.$api.certifications.updateIcon({
               name,
-              params,
-              config
+              params
             }
           ).then(({ data: { icon } }) => {
             this.$set(this.edit, 'icon', icon)

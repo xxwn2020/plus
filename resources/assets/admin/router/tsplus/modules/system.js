@@ -80,22 +80,6 @@ const SystemRouter = {
       ]
     },
     {
-      path: 'register',
-      // component: RegisterSetting,
-      name: 'System-Register-Setting',
-      meta: { title: 'system.registerSetting', icon: 'user' }
-    },
-    {
-      path: 'certification',
-      name: 'System-Certification-Setting',
-      meta: { title: 'system.certification', icon: 'people' }
-    },
-    {
-      path: 'thirdParty',
-      name: 'System-ThirdParty-Setting',
-      meta: { title: 'system.thirdParty', icon: 'wechat' }
-    },
-    {
       path: 'sms',
       name: 'System-Sms-Setting',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/index'),
