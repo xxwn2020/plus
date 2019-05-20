@@ -63,6 +63,7 @@ export default {
     i18n: '国际化',
     externalLink: '外链',
     /** TSPlust */
+    reports: '举报管理',
     finance: {
       root: '财务管理',
       wallet: '钱包管理',
@@ -545,6 +546,9 @@ export default {
         '每页数据',
       page:
         '当前页数'
+    },
+    reports: {
+      root: '举报列表'
     }
     /* 搜索翻译 */
     /** TSPlus */
