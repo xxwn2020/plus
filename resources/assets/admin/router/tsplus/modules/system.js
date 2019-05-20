@@ -26,9 +26,10 @@ const SystemRouter = {
         },
         {
           path: 'authentication',
-          name: 'System-User-Setting-Authentication',
+          name: 'System-User-Setting-Certification',
+          component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user/certificate/certificate'),
           meta: {
-            title: 'system.user.authentication',
+            title: 'system.user.certification',
             icon: 'people',
             tabs: true
           }

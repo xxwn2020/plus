@@ -1,4 +1,5 @@
 import { admin, Resource } from './http'
+
 const certificate = new Resource('/certifications', admin)
 
 export default {
@@ -7,5 +8,23 @@ export default {
     get: 'get',
     del: 'del',
     list: 'list'
-  })
+  }),
+  /* 获取认证列表 */
+  getCates: () => (
+    admin.get('/certification/categories', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /* 更新认证类型 */
+  saveCate: ({ name, params }) => (
+    admin.put(`certification/categories/${name}`, params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  updateIcon: ({ name, params, config }) => (
+    admin.post(`/certification/categories/${name}/icon/upload`, params, {
+      ...config,
+      validateStatus: s => (s === 201)
+    })
+  )
 }

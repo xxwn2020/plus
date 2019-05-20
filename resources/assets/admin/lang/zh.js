@@ -126,7 +126,7 @@ export default {
       user: {
         root: '用户',
         config: '用户设置',
-        authentication: '认证设置',
+        certification: '认证设置',
         thirdParts: {
           root: '三方登录配置'
         }
@@ -526,6 +526,14 @@ export default {
         clientId: 'Client ID',
         clientSecret: 'Client Secret',
         registerType: '注册方式'
+      },
+      certificate: {
+        root: '',
+        type: '认证类型',
+        title: '认证title',
+        description: '认证简介',
+        edit: '编辑认证类型',
+        icon: '认证图标'
       }
     },
     /* 搜索翻译 */

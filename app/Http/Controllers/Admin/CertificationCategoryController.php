@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Plus\Models\CertificationCategory;
 
@@ -28,12 +29,16 @@ class CertificationCategoryController extends Controller
 {
     /**
      * certification categories list.
-     * @param Request $request
+     *
+     * @return JsonResponse
      * @author: huhao <915664508@qq.com>
      */
     public function certifications()
     {
         $items = CertificationCategory::get();
+        $items->map(function (&$item) {
+            $item->icon = $item->icon;
+        });
 
         return response()->json($items)->setStatusCode(200);
     }
@@ -42,6 +47,7 @@ class CertificationCategoryController extends Controller
      * certification category detail.
      *
      * @param $name
+     *
      * @return $this
      * @author: huhao <915664508@qq.com>
      */
@@ -54,8 +60,10 @@ class CertificationCategoryController extends Controller
 
     /**
      * update certification category.
-     * @param Request $request
+     *
+     * @param  Request  $request
      * @param $name
+     *
      * @return $this
      * @author: huhao <915664508@qq.com>
      */
@@ -77,12 +85,15 @@ class CertificationCategoryController extends Controller
         ])->setStatusCode($response === true ? 201 : 422);
     }
 
-    public function iconUpload(Request $request, CertificationCategory $category)
-    {
+    public function iconUpload(
+        Request $request,
+        CertificationCategory $category
+    ) {
         $icon = $request->file('icon');
 
         if (! $icon->isValid()) {
-            return response()->json(['messages' => [$icon->getErrorMessage()]], 422);
+            return response()->json(['messages' => [$icon->getErrorMessage()]],
+                422);
         }
 
         $category->storeAvatar($icon);
