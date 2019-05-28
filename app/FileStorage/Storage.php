@@ -52,8 +52,7 @@ class Storage implements StorageInterface
     public function __construct(
         AppInterface $app,
         ChannelManager $channelManager
-    )
-    {
+    ) {
         $this->app = $app;
         $this->channelManager = $channelManager;
     }
