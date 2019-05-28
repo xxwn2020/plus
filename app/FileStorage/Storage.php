@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\FileStorage;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\AppInterface;
 use Illuminate\Support\Carbon;
@@ -53,7 +52,8 @@ class Storage implements StorageInterface
     public function __construct(
         AppInterface $app,
         ChannelManager $channelManager
-    ) {
+    )
+    {
         $this->app = $app;
         $this->channelManager = $channelManager;
     }

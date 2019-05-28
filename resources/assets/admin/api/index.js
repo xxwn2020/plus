@@ -31,8 +31,10 @@ import cors from './cors'
 import storageConfig from './storageConfig'
 /* 对应财务管理 */
 import finance from './finance'
-/* 对用系统设置 -> 用户设置 */
+/* 对应系统设置 -> 用户设置 */
 import userConfig from './user-config'
+/* 对应系统设置 -> 地区设置 */
+import area from './area'
 
 const api = {
   normError,
@@ -53,7 +55,8 @@ const api = {
   cors,
   storageConfig,
   finance,
-  userConfig
+  userConfig,
+  area
 }
 
 api.install = Vue => (Vue.prototype.$api = api)

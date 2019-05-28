@@ -1,16 +1,178 @@
 <template>
-  <el-main>
-    <el-card :body-style="{ padding: '0px' }">
-      <div slot="header">
-        <span>地区管理</span>
-      </div>
-      <!-- card body -->
-    </el-card>
-  </el-main>
+  <div>
+    <el-main>
+      <el-card v-loading="getLoading" shadow="never">
+        <div slot="header">
+          <span>地区管理</span>
+        </div>
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText">
+        </el-input>
+        <el-tree
+          accordion
+          ref="tree2"
+          :data="countries"
+          node-key="id"
+          :props="{label: 'name', children: 'childNodes'}"
+          :default-expand-all="false"
+          :filter-node-method="filterNode"
+          :expand-on-click-node="false"
+          :default-expanded-keys="[1]"
+        >
+          <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span>{{ node.label }}</span>
+        <span>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => showAddForm(data)">
+            Append
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => remove(node, data)">
+            Delete
+          </el-button>
+        </span>
+      </span>
+        </el-tree>
+      </el-card>
+    </el-main>
+    <el-dialog
+      title="添加区域"
+      :visible.sync="dialogVisible"
+      :before-close="handleClose">
+      <el-form ref="addAreaForm" :model="form" label-width="120px">
+        <el-form-item label="父级地区">
+          <el-input v-model="parent.name" disabled></el-input>
+        </el-form-item>
+        <el-form-item :rules="[{required: true, message:'名称必填', trigger: 'blur'}]" label="名称" prop="name">
+          <el-input v-model="form.name" placeholder="输入名称"></el-input>
+        </el-form-item>
+        <el-form-item label="拓展信息" prop="extends">
+          <el-input v-model="form.extends" placeholder="输入拓展信息[选填]"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" :loading="saveLoading" @click="save">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 <script>
-export default {
-  name: "OperationAreas"
-};
+
+  import { mapGetters } from 'vuex'
+  import { createHieArr } from '@/utils/tools'
+
+  export default {
+    name: 'OperationAreas',
+    data: () => ({
+      form: {
+        name: null,
+        extends: null,
+        pid: 0
+      },
+      saveLoading: false,
+      getLoading: false,
+      opened1: 0,
+      opened2: 0,
+      opened3: 0,
+      filterText: '',
+      dialogVisible: false,
+      changing: null
+    }),
+    async beforeMount () {
+      this.gLoading(true)
+      await this.$store.dispatch('area/getFirstList')
+      this.gLoading(false)
+    },
+    computed: {
+      ...mapGetters(['areas']),
+      /* 列出所有的第一级 */
+      countries () {
+        const { format = [] } = this
+        return format.length ? format.filter(area => (
+            area.pid === 0
+        )) : []
+      },
+      format () {
+        const { areas } = this
+        const deepAreas = Object.assign([], areas)
+
+        return createHieArr(deepAreas, { id_parent: 'pid', ID: 'id' })
+      },
+      /* 显示添加地区时的上级地区 */
+      parent () {
+        const { form: { pid }, areas } = this
+        if (!pid) {
+          return {}
+        }
+        return areas.find(item => (
+            item.id === pid
+        ))
+      }
+    },
+    watch: {
+      filterText (val) {
+        this.$refs.tree2.filter(val)
+      }
+    },
+    methods: {
+      /* 保存新增 */
+      async save () {
+        const { form, saving } = this
+        if (!saving) {
+          this.sLoading(true)
+          await this.$store.dispatch('area/addSingleArea', form)
+          this.sLoading(false)
+          this.handleClose()
+          this.showSuccess()
+        }
+      },
+      /* 打开添加对话框 */
+      showAddForm (data) {
+        const { id } = data
+        this.$set(this.form, 'pid', id)
+        this.$set(this, 'dialogVisible', true)
+        this.$set(this, 'changing', data)
+      },
+      /* 关闭对话框 */
+      handleClose (done = null) {
+        if (typeof done === 'function') {
+          done()
+        }
+        this.$set(this, 'form', {
+          name: null,
+          extends: null,
+          pid: 0
+        })
+        this.$set(this, 'dialogVisible', false)
+      },
+      /* 删除地区 */
+      remove (node, data) {
+        if (data.childNodes.length > 0) {
+          this.$alert('请先删除该地区的下级地区', '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+          return
+        } else {
+          this.$confirm('确定要删除此地区吗？', '提示', {
+            type: 'warning'
+          }).then(() => {
+            this.$store.dispatch('area/delSingleArea', data.id)
+          })
+        }
+      },
+      /* 过滤器 */
+      filterNode (value, data) {
+        if (!value) return true
+        return data.name.indexOf(value) !== -1
+      }
+    }
+  }
 </script>
 
