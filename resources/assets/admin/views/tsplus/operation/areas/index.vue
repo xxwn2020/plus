@@ -56,6 +56,12 @@
           <el-input v-model="form.name" placeholder="输入名称"></el-input>
         </el-form-item>
         <el-form-item label="拓展信息" prop="extends">
+          <el-alert
+            title="拓展信息赋予单条信息而外的数据，例如国家设置，中国的拓展信息设置的3,用于在app开发中UI层展示几级选择菜单，所以，只有在业务需求下，设置拓展信息才是有用的。其他情况下留空即可。"
+            type="success"
+            :closable="false"
+          >
+          </el-alert>
           <el-input v-model="form.extends" placeholder="输入拓展信息[选填]"></el-input>
         </el-form-item>
       </el-form>
