@@ -20,13 +20,13 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed;
 
-use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
 use Zhiyi\Plus\Support\PinnedsNotificationEventer;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
+use function Zhiyi\Plus\setting;
 
 class FeedServiceProvider extends ServiceProvider
 {
@@ -50,32 +50,42 @@ class FeedServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            dirname(__DIR__).'/assets' => $this->app->PublicPath().'/assets/feed',
+            dirname(__DIR__).'/assets' => $this->app->PublicPath()
+                .'/assets/feed',
         ], 'feed:resource/assets');
 
-        $this->app->make(BootstrapAPIsEventer::class)->listen('v2', function () {
-            return [
-                'feed' => [
-                    'reward' => setting('feed', 'reward-switch'),
-                    'paycontrol' => setting('feed', 'pay-switch', false),
-                    'items' => setting('feed', 'pay-items', []),
-                    'limit' => setting('feed', 'pay-word-limit', 50),
-                ],
-            ];
-        });
+        $this->app->make(BootstrapAPIsEventer::class)
+            ->listen('v2', function () {
+                return \Cache::rememberForever('feed-bootstrapper',
+                    function () {
+                        return [
+                            'feed' => [
+                                'reward'     => setting('feed',
+                                    'reward-switch'),
+                                'paycontrol' => setting('feed', 'pay-switch',
+                                    false),
+                                'items'      => setting('feed', 'pay-items',
+                                    []),
+                                'limit'      => setting('feed',
+                                    'pay-word-limit', 50),
+                            ],
+                        ];
+                    });
+            });
 
-        $this->app->make(PinnedsNotificationEventer::class)->listen(function () {
+        $this->app->make(PinnedsNotificationEventer::class)->listen(function (
+        ) {
             return [
-                'name' => 'feeds',
-                'namespace' => \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedPinned::class,
+                'name'         => 'feeds',
+                'namespace'    => \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedPinned::class,
                 'owner_prefix' => 'target_user',
-                'wherecolumn' => function ($query) {
+                'wherecolumn'  => function ($query) {
                     return $query
                         ->whereNull('expires_at')
                         ->where('channel', 'comment')
                         ->has('feed')
                         ->has('comment');
-                // return $query->where('expires_at', null)->where('channel', 'comment')->whereExists(function ($query) {
+                    // return $query->where('expires_at', null)->where('channel', 'comment')->whereExists(function ($query) {
                     //     return $query->from('feeds')->whereRaw('feed_pinneds.raw = feeds.id')->where('deleted_at', null);
                     // })->whereExists(function ($query) {
                     //     return $query->from('comments')->whereRaw('feed_pinneds.target = comments.id');
@@ -98,11 +108,12 @@ class FeedServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make(ManageRepository::class)->loadManageFrom('动态管理', 'feed:admin', [
-            'route' => true,
-            'icon' => asset('assets/feed/feed-icon.png'),
-            'key' => 'feed',
-        ]);
+        $this->app->make(ManageRepository::class)
+            ->loadManageFrom('动态管理', 'feed:admin', [
+                'route' => true,
+                'icon'  => asset('assets/feed/feed-icon.png'),
+                'key'   => 'feed',
+            ]);
 
         Relation::morphMap([
             'feeds' => Models\Feed::class,

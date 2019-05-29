@@ -20,11 +20,11 @@ declare(strict_types=1);
 
 namespace SlimKit\PlusCheckIn\Providers;
 
-use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use function Zhiyi\Plus\setting;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -41,14 +41,19 @@ class RouteServiceProvider extends ServiceProvider
         );
 
         // Register Bootstrapper API event.
-        $this->app->make(BootstrapAPIsEventer::class)->listen('v2', function () {
-            return [
-                'checkin' => [
-                    'switch' => setting('checkin', 'switch', true),
-                    'balance' => setting('checkin', 'attach-balance', 1),
-                ],
-            ];
-        });
+        $this->app->make(BootstrapAPIsEventer::class)
+            ->listen('v2', function () {
+                return \Cache::rememberForever('checkin-bootstrapper',
+                    function () {
+                        return [
+                            'checkin' => [
+                                'switch'  => setting('checkin', 'switch', true),
+                                'balance' => setting('checkin',
+                                    'attach-balance', 1),
+                            ],
+                        ];
+                    });
+            });
 
         // Register manage menu.
         $this->registerManageMenu();
@@ -63,10 +68,12 @@ class RouteServiceProvider extends ServiceProvider
     public function registerManageMenu()
     {
         // Publish admin menu.
-        $this->app->make(ManageRepository::class)->loadManageFrom(trans('plus-checkin::app.name'), 'checkin:admin-home', [
-            'route' => true,
-            'icon' => asset('assets/checkin/icon.svg'),
-            'key' => 'checkin',
-        ]);
+        $this->app->make(ManageRepository::class)
+            ->loadManageFrom(trans('plus-checkin::app.name'),
+                'checkin:admin-home', [
+                    'route' => true,
+                    'icon'  => asset('assets/checkin/icon.svg'),
+                    'key'   => 'checkin',
+                ]);
     }
 }

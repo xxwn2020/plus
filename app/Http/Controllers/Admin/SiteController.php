@@ -23,7 +23,6 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 use Carbon\Carbon;
 use Zhiyi\Plus\Models\Area;
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\CommonConfig;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +31,7 @@ use Illuminate\Contracts\Config\Repository;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use function Zhiyi\Plus\setting;
 
 class SiteController extends Controller
 {
@@ -41,13 +41,12 @@ class SiteController extends Controller
      * @var Zhiyi\Plus\Models\CommonConfig
      */
     protected $commonCinfigModel;
-
     protected $app;
 
     /**
      * Construct handle.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
      *
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -60,16 +59,19 @@ class SiteController extends Controller
     /**
      * Get the website info.
      *
-     * @param Request         $request
-     * @param Repository      $config
-     * @param ResponseFactory $response
+     * @param  Request  $request
+     * @param  Repository  $config
+     * @param  ResponseFactory  $response
      *
      * @return mixed
      *
      * @author Seven Du <shiweidu@outlook.com>
      * @homepage http://medz.cn
      */
-    public function get(Request $request, Repository $config, ResponseFactory $response)
+    public function get(Request $request,
+        Repository $config,
+        ResponseFactory $response
+    )
     {
         if (! $request->user()->ability('admin:site:base')) {
             return response()->json([
@@ -77,11 +79,13 @@ class SiteController extends Controller
             ])->setStatusCode(403);
         }
 
-        $baseInfo = Cache::rememberForever('site:config:baseInfo', function () use ($config) {
-            return collect($config->get('app'))
-                ->only('name', 'keywords', 'description', 'icp', 'technical', 'copyright', 'stateCode', 'pc')
-                ->all();
-        });
+        $baseInfo = Cache::rememberForever('site:config:baseInfo',
+            function () use ($config) {
+                return collect($config->get('app'))
+                    ->only('name', 'keywords', 'description', 'icp',
+                        'technical', 'copyright', 'stateCode', 'pc')
+                    ->all();
+            });
 
         return $response->json($baseInfo)->setStatusCode(200);
     }
@@ -89,14 +93,17 @@ class SiteController extends Controller
     /**
      * 更新网站基本信息.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return mixed
      *
      * @author Seven Du <shiweidu@outlook.com>
      * @homepage http://medz.cn
      */
-    public function updateSiteInfo(Request $request, Configuration $config, ResponseFactory $response)
+    public function updateSiteInfo(Request $request,
+        Configuration $config,
+        ResponseFactory $response
+    )
     {
         if (! $request->user()->ability('admin:site:base')) {
             return response()->json([
@@ -104,7 +111,10 @@ class SiteController extends Controller
             ])->setStatusCode(403);
         }
 
-        $keys = ['name', 'keywords', 'description', 'icp', 'technical', 'copyright', 'stateCode', 'pc'];
+        $keys = [
+            'name', 'keywords', 'description', 'icp', 'technical', 'copyright',
+            'stateCode', 'pc',
+        ];
 
         $site = [];
         foreach ($request->only($keys) as $key => $value) {
@@ -145,7 +155,7 @@ class SiteController extends Controller
     /**
      * 添加地区.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return mixed [description]
      *
@@ -192,7 +202,7 @@ class SiteController extends Controller
     /**
      * 删除地区.
      *
-     * @param int $id
+     * @param  int  $id
      *
      * @return mixed
      *
@@ -223,8 +233,8 @@ class SiteController extends Controller
     /**
      * 更新地区数据.
      *
-     * @param Request $request
-     * @param Area    $area
+     * @param  Request  $request
+     * @param  Area  $area
      *
      * @return mixed
      *
@@ -273,21 +283,21 @@ class SiteController extends Controller
      */
     public function hots(ResponseFactory $response)
     {
-        $hots = CommonConfig::byNamespace('common')
-            ->byName('hots_area')
-            ->value('value');
-
-        $toHot = $hots ? json_decode($hots) : [];
+        $hots = setting('system')->get('hot_areas');
 
         return $response->json([
-            'data' => $toHot,
+            'data' => $hots,
         ])->setStatusCode(200);
     }
 
     /**
      * 添加、更新 热门地区.
      *
+     * @param  Request  $request
+     * @param  ResponseFactory  $response
+     *
      * @return mixed
+     * @throws \Throwable
      */
     public function doHots(Request $request, ResponseFactory $response)
     {
@@ -296,36 +306,27 @@ class SiteController extends Controller
         $sort = (int) $request->input('sort', 0);
 
         if (! $update && count(explode(' ', $areaStr)) < 2) {
-            return $response->json(['error' => ['地区不能小于两级']], 422);
+            return $response->json(['error' => '地区不能小于两级'], 422);
         }
 
-        $hots = [];
-        $items = $this->commonCinfigModel->byNamespace('common')
-            ->byName('hots_area')
-            ->value('value');
-        if ($items) {
-            $hots = json_decode($items, true);
-        }
+        $config = setting('system');
+        $hots = $config->get('hot_areas');
 
         if ($update) {
             $this->unsetHotArea($hots, $areaStr);
         } else {
             if ($this->hotAreaExists($hots, $areaStr)) {
-                return $response->json(['error' => ['热门城市已存在']], 422);
+                return $response->json(['error' => '热门城市已存在'], 422);
             }
             $hots[] = ['name' => $areaStr, 'sort' => $sort];
         }
 
         $hots = array_values($hots);
-
-        $this->commonCinfigModel->updateOrCreate(
-            ['namespace' => 'common', 'name' => 'hots_area'],
-            ['value' => json_encode($hots)]
-        );
+        $config->set('hot_areas', $hots);
 
         return $response->json([
             'message' => '操作成功',
-            'status' => $update ? 2 : 1,
+            'status'  => $update ? 2 : 1,
         ])->setStatusCode(201);
     }
 
@@ -345,10 +346,10 @@ class SiteController extends Controller
     /**
      * 删除热门城市.
      *
-     * @param array  &$hotAreas [description]
+     * @param  array  &$hotAreas  [description]
      * @param  [type] $hotAreaName [description]
      *
-     * @return [type]              [description]
+     * @return void [type]              [description]
      */
     protected function unsetHotArea(array &$hotAreas, $hotAreaName)
     {
@@ -375,13 +376,13 @@ class SiteController extends Controller
         $password = $config->get('mail.password');
 
         return $response->json([
-            'driver' => $driver,
-            'host' => $host,
-            'port' => $port,
-            'from' => $from,
+            'driver'     => $driver,
+            'host'       => $host,
+            'port'       => $port,
+            'from'       => $from,
             'encryption' => $encryption,
-            'username' => $username,
-            'password' => $password,
+            'username'   => $username,
+            'password'   => $password,
         ])->setStatusCode(200);
     }
 
@@ -390,7 +391,10 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function updateMailInfo(Request $request, Configuration $config, ResponseFactory $response)
+    public function updateMailInfo(Request $request,
+        Configuration $config,
+        ResponseFactory $response
+    )
     {
         // if (! $request->user()->ability('admin:mail:show')) {
         //     return response()->json([
@@ -414,7 +418,10 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function sendMail(Request $request, Mailer $mailer, ResponseFactory $response)
+    public function sendMail(Request $request,
+        Mailer $mailer,
+        ResponseFactory $response
+    )
     {
         $title = '测试邮件';
         $email = $request->input('email');
@@ -435,23 +442,24 @@ class SiteController extends Controller
     public function server(Request $request, ResponseFactory $response)
     {
         $system = [
-            'app_version' => app()->version(),
-            'php_version' => PHP_VERSION,
-            'os' => PHP_OS,
-            'db' => config('database.default'),
-            'server' => $request->server->get('SERVER_SOFTWARE'),
-            'port' => $request->server->get('SERVER_PORT'),
-            'root' => $request->server->get('DOCUMENT_ROOT'),
-            'agent' => $request->server->get('HTTP_USER_AGENT'),
-            'protocol' => $request->server->get('SERVER_PROTOCOL'),
-            'domain_ip' => $request->server->get('SERVER_NAME'),
-            'user_ip' => $request->server->get('REMOTE_ADDR'),
+            'app_version'     => app()->version(),
+            'php_version'     => PHP_VERSION,
+            'os'              => PHP_OS,
+            'db'              => config('database.default'),
+            'server'          => $request->server->get('SERVER_SOFTWARE'),
+            'port'            => $request->server->get('SERVER_PORT'),
+            'root'            => $request->server->get('DOCUMENT_ROOT'),
+            'agent'           => $request->server->get('HTTP_USER_AGENT'),
+            'protocol'        => $request->server->get('SERVER_PROTOCOL'),
+            'domain_ip'       => $request->server->get('SERVER_NAME'),
+            'user_ip'         => $request->server->get('REMOTE_ADDR'),
             'laravel_version' => app()->getLaravelVersion(),
             'max_upload_size' => ini_get('upload_max_filesize'),
-            'execute_time' => ini_get('max_execution_time').'秒',
-            'server_date' => date('Y年n月j日 H:i:s'),
-            'local_date' => gmdate('Y年n月j日 H:i:s', time() + 8 * 3600),
-            'disk' => round((disk_free_space('.') / (1024 * 1024)), 2).'M',
+            'execute_time'    => ini_get('max_execution_time').'秒',
+            'server_date'     => date('Y年n月j日 H:i:s'),
+            'local_date'      => gmdate('Y年n月j日 H:i:s', time() + 8 * 3600),
+            'disk'            => round((disk_free_space('.') / (1024 * 1024)),
+                    2).'M',
         ];
 
         return $response->json($system)->setStatusCode(200);
@@ -465,14 +473,14 @@ class SiteController extends Controller
     public function siteConfigurations()
     {
         return response()->json([
-            'about_url' => setting('site', 'about-url'),
-            'anonymous' => setting('user', 'anonymous', []),
-            'client_email' => setting('site', 'client-email'),
-            'gold' => [
+            'about_url'            => setting('site', 'about-url'),
+            'anonymous'            => setting('user', 'anonymous', []),
+            'client_email'         => setting('site', 'client-email'),
+            'gold'                 => [
                 'status' => setting('site', 'gold-switch'),
             ],
-            'reserved_nickname' => setting('user', 'keep-username'),
-            'reward' => setting('site', 'reward', []),
+            'reserved_nickname'    => setting('user', 'keep-username'),
+            'reward'               => setting('site', 'reward', []),
             'user_invite_template' => setting('user', 'invite-template'),
         ], 200);
     }
@@ -480,27 +488,27 @@ class SiteController extends Controller
     /**
      * 更新站点设置.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateSiteConfigure(Request $request)
     {
         setting('user')->set([
-            'keep-username' => $request->input('site.reserved_nickname'),
-            'anonymous' => [
+            'keep-username'   => $request->input('site.reserved_nickname'),
+            'anonymous'       => [
                 'status' => (bool) $request->input('site.anonymous.status'),
-                'rule' => (string) $request->input('site.anonymous.rule'),
+                'rule'   => (string) $request->input('site.anonymous.rule'),
             ],
             'invite-template' => $request->input('site.user_invite_template'),
         ]);
         setting('site')->set([
-            'gold-switch' => (bool) $request->input('site.gold.status'),
-            'reward' => [
-                'status' => (bool) $request->input('site.reward.status'),
+            'gold-switch'  => (bool) $request->input('site.gold.status'),
+            'reward'       => [
+                'status'  => (bool) $request->input('site.reward.status'),
                 'amounts' => $request->input('site.reward.amounts'),
             ],
-            'about-url' => $request->input('site.about_url'),
+            'about-url'    => $request->input('site.about_url'),
             'client-email' => $request->input('site.client_email'),
         ]);
 
@@ -510,19 +518,22 @@ class SiteController extends Controller
     /**
      * 获取后台页面配置.
      *
-     * @param Configuration $config [description]
+     * @param  Configuration  $config  [description]
      *
      * @return [type] [description]
      * @author BS <414606094@qq.com>
      */
     public function getBackGroundConfiguration(Repository $config)
     {
-        $data['logo_src'] = $config->get('site.background.logo', url('/plus.png'));
+        $data['logo_src'] = $config->get('site.background.logo',
+            url('/plus.png'));
 
         return response()->json($data, 200);
     }
 
-    public function setBackGroundConfiguration(Request $request, Configuration $config)
+    public function setBackGroundConfiguration(Request $request,
+        Configuration $config
+    )
     {
         $config->set('site.background.logo', $request->input('logo_src'));
 

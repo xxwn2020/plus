@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Providers;
 
+use Cache;
 use Zhiyi\Plus\Models\User;
-use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\News;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\NewsPinned;
+use function Zhiyi\Plus\setting;
 
 class NewsServiceProvider extends ServiceProvider
 {
@@ -48,7 +49,8 @@ class NewsServiceProvider extends ServiceProvider
         );
 
         $this->publishes([
-            dirname(__DIR__).'/../resource' => $this->app->PublicPath().'/assets/news',
+            dirname(__DIR__).'/../resource' => $this->app->PublicPath()
+                .'/assets/news',
         ], 'public');
 
         // Register view namespace.
@@ -59,35 +61,48 @@ class NewsServiceProvider extends ServiceProvider
         );
 
         // Register Bootstrapper API event.
-        $this->app->make(BootstrapAPIsEventer::class)->listen('v2', function () {
-            return [
-                'news' => [
-                    'contribute' => setting('news', 'contribute', [
-                        'pay' => true,
-                        'verified' => true,
-                    ]),
-                    'pay_contribute' => setting('news', 'contribute-amount', 100),
-                ],
-            ];
-        });
+        $this->app->make(BootstrapAPIsEventer::class)
+            ->listen('v2', function () {
+                return Cache::rememberForever('news-bootstrapper',
+                    function () {
+                        return [
+                            'news' => [
+                                'contribute'     => setting('news',
+                                    'contribute', [
+                                        'pay'      => true,
+                                        'verified' => true,
+                                    ]),
+                                'pay_contribute' => setting('news',
+                                    'contribute-amount', 100),
+                            ],
+                        ];
+                    });
+            });
 
         // 注册置顶审核通知事件
-        $this->app->make(PinnedsNotificationEventer::class)->listen(function () {
+        $this->app->make(PinnedsNotificationEventer::class)->listen(function (
+        ) {
             return [
-                'name' => 'news-comments',
-                'namespace' => NewsPinned::class,
+                'name'         => 'news-comments',
+                'namespace'    => NewsPinned::class,
                 'owner_prefix' => 'target_user',
-                'wherecolumn' => function ($query) {
-                    return $query->where('expires_at', null)->where('channel', 'news:comment')->whereExists(function ($query) {
-                        return $query->from('news')->whereRaw('news_pinneds.target = news.id')->where('deleted_at', null);
-                    })->whereExists(function ($query) {
-                        return $query->from('comments')->whereRaw('news_pinneds.raw = comments.id');
-                    });
+                'wherecolumn'  => function ($query) {
+                    return $query->where('expires_at', null)
+                        ->where('channel', 'news:comment')
+                        ->whereExists(function ($query) {
+                            return $query->from('news')
+                                ->whereRaw('news_pinneds.target = news.id')
+                                ->where('deleted_at', null);
+                        })->whereExists(function ($query) {
+                            return $query->from('comments')
+                                ->whereRaw('news_pinneds.raw = comments.id');
+                        });
                 },
             ];
         });
 
-        $this->app->make('Illuminate\Database\Eloquent\Factory')->load(__DIR__.'/../../database/factories');
+        $this->app->make('Illuminate\Database\Eloquent\Factory')->load(__DIR__
+            .'/../../database/factories');
     }
 
     /**
@@ -99,14 +114,16 @@ class NewsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make(ManageRepository::class)->loadManageFrom('资讯', 'news:admin', [
-            'route' => true,
-            'icon' => asset('assets/news/news-icon.png'),
-            'key' => 'news',
-        ]);
+        $this->app->make(ManageRepository::class)
+            ->loadManageFrom('资讯', 'news:admin', [
+                'route' => true,
+                'icon'  => asset('assets/news/news-icon.png'),
+                'key'   => 'news',
+            ]);
 
         User::macro('newsCollections', function () {
-            return $this->belongsToMany(News::class, 'news_collections', 'user_id', 'news_id');
+            return $this->belongsToMany(News::class, 'news_collections',
+                'user_id', 'news_id');
         });
 
         Relation::morphMap([
