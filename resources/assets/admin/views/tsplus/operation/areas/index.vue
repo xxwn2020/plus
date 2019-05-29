@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="areas">
     <el-main>
+      <popular-cities style="margin-bottom: 20px"></popular-cities>
       <el-card v-loading="getLoading" shadow="never">
         <div slot="header">
           <span>地区管理</span>
@@ -10,6 +11,7 @@
           v-model="filterText">
         </el-input>
         <el-tree
+          class="areas-tree"
           accordion
           ref="tree2"
           :data="countries"
@@ -18,7 +20,9 @@
           :default-expand-all="false"
           :filter-node-method="filterNode"
           :expand-on-click-node="false"
-          :default-expanded-keys="[1]"
+          :default-expanded-keys="defaultExpandedKeys"
+          @node-expand="nodeExpand"
+          @node-collapse="nodeCollapse"
         >
           <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
@@ -27,13 +31,13 @@
             type="text"
             size="mini"
             @click="() => showAddForm(data)">
-            Append
+            添加子级地区
           </el-button>
           <el-button
             type="text"
             size="mini"
             @click="() => remove(node, data)">
-            Delete
+            删除该地区
           </el-button>
         </span>
       </span>
@@ -66,9 +70,11 @@
 
   import { mapGetters } from 'vuex'
   import { createHieArr } from '@/utils/tools'
+  import PopularCities from './popular-cities'
 
   export default {
     name: 'OperationAreas',
+    components: { PopularCities },
     data: () => ({
       form: {
         name: null,
@@ -82,7 +88,8 @@
       opened3: 0,
       filterText: '',
       dialogVisible: false,
-      changing: null
+      changing: null,
+      defaultExpandedKeys: [1]
     }),
     async beforeMount () {
       this.gLoading(true)
@@ -121,6 +128,13 @@
       }
     },
     methods: {
+      nodeExpand (data, { id }) {
+        this.defaultExpandedKeys.push(id)
+      },
+      nodeCollapse () {
+        const { defaultExpandedKeys } = this
+        defaultExpandedKeys.pop()
+      },
       /* 保存新增 */
       async save () {
         const { form, saving } = this
@@ -164,7 +178,7 @@
             type: 'warning'
           }).then(() => {
             this.$store.dispatch('area/delSingleArea', data.id)
-          })
+          }).catch(() => {})
         }
       },
       /* 过滤器 */
@@ -175,4 +189,10 @@
     }
   }
 </script>
-
+<style lang="scss" scoped>
+  .areas {
+    &-tree {
+      margin-top: 20px;
+    }
+  }
+</style>
