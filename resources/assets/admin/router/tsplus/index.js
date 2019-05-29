@@ -1,11 +1,13 @@
 // import ManagementRouter from './modules/management'
-import OperationRouter from './modules/operation'
+// import OperationRouter from './modules/operation'
 // import SystemRouter from './modules/system'
 // import FinanceRouter from './modules/finance'
+import TemplateRouter from './modules/template'
 
 export default [
   // ManagementRouter,
-  OperationRouter
+  // OperationRouter,
   // SystemRouter
   // FinanceRouter
+  TemplateRouter
 ]

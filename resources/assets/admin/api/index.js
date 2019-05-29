@@ -37,6 +37,8 @@ import userConfig from './user-config'
 import area from './area'
 /* 对应运营管理 -> 客户端设置 */
 import client from './client'
+/* 对应网页模版 */
+import template from './template'
 
 const api = {
   normError,
@@ -59,7 +61,8 @@ const api = {
   finance,
   userConfig,
   area,
-  client
+  client,
+  template
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
