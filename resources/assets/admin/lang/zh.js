@@ -569,7 +569,7 @@ export default {
         '当前页数'
     },
     reports: {
-      root: '举报列表'
+      root: '举报管理'
     },
     templates: {
       aboutUs: '关于我们',

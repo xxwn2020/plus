@@ -30,7 +30,8 @@ class ReportController extends Controller
     /**
      * 举报列表.
      *
-     * @param  Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      */
     public function index(Request $request)
@@ -38,29 +39,36 @@ class ReportController extends Controller
         $pcInstalled = $this->getPcInstalled();
 
         $limit = $request->query('limit');
-        $offset = $request->query('offset');
+        $status = $request->query('state', '');
 
-        $query = ReportModel::with(['user', 'target', 'reportable']);
+        $query = ReportModel::query()->with(['user', 'target', 'reportable'])
+            ->when(in_array($status, [0, 1, 2]),
+                function ($query) use ($status) {
+                    $query->where('status', $status);
+                });
 
-        $count = $query->count();
-        $items = $query->limit($limit)->offset($offset)->get();
+        $items = $query->paginate($limit);
 
         if ($pcInstalled) {
             $items->map(function ($item) {
-                $item->view = route('pc:reportview', ['reportable_id' => $item->reportable_id, 'reportable_type' => $item->reportable_type]);
+                $item->view = route('pc:reportview', [
+                    'reportable_id'   => $item->reportable_id,
+                    'reportable_type' => $item->reportable_type,
+                ]);
 
                 return $item;
             });
         }
 
-        return response()->json($items, 200, ['x-total' => $count]);
+        return response()->json($items, 200);
     }
 
     /**
      * 处理举报.
      *
-     * @param  Request     $request
-     * @param  ReportModel $report
+     * @param  Request  $request
+     * @param  ReportModel  $report
+     *
      * @return mixed
      */
     public function deal(Request $request, ReportModel $report)
@@ -72,13 +80,13 @@ class ReportController extends Controller
 
         if ($report->user) {
             $report->user->notify(new SystemNotification('你举报的内容平台已处理', [
-                'type' => 'report',
+                'type'     => 'report',
                 'resource' => [
                     'type' => $report->reportable_type,
-                    'id' => $report->reportable_id,
+                    'id'   => $report->reportable_id,
                 ],
-                'subject' => $report->subject,
-                'state' => 'passed',
+                'subject'  => $report->subject,
+                'state'    => 'passed',
             ]));
         }
 
@@ -88,8 +96,9 @@ class ReportController extends Controller
     /**
      * 驳回举报.
      *
-     * @param Request $request
-     * @param ReportModel $report
+     * @param  Request  $request
+     * @param  ReportModel  $report
+     *
      * @return mixed
      * @author BS <414606094@qq.com>
      */
@@ -102,13 +111,13 @@ class ReportController extends Controller
 
         if ($report->user) {
             $report->user->notify(new SystemNotification('你举报的内容平台已处理', [
-                'type' => 'report',
+                'type'     => 'report',
                 'resource' => [
                     'type' => $report->reportable_type,
-                    'id' => $report->reportable_id,
+                    'id'   => $report->reportable_id,
                 ],
-                'subject' => $report->subject,
-                'state' => 'rejected',
+                'subject'  => $report->subject,
+                'state'    => 'rejected',
             ]));
         }
 
@@ -121,7 +130,8 @@ class ReportController extends Controller
      * @return bool
      * @author BS <414606094@qq.com>
      */
-    protected function getPcInstalled(): bool
+    protected function getPcInstalled()
+    : bool
     {
         return class_exists(\Zhiyi\Component\ZhiyiPlus\PlusComponentPc\PcServiceProvider::class);
     }

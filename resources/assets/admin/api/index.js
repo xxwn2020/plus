@@ -39,6 +39,8 @@ import area from './area'
 import client from './client'
 /* 对应网页模版 */
 import template from './template'
+/* 对应举报管理 */
+import report from './report'
 
 const api = {
   normError,
@@ -62,7 +64,8 @@ const api = {
   userConfig,
   area,
   client,
-  template
+  template,
+  report
 }
 
 api.install = Vue => (Vue.prototype.$api = api)
