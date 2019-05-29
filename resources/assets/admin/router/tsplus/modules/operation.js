@@ -40,6 +40,12 @@ const OperationRouter = {
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/sensitive-words/index')
     },
     {
+      path: 'client-configuration',
+      name: 'Operation-Client-Configuration',
+      meta: { title: 'operation.client' },
+      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/operation/clients/clients.vue')
+    },
+    {
       path: 'areas',
       name: 'Operation-Areas',
       meta: { title: 'operation.areas' },

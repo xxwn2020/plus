@@ -110,7 +110,8 @@ export default {
       },
       cache: {
         root: '缓存管理'
-      }
+      },
+      client: '客户端设置'
     },
 
     system: {
@@ -289,7 +290,9 @@ export default {
       unknown: '未 知',
       waiting: '待审核',
       refuse: '已拒绝',
-      accept: '已通过'
+      accept: '已通过',
+      open: '开 启',
+      close: '关 闭'
     },
     all: '全 部',
     add: '添 加',
@@ -455,64 +458,64 @@ export default {
       search: {
         userId: 'ID',
         sort:
-          '排序方式',
+            '排序方式',
         email:
-          '电子邮箱',
+            '电子邮箱',
         phone:
-          '手机号码',
+            '手机号码',
         role:
-          '用户角色',
+            '用户角色',
         follow:
-          '关注设置',
+            '关注设置',
         regist_start_date:
-          '注册时间',
+            '注册时间',
         regist_end_date:
-          '注册时间',
+            '注册时间',
         name:
-          '用户昵称',
+            '用户昵称',
         location:
-          '所在地区',
+            '所在地区',
         dateTimeRange:
-          '注册时间',
+            '注册时间',
         trashed:
-          '是否禁用',
+            '是否禁用',
         recommend:
-          '是否推荐',
+            '是否推荐',
         currency:
-          '积 分',
+            '积 分',
         createdAt:
-          '注册时间',
+            '注册时间',
         sex:
-          {
-            root: '性 别',
-            male:
-              '男',
-            female:
-              '女',
-            hide:
-              '保 密'
-          }
+            {
+              root: '性 别',
+              male:
+                  '男',
+              female:
+                  '女',
+              hide:
+                  '保 密'
+            }
       }
     },
     /* 用户设置 */
     userConfig: {
       config: '注册设置',
       register:
-        {
-          method: '注册方式',
-          fixed:
-            '强制完善资料',
-          type:
-            '注册类型',
-          showTerms:
-            '服务条款和隐私政策',
-          terms:
-            '条款内容'
-        },
+          {
+            method: '注册方式',
+            fixed:
+                '强制完善资料',
+            type:
+                '注册类型',
+            showTerms:
+                '服务条款和隐私政策',
+            terms:
+                '条款内容'
+          },
       imHelper: {
         root: '聊天小助手',
         label:
-          '选择小助手'
+            '选择小助手'
       },
       thirdParts: {
         qq: 'QQ登录',
@@ -537,15 +540,28 @@ export default {
         icon: '认证图标'
       }
     },
+    client: {
+      root: '客户端设置',
+      web: {
+        root: 'PC端',
+        open: '是否开启PC端',
+        url: '请输入PC端地址'
+      },
+      spa: {
+        root: '移动端网页(H5)',
+        open: '是否开启移动端网页',
+        url: '请输入移动端网页地址'
+      }
+    },
     /* 搜索翻译 */
     search: {
       root: '搜 索',
       perPage:
-        '每页数据',
+          '每页数据',
       limit:
-        '每页数据',
+          '每页数据',
       page:
-        '当前页数'
+          '当前页数'
     },
     reports: {
       root: '举报列表'
