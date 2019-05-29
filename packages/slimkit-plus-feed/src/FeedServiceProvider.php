@@ -20,13 +20,13 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed;
 
+use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
 use Zhiyi\Plus\Support\PinnedsNotificationEventer;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
-use function Zhiyi\Plus\setting;
 
 class FeedServiceProvider extends ServiceProvider
 {
@@ -85,7 +85,7 @@ class FeedServiceProvider extends ServiceProvider
                         ->where('channel', 'comment')
                         ->has('feed')
                         ->has('comment');
-                    // return $query->where('expires_at', null)->where('channel', 'comment')->whereExists(function ($query) {
+                // return $query->where('expires_at', null)->where('channel', 'comment')->whereExists(function ($query) {
                     //     return $query->from('feeds')->whereRaw('feed_pinneds.raw = feeds.id')->where('deleted_at', null);
                     // })->whereExists(function ($query) {
                     //     return $query->from('comments')->whereRaw('feed_pinneds.target = comments.id');

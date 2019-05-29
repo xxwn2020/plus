@@ -22,6 +22,7 @@ namespace Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Providers;
 
 use Cache;
 use Zhiyi\Plus\Models\User;
+use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
@@ -30,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\News;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentNews\Models\NewsPinned;
-use function Zhiyi\Plus\setting;
 
 class NewsServiceProvider extends ServiceProvider
 {

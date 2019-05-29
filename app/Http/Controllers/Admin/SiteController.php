@@ -23,6 +23,7 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 use Carbon\Carbon;
 use Zhiyi\Plus\Models\Area;
 use Illuminate\Http\Request;
+use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\CommonConfig;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Facades\Cache;
@@ -31,7 +32,6 @@ use Illuminate\Contracts\Config\Repository;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use function Zhiyi\Plus\setting;
 
 class SiteController extends Controller
 {
@@ -71,8 +71,7 @@ class SiteController extends Controller
     public function get(Request $request,
         Repository $config,
         ResponseFactory $response
-    )
-    {
+    ) {
         if (! $request->user()->ability('admin:site:base')) {
             return response()->json([
                 'message' => '没有权限查看该项信息',
@@ -103,8 +102,7 @@ class SiteController extends Controller
     public function updateSiteInfo(Request $request,
         Configuration $config,
         ResponseFactory $response
-    )
-    {
+    ) {
         if (! $request->user()->ability('admin:site:base')) {
             return response()->json([
                 'message' => '没有权限更新该信息',
@@ -394,8 +392,7 @@ class SiteController extends Controller
     public function updateMailInfo(Request $request,
         Configuration $config,
         ResponseFactory $response
-    )
-    {
+    ) {
         // if (! $request->user()->ability('admin:mail:show')) {
         //     return response()->json([
         //         'message' => '没有权限更新该信息',
@@ -421,8 +418,7 @@ class SiteController extends Controller
     public function sendMail(Request $request,
         Mailer $mailer,
         ResponseFactory $response
-    )
-    {
+    ) {
         $title = '测试邮件';
         $email = $request->input('email');
         $content = $request->input('content');
@@ -533,8 +529,7 @@ class SiteController extends Controller
 
     public function setBackGroundConfiguration(Request $request,
         Configuration $config
-    )
-    {
+    ) {
         $config->set('site.background.logo', $request->input('logo_src'));
 
         return response()->json(['message' => ['保存成功']], 201);

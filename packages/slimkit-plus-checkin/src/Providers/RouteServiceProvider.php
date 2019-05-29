@@ -20,11 +20,11 @@ declare(strict_types=1);
 
 namespace SlimKit\PlusCheckIn\Providers;
 
+use function Zhiyi\Plus\setting;
 use Illuminate\Support\ServiceProvider;
 use Zhiyi\Plus\Support\ManageRepository;
 use Zhiyi\Plus\Support\BootstrapAPIsEventer;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use function Zhiyi\Plus\setting;
 
 class RouteServiceProvider extends ServiceProvider
 {
