@@ -159,6 +159,12 @@ export default {
       cdn: {
         root: 'CDN管理'
       }
+    },
+    promotion: {
+      root: '推广',
+      ad: '广告管理',
+      addAd: '添加广告',
+      editAd: '编辑广告'
     }
     /** TSPlus */
   },
@@ -282,6 +288,7 @@ export default {
     uname: '用户名',
     delete: '删 除',
     status: '状 态',
+    back: '返 回',
     payment: {
       iapSetting: 'IAP设置',
       iapSwitch: 'IAP开关',
@@ -570,6 +577,23 @@ export default {
     },
     reports: {
       root: '举报管理'
+    },
+    promotion: {
+      ad: {
+        root: '广告管理',
+        add: '添加广告',
+        edit: '编辑广告',
+        title: '广告标题',
+        titleDesc: '必填，广告标题',
+        position: '广告位置',
+        positionDesc: '必选，广告位置',
+        type: '广告类型',
+        typeDesc: '必选，广告类型',
+        duration: '广告时长',
+        durationDesc: '必填，广告时长',
+        sort: '广告排序',
+        sortDesc: '广告排序，值越大越靠前'
+      }
     },
     templates: {
       aboutUs: '关于我们',

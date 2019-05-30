@@ -355,7 +355,7 @@ Route::middleware('auth:web')
         Route::get('ads/{ad}', 'AdvertisingController@showAd');
         Route::post('ads', 'AdvertisingController@storeAd');
         Route::delete('ads/{ad}', 'AdvertisingController@deleteAd');
-        Route::put('ads/{ad}', 'AdvertisingController@updateAd');
+        Route::patch('ads/{ad}', 'AdvertisingController@updateAd');
 
         /* ------------- 站点管理 -----------------*/
         Route::get('site/configures', 'SiteController@siteConfigurations');

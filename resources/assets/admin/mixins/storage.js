@@ -42,27 +42,23 @@ export default {
         this.mutilplePercentage = parseInt((loaded / total).toFixed(2) * 100)
       }
       instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s)
-      instance
-        .request({
-          method: method.toLowerCase(),
-          url: uri,
-          headers,
-          data: file
-        })
-        .then(() => {
-          this.$set(this, 'percentage', 0)
-          this.nodes.push({ node, name: file.name })
-        })
-        .catch(this.showApiError)
-        .finally(() => {
-          this.mutilpleUploading = false
-        })
+      instance.request({
+        method: method.toLowerCase(),
+        url: uri,
+        headers,
+        data: file
+      }).then(() => {
+        this.$set(this, 'percentage', 0)
+        this.nodes.push({ node, name: file.name })
+      }).catch(this.showApiError).finally(() => {
+        this.mutilpleUploading = false
+      })
     },
     /**
      * 视频上传
      * 覆盖upload组件的默认上传事件
      */
-    async upload ({ file }) {
+    async upload ({ file, callback = null, url = false, column }) {
       const { data: task } = await this.createTask(file)
       const { headers, method, uri, node } = task
       this.uploading = true
@@ -72,21 +68,21 @@ export default {
         this.percentage = parseInt((loaded / total).toFixed(2) * 100)
       }
       instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s)
-      instance
-        .request({
-          method: method.toLowerCase(),
-          url: uri,
-          headers,
-          data: file
-        })
-        .then(() => {
+      instance.request({
+        method: method.toLowerCase(),
+        url: uri,
+        headers,
+        data: file
+      }).then(() => {
+        if (typeof callback === 'function') {
+          callback(url ? File.url(node) : node, column)
+        } else {
           this.$set(this, 'percentage', 0)
           this.$set(this, 'node', node)
-        })
-        .catch(this.showApiError)
-        .finally(() => {
-          this.uploading = false
-        })
+        }
+      }).catch(this.showApiError).finally(() => {
+        this.uploading = false
+      })
     },
     /**
      * 获取文件md5

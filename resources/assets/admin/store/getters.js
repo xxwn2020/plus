@@ -15,6 +15,7 @@ const getters = {
   errorLogs: state => state.errorLog.logs,
   manageList: state => state.manageList.list,
 
-  areas: state => state.area.list
+  areas: state => state.area.list,
+  adSpaces: state => state.ad.spaces
 }
 export default getters

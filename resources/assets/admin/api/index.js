@@ -41,10 +41,13 @@ import client from './client'
 import template from './template'
 /* 对应举报管理 */
 import report from './report'
+/* 对应推广 */
+import promotion from './ad'
 
 const api = {
   normError,
   http,
+  promotion,
   systemInfo,
   users,
   roles,
