@@ -11,19 +11,20 @@
     </div>
     <el-main>
       <el-form
-        style="width: auto;"
+        style="max-width: 100vw;"
         :inline="true"
         :model="query"
         ref="userFilterForm"
-        label-width="80px"
       >
         <div class="form-item" v-for="field in formFileds.fields" :key="field.id">
           <el-input
+            size="mini"
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'input'"
             v-model="query[field.id]"
           ></el-input>
           <el-cascader
+            size="mini"
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'cascader'"
             :options="field.options"
@@ -31,6 +32,7 @@
             @change="handleChange"
           ></el-cascader>
           <el-select
+            size="mini"
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'select'"
             v-model="query[field.id]"
@@ -43,6 +45,7 @@
             ></el-option>
           </el-select>
           <el-date-picker
+            size="mini"
             v-if="field.type === 'dateTimeRange'"
             v-model="dateTimeRange"
             type="datetimerange"
@@ -55,6 +58,7 @@
         </div>
         <div>
           <el-button
+            size="mini"
             type="primary"
             :loading="loading"
             @click="doSearch()"
@@ -94,8 +98,8 @@
         <el-table-column width="60" prop="sex" :label="$t('admin.users.search.sex.root')">
           <template
             slot-scope="scope"
-          >{{scope.row.sex === 0 ? $t('admin.users.search.sex.hide ') : (scope.row.sex === 1 ?
-            $t('admin.users.search.sex.male ') : $t('admin.users.search.sex.female '))}}
+          >{{scope.row.sex === 0 ? $t('admin.users.search.sex.hide') : (scope.row.sex === 1 ?
+            $t('admin.users.search.sex.male') : $t('admin.users.search.sex.female'))}}
           </template>
         </el-table-column>
         <el-table-column width="120" prop="email" :label="$t('admin.users.search.email')"/>
