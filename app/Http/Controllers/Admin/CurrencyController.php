@@ -23,11 +23,10 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 use DB;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
-use Zhiyi\Plus\Models\Currency;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Plus\Models\CurrencyOrder as OrderModel;
 use Zhiyi\Plus\Packages\Currency\Processes\Common;
+use function Zhiyi\Plus\setting;
 
 class CurrencyController extends Controller
 {
@@ -39,28 +38,28 @@ class CurrencyController extends Controller
     public function showConfig()
     {
         $cash = setting('currency', 'cash', [
-            'rule' => '我是提现规则',
+            'rule'   => '我是提现规则',
             'status' => true, // 提现开关
         ]);
         $recharge = setting('currency', 'recharge', [
-            'rule' => '我是积分充值规则',
+            'rule'   => '我是积分充值规则',
             'status' => true, // 充值开关
         ]);
         $config = [
-            'basic_conf' => [
-                'rule' => setting('currency', 'rule', '我是积分规则'),
-                'cash.rule' => $cash['rule'],
-                'cash.status' => $cash['status'],
-                'recharge.rule' => $recharge['rule'],
+            'basic_conf'  => [
+                'rule'            => setting('currency', 'rule', '我是积分规则'),
+                'cash.rule'       => $cash['rule'],
+                'cash.status'     => $cash['status'],
+                'recharge.rule'   => $recharge['rule'],
                 'recharge.status' => $recharge['status'],
             ],
             'detail_conf' => setting('currency', 'settings', [
-                'recharge-ratio' => 1,
+                'recharge-ratio'   => 1,
                 'recharge-options' => '100,500,1000,2000,5000,10000',
-                'recharge-max' => 10000000,
-                'recharge-min' => 100,
-                'cash-max' => 10000000,
-                'cash-min' => 100,
+                'recharge-max'     => 10000000,
+                'recharge-min'     => 100,
+                'cash-max'         => 10000000,
+                'cash-min'         => 100,
             ]),
         ];
 
@@ -70,33 +69,35 @@ class CurrencyController extends Controller
     /**
      * 更新积分基础配置.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
+     * @throws \Throwable
      */
     public function updateConfig(Request $request)
     {
         $type = strtolower((string) $request->query('type'));
         if ($type == 'detail') {
             setting('currency')->set('settings', [
-                'recharge-ratio' => (int) $request->input('recharge-ratio'),
+                'recharge-ratio'   => (int) $request->input('recharge-ratio'),
                 'recharge-options' => $request->input('recharge-option'),
-                'recharge-max' => $request->input('recharge-max'),
-                'recharge-min' => $request->input('recharge-min'),
-                'cash-max' => $request->input('cash-max'),
-                'cash-min' => $request->input('cash-min'),
+                'recharge-max'     => $request->input('recharge-max'),
+                'recharge-min'     => $request->input('recharge-min'),
+                'cash-max'         => $request->input('cash-max'),
+                'cash-min'         => $request->input('cash-min'),
             ]);
 
             return response()->json(['message' => '更新成功'], 201);
         }
 
         setting('currency')->set([
-            'rule' => $request->input('rule'),
+            'rule'     => $request->input('rule'),
             'recharge' => [
-                'rule' => $request->input('recharge.rule'),
+                'rule'   => $request->input('recharge.rule'),
                 'status' => $request->input('recharge.status'),
             ],
-            'cash' => [
-                'rule' => $request->input('cash.rule'),
+            'cash'     => [
+                'rule'   => $request->input('cash.rule'),
                 'status' => $request->input('cash.status'),
             ],
         ]);
@@ -107,27 +108,22 @@ class CurrencyController extends Controller
     /**
      * 积分流水.
      *
-     * @param Request    $request
-     * @param OrderModel $orderModel
+     * @param  Request  $request
+     * @param  OrderModel  $orderModel
+     *
      * @return mixed
      * @author BS <414606094@qq.com>
      */
     public function list(Request $request, OrderModel $orderModel)
     {
         $limit = $request->query('limit', 15);
-        $offset = $request->query('offset', 0);
         $user = (int) $request->query('user');
-        $name = $request->query('name');
         $action = $request->query('action');
         $state = $request->query('state');
 
-        $query = $orderModel->when($user, function ($query) use ($user) {
-            return $query->where('owner_id', $user);
-        })
-            ->when($name, function ($query) use ($name) {
-                return $query->whereHas('user', function ($query) use ($name) {
-                    return $query->where('name', 'like', '%'.$name.'%');
-                });
+        $query = $orderModel->newQuery()
+            ->when($user, function ($query) use ($user) {
+                return $query->where('owner_id', $user);
             })
             ->when(in_array($action, [1, -1]), function ($query) use ($action) {
                 return $query->where('type', $action);
@@ -138,10 +134,8 @@ class CurrencyController extends Controller
 
         $count = $query->count();
         $orders = $query->with('user')
-            ->limit($limit)
-            ->offset($offset)
             ->orderBy('id', 'desc')
-            ->get();
+            ->paginate($limit);
 
         return response()->json($orders, 200, ['x-total' => $count]);
     }
@@ -149,25 +143,31 @@ class CurrencyController extends Controller
     /**
      * 积分概览.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author BS <414606094@qq.com>
      */
     public function overview(OrderModel $orderModel)
     {
-        $recharge = $orderModel->where('target_type', 'recharge')->select(DB::raw('count(id) as count, sum(amount) as sum'))->first();
-        $cash = $orderModel->where('target_type', 'cash')->select(DB::raw('count(id) as count, sum(amount) as sum'))->first();
+        $recharge = $orderModel->where('target_type', 'recharge')
+            ->select(DB::raw('count(id) as count, sum(amount) as sum'))
+            ->first();
+        $cash = $orderModel->where('target_type', 'cash')
+            ->select(DB::raw('count(id) as count, sum(amount) as sum'))
+            ->first();
 
         return response()->json([
             'recharge' => $recharge,
-            'cash' => $cash,
+            'cash'     => $cash,
         ], 200);
     }
 
     /**
      * 获取用户积分信息.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -207,13 +207,16 @@ class CurrencyController extends Controller
     /**
      * 用户积分赋值.
      *
-     * @param Request $request
-     * @param Common  $common
+     * @param  Request  $request
+     * @param  Common  $common
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function add(Request $request, Common $common)
     {
-        if (! is_numeric($request->input('num')) || $request->input('num') == 0) {
+        if (! is_numeric($request->input('num'))
+            || $request->input('num') == 0
+        ) {
             return response()->json(['message' => '请输入正确的数值'], 422);
         }
 
@@ -227,12 +230,14 @@ class CurrencyController extends Controller
             return response()->json(['message' => '该用户积分不足不能进行减少操作'], 403);
         }
 
-        $order = $common->createOrder($currency->owner_id, abs($num), ($num > 0 ? 1 : -1), '后台', '管理员操作');
+        $order = $common->createOrder($currency->owner_id, abs($num),
+            ($num > 0 ? 1 : -1), '后台', '管理员操作');
         $order->save();
 
         $currency->sum += $num;
         $currency->save();
 
-        return response()->json(['message' => '操作成功', 'currency' => $currency], 200);
+        return response()->json(['message' => '操作成功', 'currency' => $currency],
+            200);
     }
 }

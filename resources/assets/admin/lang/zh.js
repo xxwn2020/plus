@@ -119,6 +119,12 @@ export default {
       client: '客户端设置'
     },
 
+    currency: {
+      root: '积分',
+      turnover: '流水',
+      config: '配置'
+    },
+
     system: {
       root: '系统配置',
       info: '系统信息',

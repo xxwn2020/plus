@@ -43,6 +43,8 @@ import template from './template'
 import report from './report'
 /* 对应推广 */
 import promotion from './ad'
+/* 对应积分相关 */
+import currency from './currency'
 
 const api = {
   normError,
@@ -51,6 +53,7 @@ const api = {
   systemInfo,
   users,
   roles,
+  currency,
   abilities,
   storage,
   certifications,
