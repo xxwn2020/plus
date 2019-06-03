@@ -13,6 +13,12 @@ export default {
       hidden: true,
       children: [
         {
+          path: 'statistics',
+          component: () => import(/* webpackChunkName: 'currency' */ '@/views/tsplus/currency/statistics'),
+          name: 'Currency-Statistics',
+          meta: { title: 'currency.statistics', tabs: true }
+        },
+        {
           path: 'turnover',
           component: () => import(/* webpackChunkName: 'currency' */ '@/views/tsplus/currency/currency'),
           name: 'Currency-Turnover',

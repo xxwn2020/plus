@@ -23,5 +23,10 @@ export default {
     admin.patch('/currency/config?type=detail', params, {
       validateStatus: s => (s === 201)
     })
+  ),
+  statistics: () => (
+    admin.get('/currency/overview', {
+      validateStatus: s => (s === 200)
+    })
   )
 }

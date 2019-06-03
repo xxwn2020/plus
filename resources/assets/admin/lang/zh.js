@@ -121,6 +121,7 @@ export default {
 
     currency: {
       root: '积分',
+      statistics: '统计',
       turnover: '流水',
       config: '配置'
     },
