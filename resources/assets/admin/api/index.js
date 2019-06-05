@@ -45,6 +45,8 @@ import report from './report'
 import promotion from './ad'
 /* 对应积分相关 */
 import currency from './currency'
+/* 对应打赏管理 */
+import reward from './reward'
 
 const api = {
   normError,
@@ -53,6 +55,7 @@ const api = {
   systemInfo,
   users,
   roles,
+  reward,
   currency,
   abilities,
   storage,

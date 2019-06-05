@@ -6,6 +6,7 @@ import TemplateRouter from './modules/template'
 import Report from './modules/report'
 import Promotion from './modules/promotion'
 import Currency from './modules/currency'
+import Reward from './modules/reward'
 
 export default [
   ManagementRouter,
@@ -15,5 +16,6 @@ export default [
   TemplateRouter,
   Report,
   Promotion,
-  Currency
+  Currency,
+  Reward
 ]

@@ -24,6 +24,7 @@ use DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Reward;
+use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Http\Controllers\Controller;
 
 class RewardController extends Controller
@@ -36,8 +37,9 @@ class RewardController extends Controller
     /**
      * 打赏日期分组统计.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param  Request  $request
+     *
+     * @return JsonResponse
      */
     public function statistics(Request $request)
     {
@@ -49,7 +51,8 @@ class RewardController extends Controller
     /**
      * 根据条件获取统计数据.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      */
     protected function byConditionsGetStatisticsData(Request $request)
@@ -64,12 +67,14 @@ class RewardController extends Controller
                 $start = Carbon::now()->startOfDay()->toDateTimeString();
                 $end = Carbon::now()->endOfDay()->toDateTimeString();
             } elseif ($scope == 'week') {
-                $start = Carbon::now()->addDay(-7)->startOfDay()->toDateTimeString();
+                $start = Carbon::now()->addDay(-7)->startOfDay()
+                    ->toDateTimeString();
                 $end = Carbon::now()->toDateTimeString();
             }
         } else {
             if ($start && $end) {
-                $start = Carbon::parse($start)->startOfDay()->toDateTimeString();
+                $start = Carbon::parse($start)->startOfDay()
+                    ->toDateTimeString();
                 $end = Carbon::parse($end)->endOfDay()->toDateTimeString();
             }
         }
@@ -79,16 +84,16 @@ class RewardController extends Controller
              sum(amount) AS reward_amount, 
              LEFT (created_at, 10) AS reward_date'
         ))
-        ->when($type, function ($query) use ($type) {
-            $query->where('rewardable_type', $type);
-        })
-        ->when($start && $end, function ($qeury) use ($start, $end) {
-            $qeury->whereBetween('created_at', [$start, $end]);
-        })
-        ->groupBy('reward_date')
-        ->orderBy('reward_date', 'asc')
-        ->get()
-        ->toArray();
+            ->when($type, function ($query) use ($type) {
+                $query->where('rewardable_type', $type);
+            })
+            ->when($start && $end, function ($qeury) use ($start, $end) {
+                $qeury->whereBetween('created_at', [$start, $end]);
+            })
+            ->groupBy('reward_date')
+            ->orderBy('reward_date', 'asc')
+            ->get()
+            ->toArray();
 
         return $items;
     }
@@ -96,8 +101,9 @@ class RewardController extends Controller
     /**
      * 打赏清单.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param  Request  $request
+     *
+     * @return JsonResponse
      */
     public function rewards(Request $request)
     {
@@ -107,33 +113,31 @@ class RewardController extends Controller
         $keyword = $request->get('keyword');
 
         $limit = (int) $request->query('limit', 15);
-        $offset = (int) $request->query('offset', 0);
 
         $query = Reward::with(['user', 'target'])
-        ->when($type, function ($query) use ($type) {
-            $query->where('rewardable_type', $type);
-        })
-        ->when($start && $end, function ($query) use ($start, $end) {
-            $query->whereBetween('created_at', [
-                Carbon::parse($start)->startOfDay()->toDateTimeString(),
-                Carbon::parse($end)->endOfDay()->toDateTimeString(),
-            ]);
-        })
-        ->when($keyword, function ($query) use ($keyword) {
-            if (is_numeric($keyword)) {
-                $query->where('user_id', $keyword);
-            } else {
-                $query->whereHas('user', function ($qeruy) use ($keyword) {
-                    $qeruy->where('name', 'like', sprintf('%%%s%%', $keyword));
-                });
-            }
-        });
+            ->when($type, function ($query) use ($type) {
+                $query->where('rewardable_type', $type);
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                $query->whereBetween('created_at', [
+                    Carbon::parse($start)->startOfDay()->toDateTimeString(),
+                    Carbon::parse($end)->endOfDay()->toDateTimeString(),
+                ]);
+            })
+            ->when($keyword, function ($query) use ($keyword) {
+                if (is_numeric($keyword)) {
+                    $query->where('user_id', $keyword);
+                } else {
+                    $query->whereHas('user', function ($qeruy) use ($keyword) {
+                        $qeruy->where('name', 'like',
+                            sprintf('%%%s%%', $keyword));
+                    });
+                }
+            });
 
         $total = $query->count('id');
         $items = $query->orderBy('id', 'desc')
-            ->limit($limit)
-            ->offset($offset)
-            ->get();
+            ->paginate($limit);
 
         return response()->json($items, 200, ['x-reward-total' => $total]);
     }
@@ -141,7 +145,7 @@ class RewardController extends Controller
     /**
      * 导出下载.
      *
-     * @param Request $request
+     * @param  Request  $request
      */
     public function export(Request $request)
     {
@@ -160,7 +164,8 @@ class RewardController extends Controller
     /**
      * 根据条件获取打赏数据.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      */
     protected function byConditionsGetRewardData(Request $request)
@@ -171,27 +176,27 @@ class RewardController extends Controller
         $keyword = $request->get('keyword');
 
         $items = Reward::with(['user', 'target'])
-        ->when($type, function ($query) use ($type) {
-            $query->where('rewardable_type', $type);
-        })
-        ->when($start && $end, function ($query) use ($start, $end) {
-            $query->whereBetween('created_at', [
-                Carbon::parse($start)->startOfDay()->toDateTimeString(),
-                Carbon::parse($end)->endOfDay()->toDateTimeString(),
-            ]);
-        })
-        ->when($keyword, function ($query) use ($keyword) {
-            if (is_numeric($keyword)) {
-                $query->where('user_id', $keyword);
-            } else {
-                $query->whereHas('user', function ($qeruy) use ($keyword) {
-                    $qeruy->where('name', 'like', $keyword);
-                });
-            }
-        })
-        ->orderBy('id', 'desc')
-        ->get()
-        ->toArray();
+            ->when($type, function ($query) use ($type) {
+                $query->where('rewardable_type', $type);
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                $query->whereBetween('created_at', [
+                    Carbon::parse($start)->startOfDay()->toDateTimeString(),
+                    Carbon::parse($end)->endOfDay()->toDateTimeString(),
+                ]);
+            })
+            ->when($keyword, function ($query) use ($keyword) {
+                if (is_numeric($keyword)) {
+                    $query->where('user_id', $keyword);
+                } else {
+                    $query->whereHas('user', function ($qeruy) use ($keyword) {
+                        $qeruy->where('name', 'like', $keyword);
+                    });
+                }
+            })
+            ->orderBy('id', 'desc')
+            ->get()
+            ->toArray();
 
         return $items;
     }
@@ -199,7 +204,8 @@ class RewardController extends Controller
     /**
      * 转换打赏数组.
      *
-     * @param array $data
+     * @param  array  $data
+     *
      * @return array
      */
     public function convertRewardData(array $data)
@@ -209,7 +215,8 @@ class RewardController extends Controller
             $items[$key][] = $value['user']['name'];
             $items[$key][] = $value['target']['name'];
             $items[$key][] = $value['amount'] / self::CONVERSION_VALUE;
-            $items[$key][] = $this->getRewardavelTypes()[$value['rewardable_type']];
+            $items[$key][]
+                = $this->getRewardavelTypes()[$value['rewardable_type']];
             $items[$key][] = $value['created_at'];
         }
 
@@ -224,28 +231,32 @@ class RewardController extends Controller
     protected function getRewardavelTypes()
     {
         return [
-           'feeds' => '动态打赏',
-           'news'  => '资讯打赏',
-           'users' => '用户打赏',
-           'question-answers' => '问答打赏',
-           'group-posts' => '圈子帖子打赏',
+            'feeds'            => '动态打赏',
+            'news'             => '资讯打赏',
+            'users'            => '用户打赏',
+            'question-answers' => '问答打赏',
+            'group-posts'      => '圈子帖子打赏',
         ];
     }
 
     /**
      * export excel.
      *
-     * @param array $data  数据
-     * @param array $title 列名
-     * @param string $filename
+     * @param  array  $data  数据
+     * @param  array  $title  列名
+     * @param  string  $filename
      */
-    public function exportExcel(array $data = [], array $title = [], $filename = 'export')
-    {
+    public function exportExcel(
+        array $data = [],
+        array $title = [],
+        $filename = 'export'
+    ) {
         //set response header
         header('Content-type:application/octet-stream');
         header('Accept-Ranges:bytes');
         header('Content-type:application/vnd.ms-excel');
-        header(sprintf('Content-Disposition:attachment;filename=%s.xls', $filename));
+        header(sprintf('Content-Disposition:attachment;filename=%s.xls',
+            $filename));
         header('Pragma: no-cache');
         header('Expires: 0');
 

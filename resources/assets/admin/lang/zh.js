@@ -102,6 +102,11 @@ export default {
         'edit': '编辑认证信息'
       }
     },
+    rewards: {
+      root: '打赏管理',
+      statistics: '打赏统计',
+      turnover: '打赏清单'
+    },
     operation: {
       root: '运营管理',
       basic: '基础设置',
@@ -123,7 +128,8 @@ export default {
       root: '积分',
       statistics: '统计',
       turnover: '流水',
-      config: '配置'
+      config: '配置',
+      audit: '提现审批'
     },
 
     system: {
