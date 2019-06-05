@@ -38,7 +38,8 @@ class PcServiceProvider extends ServiceProvider
 
         // publish resource
         $this->publishes([
-            dirname(__DIR__).'/resources/assets/web' => $this->app->PublicPath().'/assets/pc',
+            dirname(__DIR__).'/resources/assets/web' => $this->app->PublicPath()
+                .'/assets/pc',
         ], 'pc-public');
 
         // load routes
@@ -52,20 +53,31 @@ class PcServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            dirname(__DIR__).'/config/pc.php' => $this->app->configPath('pc.php'),
+            dirname(__DIR__)
+            .'/config/pc.php' => $this->app->configPath('pc.php'),
         ], 'config');
 
         // load view composers
-        View::composer('pcview::widgets.hotusers', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotUsers');
-        View::composer('pcview::widgets.recusers', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\RecommendUsers');
-        View::composer('pcview::widgets.checkin', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\CheckIn');
-        View::composer('pcview::widgets.hotnews', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotNews');
-        View::composer('pcview::widgets.hotgroups', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotGroups');
-        View::composer('pcview::widgets.incomerank', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\IncomeRank');
-        View::composer('pcview::widgets.hotquestions', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotQuestions');
-        View::composer('pcview::widgets.questionrank', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\QuestionRank');
-        View::composer('pcview::widgets.relevantquestion', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\QuestionRelevant');
-        View::composer('pcview::widgets.hottopics', 'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotTopics');
+        View::composer('pcview::widgets.hotusers',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotUsers');
+        View::composer('pcview::widgets.recusers',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\RecommendUsers');
+        View::composer('pcview::widgets.checkin',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\Checkin');
+        View::composer('pcview::widgets.hotnews',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotNews');
+        View::composer('pcview::widgets.hotgroups',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotGroups');
+        View::composer('pcview::widgets.incomerank',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\IncomeRank');
+        View::composer('pcview::widgets.hotquestions',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotQuestions');
+        View::composer('pcview::widgets.questionrank',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\QuestionRank');
+        View::composer('pcview::widgets.relevantquestion',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\QuestionRelevant');
+        View::composer('pcview::widgets.hottopics',
+            'Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers\HotTopics');
     }
 
     /**
@@ -77,11 +89,12 @@ class PcServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make(ManageRepository::class)->loadManageFrom('PC端', 'pc:admin', [
-            'route' => true,
-            'icon' => asset('assets/pc/pc-icon.png'),
-            'key' => 'pc',
-        ]);
+        $this->app->make(ManageRepository::class)
+            ->loadManageFrom('PC端', 'pc:admin', [
+                'route' => true,
+                'icon'  => asset('assets/pc/pc-icon.png'),
+                'key'   => 'pc',
+            ]);
 
         $this->mergeConfigFrom(
             dirname(__DIR__).'/config/pc.php', 'pc'

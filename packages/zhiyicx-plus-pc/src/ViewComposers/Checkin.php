@@ -18,8 +18,8 @@
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentPc\ViewComposers;
 
+use Cache;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Cache;
 use function Zhiyi\Component\ZhiyiPlus\PlusComponentPc\api;
 
 class Checkin
@@ -30,7 +30,8 @@ class Checkin
 
         if ($config['bootstrappers']['checkin']['switch']) {
             $data = api('GET', '/api/v2/user/checkin');
-            $data['checked_in'] = isset($data['checked_in']) && $data['checked_in'] ? 1 : 0;
+            $data['checked_in'] = isset($data['checked_in'])
+            && $data['checked_in'] ? 1 : 0;
             $view->with('data', $data);
         }
     }
