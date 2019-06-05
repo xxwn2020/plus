@@ -30,14 +30,22 @@ const managementRouter = {
           hidden: true,
           name: 'management-users-certifications-add',
           component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/addCertificated'),
-          meta: { title: 'management.certifications.add', hidden: true, noCache: true }
+          meta: {
+            title: 'management.certifications.add',
+            hidden: true,
+            noCache: true
+          }
         },
         {
           path: 'certifications/edit/:id',
           hidden: true,
           name: 'management-users-certifications-edit',
           component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/editCertificated'),
-          meta: { title: 'management.certifications.edit', hidden: true, noCache: true }
+          meta: {
+            title: 'management.certifications.edit',
+            hidden: true,
+            noCache: true
+          }
         },
         {
           path: 'roles',
@@ -87,12 +95,6 @@ const managementRouter = {
           meta: { title: 'management.tags.categories', tabs: true }
         }
       ]
-    },
-    {
-      path: 'integral',
-      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/integral/index'),
-      name: 'management-integral',
-      meta: { title: 'management.integral.root' }
     }
   ]
 }
