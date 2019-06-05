@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar-in-page></nav-bar-in-page>
+    <NavBarInPage></NavBarInPage>
     <el-main>
       <router-view></router-view>
     </el-main>
@@ -8,6 +8,7 @@
 </template>
 
 <script>
+
   export default {
     name: 'currency-index'
   }

@@ -29,6 +29,12 @@ export default {
           component: () => import(/* webpackChunkName: 'currency' */ '@/views/tsplus/currency/config'),
           name: 'Currency-Config',
           meta: { title: 'currency.config', tabs: true }
+        },
+        {
+          path: 'audit',
+          component: () => import(/* webpackChunkName: 'currency' */ '@/views/tsplus/currency/audit'),
+          name: 'Currency-Audit',
+          meta: { title: 'currency.audit', tabs: true }
         }
       ]
     }
