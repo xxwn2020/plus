@@ -34,48 +34,42 @@ class CurrencyCashController extends Controller
     /**
      * 提现列表.
      *
-     * @param Request $request
-     * @param OrderModel $orderModel
+     * @param  Request  $request
+     * @param  OrderModel  $orderModel
+     *
      * @return mixed
      * @author BS <414606094@qq.com>
      */
     public function list(Request $request, OrderModel $orderModel)
     {
         $limit = $request->query('limit', 15);
-        $offset = $request->query('offset', 0);
         $state = $request->query('state');
         $user = (int) $request->query('user');
-        $name = $request->query('name');
 
-        $query = $orderModel->where('target_type', 'cash')
-        ->when(! is_null($state) && in_array($state, [-1, 0, 1]), function ($query) use ($state) {
-            return $query->where('state', $state);
-        })
-        ->when($user, function ($query) use ($user) {
-            return $query->where('owner_id', $user);
-        })
-        ->when($name, function ($query) use ($name) {
-            return $query->whereHas('user', function ($query) use ($name) {
-                return $query->where('name', 'like', '%'.$name.'%');
+        $query = $orderModel->newQuery()->where('target_type', 'cash')
+            ->when(! is_null($state) && in_array($state, [-1, 0, 1]),
+                function ($query) use ($state) {
+                    return $query->where('state', $state);
+                })
+            ->when($user, function ($query) use ($user) {
+                return $query->where('owner_id', $user);
             });
-        });
 
-        $count = $query->count();
-        $cashes = $query->limit($limit)
-        ->offset($offset)
-        ->orderBy('id', 'desc')
-        ->with(['user.currency'])
-        ->get();
+        $cashes = $query->orderBy('id', 'desc')
+            ->with(['user.currency'])
+            ->paginate($limit);
 
-        return response()->json($cashes, 200, ['x-total' => $count]);
+        return response()->json($cashes, 200);
     }
 
     /**
      * 审核积分提现.
      *
-     * @param  Request        $request
-     * @param  OrderModel     $order
+     * @param  Request  $request
+     * @param  OrderModel  $order
+     *
      * @return mixed
+     * @throws \Throwable
      */
     public function audit(Request $request, OrderModel $order)
     {
@@ -102,7 +96,8 @@ class CurrencyCashController extends Controller
                 $walletOrderModel->target_type = Order::TARGET_TYPE_WITHDRAW;
                 $walletOrderModel->target_id = 0;
                 $walletOrderModel->title = '提现';
-                $walletOrderModel->body = sprintf('积分提现，钱包增加%s元', $order->amount / 100);
+                $walletOrderModel->body = sprintf('积分提现，钱包增加%s元',
+                    $order->amount / 100);
                 $walletOrderModel->type = 1;
                 $walletOrderModel->amount = $order->amount;
                 $walletOrderModel->state = 1;
@@ -126,17 +121,17 @@ class CurrencyCashController extends Controller
 
         if ($state === 1) {
             $order->user->notify(new SystemNotification('你的积分提现申请已审核通过', [
-                'type' => 'user-currency:cash',
+                'type'  => 'user-currency:cash',
                 'state' => 'passed',
             ]));
         } elseif ($state === -1) {
             $order->user->notify(new SystemNotification('你的积分提现申请被驳回', [
-                'type' => 'user-currency:cash',
-                'state' => 'rejected',
+                'type'     => 'user-currency:cash',
+                'state'    => 'rejected',
                 'contents' => $mark,
             ]));
         }
 
-        return response()->json(['message' => '处理成功'], 200);
+        return response()->json(['message' => '处理成功'], 201);
     }
 }

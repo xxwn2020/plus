@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBarInPage></NavBarInPage>
+    <nav-bar-in-page/>
     <el-main>
       <router-view></router-view>
     </el-main>

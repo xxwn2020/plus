@@ -7,7 +7,7 @@
       <el-autocomplete
         size="mini"
         :fetch-suggestions="queryUsers"
-        v-model="username"
+        v-model="query.username"
         placeholder="打赏者，模糊搜索"
         @select="selectUser"
         value-key="name"
@@ -102,13 +102,12 @@
 
 <script>
   import setQuery from '@/mixins/setQuery'
+  import searchUser from '@/mixins/searchUser'
 
   export default {
-    mixins: [setQuery],
+    mixins: [setQuery, searchUser],
     name: 'turnover',
     data: () => ({
-      username: '',
-      search: '',
       date: '',
       query: {
         page: 1,
@@ -116,7 +115,8 @@
         end: '',
         start: '',
         type: '',
-        keyword: ''
+        keyword: '',
+        username: ''
       },
       pickerOptions: {
         shortcuts: [
@@ -162,6 +162,7 @@
         date_start: this.$route.query.date_start || '',
         date_end: this.$route.query.date_end || ''
       })
+      this.$set(this, 'search', this.$route.query.username)
       this.$set(this, 'date', [this.$route.query.date_start || '', this.$route.query.date_end || ''])
     },
     watch: {
@@ -209,23 +210,7 @@
           })
         }
       },
-      /* 远程搜索用户 */
-      queryUsers (queryString, cb) {
-        const { search } = this
-        if (!queryString || queryString === search) {
-          cb([])
-          return false
-        }
-        this.$api.users.list({ name: queryString }).then(({ data: { users } }) => {
-          cb(users)
-          if (!users.length) {
-            this.$message({
-              type: 'info',
-              message: '没有找到用户'
-            })
-          }
-        })
-      },
+
       /* 使用远程搜索结果 */
       selectUser (user) {
         const { id, name } = user
