@@ -32,63 +32,43 @@ class PcTableSeeder extends Seeder
         $this->createData();
 
         Navigation::create([
-            'name' => '动态',
-            'app_name' => 'feeds',
-            'url' => '/feeds',
-            'target' => '_self',
-            'status' => 1,
-            'position' => 0,
-            'parent_id' => 0,
+            'name'       => '动态',
+            'app_name'   => 'feeds',
+            'url'        => '/feeds',
+            'target'     => '_self',
+            'status'     => 1,
+            'position'   => 0,
+            'parent_id'  => 0,
             'order_sort' => 0,
         ]);
         Navigation::create([
-            'name' => '圈子',
-            'app_name' => 'group',
-            'url' => '/group',
-            'target' => '_self',
-            'status' => 1,
-            'position' => 0,
-            'parent_id' => 0,
+            'name'       => '资讯',
+            'app_name'   => 'news',
+            'url'        => '/news',
+            'target'     => '_self',
+            'status'     => 1,
+            'position'   => 0,
+            'parent_id'  => 0,
             'order_sort' => 0,
         ]);
         Navigation::create([
-            'name' => '资讯',
-            'app_name' => 'news',
-            'url' => '/news',
-            'target' => '_self',
-            'status' => 1,
-            'position' => 0,
-            'parent_id' => 0,
+            'name'       => '找伙伴',
+            'app_name'   => 'people',
+            'url'        => '/people',
+            'target'     => '_self',
+            'status'     => 1,
+            'position'   => 0,
+            'parent_id'  => 0,
             'order_sort' => 0,
         ]);
         Navigation::create([
-            'name' => '问答',
-            'app_name' => 'question',
-            'url' => '/questions',
-            'target' => '_self',
-            'status' => 1,
-            'position' => 0,
-            'parent_id' => 0,
-            'order_sort' => 0,
-        ]);
-        Navigation::create([
-            'name' => '找伙伴',
-            'app_name' => 'people',
-            'url' => '/people',
-            'target' => '_self',
-            'status' => 1,
-            'position' => 0,
-            'parent_id' => 0,
-            'order_sort' => 0,
-        ]);
-        Navigation::create([
-            'name' => '话题',
-            'app_name' => 'topic',
-            'url' => '/topic',
-            'target' => '_self',
-            'status' => 1,
-            'position' => 0,
-            'parent_id' => 0,
+            'name'       => '话题',
+            'app_name'   => 'topic',
+            'url'        => '/topic',
+            'target'     => '_self',
+            'status'     => 1,
+            'position'   => 0,
+            'parent_id'  => 0,
             'order_sort' => 0,
         ]);
     }
@@ -101,23 +81,23 @@ class PcTableSeeder extends Seeder
     protected function createData()
     {
         AdvertisingSpace::create([
-            'channel' => 'pc',
-            'space' => 'pc:news:top',
-            'alias' => 'PC端资讯首页banner',
+            'channel'    => 'pc',
+            'space'      => 'pc:news:top',
+            'alias'      => 'PC端资讯首页banner',
             'allow_type' => 'image',
-            'format' => [
+            'format'     => [
                 'image' => [
                     'image' => '图片|string|必填，广告图',
-                    'link' => '链接|string',
+                    'link'  => '链接|string',
                 ],
             ],
-            'rule' => [
+            'rule'       => [
                 'image' => [
-                    'link' => 'url',
+                    'link'  => 'url',
                     'image' => 'required|url',
                 ],
             ],
-            'message' => [
+            'message'    => [
                 'image' => [
                     'image.required' => '广告图不能为空',
                 ],
@@ -125,23 +105,23 @@ class PcTableSeeder extends Seeder
         ]);
 
         AdvertisingSpace::create([
-            'channel' => 'pc',
-            'space' => 'pc:news:right',
-            'alias' => 'PC端资讯右侧广告',
+            'channel'    => 'pc',
+            'space'      => 'pc:news:right',
+            'alias'      => 'PC端资讯右侧广告',
             'allow_type' => 'image',
-            'format' => [
+            'format'     => [
                 'image' => [
                     'image' => '图片|string|必填，广告图',
-                    'link' => '链接|string',
+                    'link'  => '链接|string',
                 ],
             ],
-            'rule' => [
+            'rule'       => [
                 'image' => [
-                    'link' => 'url',
+                    'link'  => 'url',
                     'image' => 'required|url',
                 ],
             ],
-            'message' => [
+            'message'    => [
                 'image' => [
                     'image.required' => '广告图不能为空',
                 ],
@@ -149,23 +129,23 @@ class PcTableSeeder extends Seeder
         ]);
 
         AdvertisingSpace::create([
-            'channel' => 'pc',
-            'space' => 'pc:feeds:right',
-            'alias' => 'PC端动态右侧广告',
+            'channel'    => 'pc',
+            'space'      => 'pc:feeds:right',
+            'alias'      => 'PC端动态右侧广告',
             'allow_type' => 'image',
-            'format' => [
+            'format'     => [
                 'image' => [
                     'image' => '图片|string|必填，广告图',
-                    'link' => '链接|string',
+                    'link'  => '链接|string',
                 ],
             ],
-            'rule' => [
+            'rule'       => [
                 'image' => [
-                    'link' => 'url',
+                    'link'  => 'url',
                     'image' => 'required|url',
                 ],
             ],
-            'message' => [
+            'message'    => [
                 'image' => [
                     'image.required' => '广告图不能为空',
                 ],
@@ -173,77 +153,77 @@ class PcTableSeeder extends Seeder
         ]);
 
         AdvertisingSpace::create([
-            'channel' => 'pc',
-            'space' => 'pc:news:list',
-            'alias' => 'PC端资讯列表广告',
+            'channel'    => 'pc',
+            'space'      => 'pc:news:list',
+            'alias'      => 'PC端资讯列表广告',
             'allow_type' => 'pc:news:list',
-            'format' => [
+            'format'     => [
                 'pc:news:list' => [
-                    'name' => '用户名|string|必填，用户名',
+                    'name'    => '用户名|string|必填，用户名',
                     'content' => '内容|string|广告内容',
-                    'image' => '图片|string|广告图片',
-                    'time' => '时间|date|广告动态时间',
-                    'link' => '链接|string|广告链接',
+                    'image'   => '图片|string|广告图片',
+                    'time'    => '时间|date|广告动态时间',
+                    'link'    => '链接|string|广告链接',
                 ],
             ],
-            'rule' => [
+            'rule'       => [
                 'pc:news:list' => [
-                    'name' => 'required',
-                    'image' => 'url',
-                    'time' => 'required|date',
-                    'link' => 'required|url',
+                    'name'    => 'required',
+                    'image'   => 'url',
+                    'time'    => 'required|date',
+                    'link'    => 'required|url',
                     'content' => 'required',
                 ],
             ],
-            'message' => [
+            'message'    => [
                 'pc:news:list' => [
-                    'name.required' => '广告用户名不能为空',
-                    'image.required' => '广告图片链接不能为空',
-                    'time.required' => '时间必填',
-                    'time.date' => '时间格式错误',
+                    'name.required'    => '广告用户名不能为空',
+                    'image.required'   => '广告图片链接不能为空',
+                    'time.required'    => '时间必填',
+                    'time.date'        => '时间格式错误',
                     'content.required' => '内容必填',
-                    'link.required' => '广告连接不能为空',
-                    'link.url' => '广告链接无效',
+                    'link.required'    => '广告连接不能为空',
+                    'link.url'         => '广告链接无效',
                 ],
             ],
         ]);
 
         AdvertisingSpace::create([
-            'channel' => 'pc',
-            'space' => 'pc:feeds:list',
-            'alias' => 'PC端动态列表广告',
+            'channel'    => 'pc',
+            'space'      => 'pc:feeds:list',
+            'alias'      => 'PC端动态列表广告',
             'allow_type' => 'pc:feeds:list',
-            'format' => [
+            'format'     => [
                 'pc:feeds:list' => [
-                    'avatar' => '头像图|string|必填，头像',
-                    'name' => '用户名|string|必填，用户名',
+                    'avatar'  => '头像图|string|必填，头像',
+                    'name'    => '用户名|string|必填，用户名',
                     'content' => '内容|string|广告内容',
-                    'image' => '图片|string|广告图片',
-                    'time' => '时间|date|广告动态时间',
-                    'link' => '链接|string|广告链接',
+                    'image'   => '图片|string|广告图片',
+                    'time'    => '时间|date|广告动态时间',
+                    'link'    => '链接|string|广告链接',
                 ],
             ],
-            'rule' => [
+            'rule'       => [
                 'pc:feeds:list' => [
-                    'name' => 'required',
-                    'image' => 'url',
-                    'avatar' => 'required|url',
-                    'time' => 'required|date',
-                    'link' => 'required|url',
+                    'name'    => 'required',
+                    'image'   => 'url',
+                    'avatar'  => 'required|url',
+                    'time'    => 'required|date',
+                    'link'    => 'required|url',
                     'content' => 'required',
                 ],
             ],
-            'message' => [
+            'message'    => [
                 'pc:feeds:list' => [
-                    'name.required' => '广告用户名不能为空',
-                    'image.required' => '广告图片链接不能为空',
-                    'avatar.required' => '头像图链接不能为空',
-                    'avatar.url' => '头像图链接无效',
-                    'time.required' => '时间必填',
-                    'time.date' => '时间格式错误',
+                    'name.required'    => '广告用户名不能为空',
+                    'image.required'   => '广告图片链接不能为空',
+                    'avatar.required'  => '头像图链接不能为空',
+                    'avatar.url'       => '头像图链接无效',
+                    'time.required'    => '时间必填',
+                    'time.date'        => '时间格式错误',
                     'content.required' => '内容必填',
-                    'link.required' => '广告连接不能为空',
-                    'link.url' => '广告链接无效',
+                    'link.required'    => '广告连接不能为空',
+                    'link.url'         => '广告链接无效',
                 ],
             ],
         ]);
