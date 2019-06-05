@@ -28,5 +28,11 @@ export default {
     admin.get('/currency/overview', {
       validateStatus: s => (s === 200)
     })
+  ),
+  /* 设置用户的积分 */
+  setUserCurrency: params => (
+    admin.post('/currency/add', params, {
+      validateStatus: s => (s === 200)
+    })
   )
 }

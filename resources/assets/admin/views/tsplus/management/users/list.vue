@@ -102,15 +102,20 @@
             $t('admin.users.search.sex.male') : $t('admin.users.search.sex.female'))}}
           </template>
         </el-table-column>
-        <el-table-column width="120" prop="email" :label="$t('admin.users.search.email')"/>
-        <el-table-column width="95" :label="$t('admin.users.search.createdAt')">
+        <el-table-column prop="email" :label="$t('admin.users.search.email')"/>
+        <el-table-column :label="$t('admin.users.search.createdAt')">
           <template slot-scope="scope">{{ scope.row.created_at | localTime}}</template>
         </el-table-column>
         <el-table-column
-          width="120"
-          prop="currency.sum"
           :label="$t('admin.users.search.currency')"
-        />
+        >
+          <template slot-scope="{row: user}">
+            {{user.currency.sum}}
+            <el-button :loading="savingCurrency === user.id" size="mini" @click="setCurrency(user.id)" type="primary"
+                       plain>设置积分
+            </el-button>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" :label="$t('admin.operation')">
           <template slot-scope="scope">
             <el-button
@@ -306,7 +311,8 @@
       users: [],
       roles: [],
       page: {},
-      loading: false
+      loading: false,
+      savingCurrency: 0
     }),
     computed: {
       formFileds () {
@@ -340,6 +346,31 @@
       }
     },
     methods: {
+      /* 设置用户积分 */
+      setCurrency (user_id) {
+        const { savingCurrency } = this
+        if (!savingCurrency) {
+          this.$prompt('输入积分数量', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputPattern: /^(0|([1-9]\d*))$/,
+            inputErrorMessage: '数量不正确哦'
+          }).then(({ value }) => {
+            this.$set(this, 'savingCurrency', user_id)
+            this.$api.currency.setUserCurrency({ user_id, num: value }).then(({ data }) => {
+              this.showSuccess(data)
+              this.fetchData()
+            }).catch(this.showApiError).finally(() => {
+              this.$set(this, 'savingCurrency', 0)
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消输入'
+            })
+          })
+        }
+      },
       /* 更改排序 */
       sortChange (data) {
         const { prop, order } = data
