@@ -46,7 +46,8 @@ class AboutUsController extends Controller
      * @return Response
      */
     public function store(Request $request, Configuration $config)
-    : Response {
+    : Response
+    {
         //        dd($request->input('url'));
         $config->set('site.aboutUs.url', $request->input('url'));
         $config->set('site.aboutUs.content', $request->input('content'));
