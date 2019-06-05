@@ -30,19 +30,24 @@ class AboutUsController extends Controller
     /**
      * @return JsonResponse
      */
-    public function show(): JsonResponse
+    public function show()
+    : JsonResponse
     {
-        return response()->json(['aboutUs' => config('site.aboutUs')], 200);
+        return response()->json([
+            'aboutUs' => config('site.aboutUs') ??
+                ['url' => null, 'content' => ''],
+        ], 200);
     }
 
     /**
-     * @param Request       $request
-     * @param Configuration $config
+     * @param  Request  $request
+     * @param  Configuration  $config
+     *
      * @return Response
      */
-    public function store(Request $request, Configuration $config): Response
-    {
-//        dd($request->input('url'));
+    public function store(Request $request, Configuration $config)
+    : Response {
+        //        dd($request->input('url'));
         $config->set('site.aboutUs.url', $request->input('url'));
         $config->set('site.aboutUs.content', $request->input('content'));
 
