@@ -130,7 +130,7 @@
     beforeMount () {
       this.query = {
         ...this.query,
-        state: this.$route.query.state !== null ? parseInt(this.$route.query.state) : null
+        state: this.$route.query.state ? parseInt(this.$route.query.state) : null
       }
     },
     filters: {
