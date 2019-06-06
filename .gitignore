@@ -8,7 +8,7 @@
 .env
 .phpunit.result.cache
 .plus.yml
-_ide_helper.php
+/_ide_helper.php
 
 Homestead.json
 Homestead.yaml
