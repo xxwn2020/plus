@@ -123,7 +123,7 @@ export default {
       },
       client: '客户端设置'
     },
-
+    feedback: '意见反馈',
     currency: {
       root: '积分',
       statistics: '统计',
