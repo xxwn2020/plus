@@ -20,8 +20,10 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Cdn\Adapter;
 
+use Arr;
+use Exception;
 use OSS\OssClient;
-use Illuminate\Support\Arr;
+use OSS\Core\OssException;
 use Zhiyi\Plus\Cdn\Refresh;
 use Zhiyi\Plus\Contracts\Cdn\UrlGenerator as FileUrlGeneratorContract;
 
@@ -42,9 +44,7 @@ class AliOss implements FileUrlGeneratorContract
     /**
      * 构造方法，初始化 AliyunOSS 基本信息.
      *
-     * @param  \Zhiyi\Plus\Services\Storage  $service
-     * @param  string  $key
-     *
+     * @throws OssException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function __construct()
@@ -71,11 +71,11 @@ class AliOss implements FileUrlGeneratorContract
      * @param  array  $extra
      *
      * @return string
+     * @throws OssException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function url(string $filename, array $extra = [])
-    : string
-    {
+    : string {
         // 过滤目录分隔符.
         $filename = $this->filterSlash($filename);
 
@@ -90,9 +90,10 @@ class AliOss implements FileUrlGeneratorContract
     /**
      * Refresh the cdn files and dirs.
      *
-     * @param  \Zhiyi\Plus\Cdn\Refresh  $refresh
+     * @param  Refresh  $refresh
      *
      * @return void
+     * @throws OssException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function refresh(Refresh $refresh)
@@ -125,11 +126,11 @@ class AliOss implements FileUrlGeneratorContract
      * @param  array  $extra
      *
      * @return string
+     * @throws OssException
      * @author BS <414606094@qq.com>
      */
     protected function makeSignURL(string $filename, array $extra)
-    : string
-    {
+    : string {
         return $this->client->signUrl(
             $this->bucket,
             $filename,
@@ -146,11 +147,11 @@ class AliOss implements FileUrlGeneratorContract
      * @param  array  $extra
      *
      * @return string
+     * @throws Exception
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function makePublicURL(string $filename, array $extra)
-    : string
-    {
+    : string {
         return $this->resolveQueryString(
             sprintf('%s/%s', $this->getBaseURI(), $filename),
             $this->getProcess($filename, $extra)
@@ -167,8 +168,7 @@ class AliOss implements FileUrlGeneratorContract
      * @author BS <414606094@qq.com>
      */
     protected function getProcess(string $filename, array $extra)
-    : array
-    {
+    : array {
         if ($this->isImage($filename)) {
             $width = max(0, intval(Arr::get($extra, 'width', 0)));
             $height = max(0, intval(Arr::get($extra, 'height', 0)));
@@ -227,8 +227,7 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function isImage(string $filename)
-    : bool
-    {
+    : bool {
         return in_array(app('files')->extension($filename),
             ['psd', 'png', 'jpg', 'jpeg', 'webp', 'bmp', 'gif', 'tiff']);
     }
@@ -240,16 +239,15 @@ class AliOss implements FileUrlGeneratorContract
      * @param  array  $query
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function resolveQueryString(string $url, array $query = [])
-    : string
-    {
+    : string {
         // -1 表示获取全部。
         $pares = parse_url($url, -1);
         if ($pares === false) {
-            throw new \Exception('Parse URL error.');
+            throw new Exception('Parse URL error.');
         }
         $scheme = Arr::get($pares, 'scheme', $this->getScheme());
         $host = Arr::get($pares, 'host', '');
@@ -268,7 +266,7 @@ class AliOss implements FileUrlGeneratorContract
      * @param  string  $query1  [description]
      * @param  string  $query2  [description]
      *
-     * @return [type] [description]
+     * @return string [type] [description]
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function mergeHttpQueryString(
@@ -296,8 +294,7 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function filterSlash(string $filename)
-    : string
-    {
+    : string {
         // 将 windows 系统目录分隔符也去除.
         $filename = str_replace('\\', '/',
             str_replace(DIRECTORY_SEPARATOR, '/', $filename));
@@ -323,8 +320,7 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function getBaseURI(string $endpoint = '')
-    : string
-    {
+    : string {
         $endpoint = $this->isCname ? $this->endpoint
             : $this->bucket.'.'.$this->endpoint;
         // 去除协议头，保留 hostname 部分。

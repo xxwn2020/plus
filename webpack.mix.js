@@ -1,9 +1,9 @@
 let mix = require('laravel-mix')
 let path = require('path')
 
-mix.setPublicPath(path.join('public', 'assets'))
-  .setResourceRoot(mix.config.hmr ? '' : 'assets/')
-  .webpackConfig({
+mix.setPublicPath(path.join('public', 'assets')).
+  setResourceRoot(mix.config.hmr ? '' : 'assets/').
+  webpackConfig({
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {

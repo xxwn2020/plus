@@ -27,9 +27,9 @@ class WalletCharges extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('wallet_charges', function (Blueprint $table) {
+    public function up() {
+        Schema::create('wallet_charges', function (Blueprint $table)
+        {
             $table
                 ->increments('id');
 
@@ -118,8 +118,7 @@ class WalletCharges extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('wallet_charges');
     }
 }

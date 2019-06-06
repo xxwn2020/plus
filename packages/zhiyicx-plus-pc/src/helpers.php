@@ -18,24 +18,29 @@
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentPc;
 
+use Arr;
 use Auth;
 use Session;
+use Parsedown;
 use HTMLPurifier;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Tymon\JWTAuth\JWT;
 use HTMLPurifier_Config;
-use Illuminate\Support\Arr;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use GuzzleHttp\Exception\GuzzleException;
+use Zhiyi\Plus\FileStorage\FileMetaInterface;
 
 /**
  * [formatContent 动态列表内容处理].
  *
  * @param  [string] $content [内容]
  *
- * @return [string]
+ * @return mixed|string|string[]|null [string]
  * @author Foreach
  */
 function formatContent($content)
@@ -74,7 +79,7 @@ function formatContent($content)
 }
 
 /**
- * [inapi 内部请求（弃用）].
+ * [inApi 内部请求（弃用）].
  *
  * @param  string  $method  [请求方式]
  * @param  string  $url  [地址]
@@ -82,7 +87,7 @@ function formatContent($content)
  * @param  int  $instance
  * @param  int  $original
  *
- * @return
+ * @return JsonResponse|Response|mixed
  * @author Foreach
  */
 function inapi(
@@ -99,7 +104,7 @@ function inapi(
     ]);
 
     // 注入JWT请求单例
-    app()->resolving(\Tymon\JWTAuth\JWT::class, function ($jwt) use ($request) {
+    app()->resolving(JWT::class, function ($jwt) use ($request) {
         $jwt->setRequest($request);
 
         return $jwt;
@@ -128,7 +133,8 @@ function inapi(
  * @param  string  $url  [地址]
  * @param  array  $params  [参数]
  *
- * @return
+ * @return mixed
+ * @throws GuzzleException
  * @author Foreach
  */
 function api($method = 'POST', $url = '', $params = [])
@@ -194,12 +200,12 @@ function getTime($time)
  * [getImageUrl 获取图片地址].
  *
  * @param  array  $image  [图片数组]
- * @param  [type]  $width  [宽度]
- * @param  [type]  $height [高度]
+ * @param $width
+ * @param $height
  * @param  bool  $cut  [是否裁剪]
  * @param  int  $blur  [是否高斯模糊]
  *
- * @return [string]
+ * @return bool|string [string]
  * @author Foreach
  */
 function getImageUrl($image, $width, $height, $cut = true, $blur = 0)
@@ -244,7 +250,8 @@ function cacheClear()
  * @param  [type]  $user  [用户数组]
  * @param  int  $width  [宽度]
  *
- * @return [string]
+ * @return string [string]
+ * @throws GuzzleException
  * @author Foreach
  */
 function getAvatar($user, $width = 0)
@@ -263,7 +270,7 @@ function getAvatar($user, $width = 0)
     }
 
     $avatar = $user['avatar'];
-    if ($avatar instanceof \Zhiyi\Plus\FileStorage\FileMetaInterface) {
+    if ($avatar instanceof FileMetaInterface) {
         $avatar = $avatar->toArray();
     }
     if ($avatar['vendor'] === 'local' && $width) {
@@ -300,7 +307,7 @@ function formatMarkdown($body)
     $config->set('HTML.Allowed', 'br,a[href]');
     $purifier = new HTMLPurifier($config);
     $body = $purifier->purify($body);
-    $content = \Parsedown::instance()->text($body);
+    $content = Parsedown::instance()->text($body);
 
     return $content;
 }
@@ -319,7 +326,7 @@ function formatList($body)
     $config->set('HTML.Allowed', 'br,a[href]');
     $purifier = new HTMLPurifier($config);
     $body = $purifier->purify($body);
-    $content = \Parsedown::instance()->text($body);
+    $content = Parsedown::instance()->text($body);
 
     return $content;
 }
@@ -327,9 +334,9 @@ function formatList($body)
 /**
  * [getUserInfo 获取用户信息].
  *
- * @param  [type] $id [用户id]
+ * @param  int  $id  [用户id]
  *
- * @return
+ * @return array
  * @author Foreach
  */
 function getUserInfo($id)
@@ -340,11 +347,10 @@ function getUserInfo($id)
 /**
  * [setPinneds 置顶数据组装].
  *
- * @param  [type] $data    [列表数据]
- * @param  [type] $pinneds [置顶数据]
- * @param  [type] $k       [键名]
+ * @param $data
+ * @param $pinneds
  *
- * @return [type]        [description]
+ * @return mixed [type]        [description]
  * @author Foreach
  */
 function formatPinneds($data, $pinneds)
@@ -371,7 +377,8 @@ function formatPinneds($data, $pinneds)
  *
  * @param  [array] $feeds
  *
- * @return [array]
+ * @return mixed [array]
+ * @throws GuzzleException
  * @author Foreach
  */
 function formatRepostable($feeds)
