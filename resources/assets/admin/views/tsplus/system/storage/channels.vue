@@ -10,7 +10,7 @@
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{$t('admin.storage.channels.publicChannel')}}</span>
-        <el-button style="float: right; padding: 3px 0" type="text"></el-button>
+        <el-button plain style="float: right; padding: 3px 0" type="text"></el-button>
       </div>
       <el-form v-loading="getLoading" ref="form" label-width="80px">
         <el-alert
@@ -32,7 +32,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="savePublicChannel" :loading="saveLoading">{{$t('admin.submit')}}</el-button>
+          <el-button plain type="primary" @click="savePublicChannel" :loading="saveLoading">{{$t('admin.submit')}}</el-button>
         </el-form-item>
       </el-form>
     </el-card>

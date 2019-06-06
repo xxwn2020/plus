@@ -68,7 +68,7 @@
         <el-input v-model="form.sign" placeholder="内部订单表示"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="saveNativePaymentSetting" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
+        <el-button plain @click="saveNativePaymentSetting" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>

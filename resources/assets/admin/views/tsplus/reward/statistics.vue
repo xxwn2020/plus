@@ -4,7 +4,7 @@
       <span>打赏统计</span>
     </div>
     <el-form style="margin-bottom:20px; max-width: 100vw" ref="rewardStatisticsForm" :model="query" :inline="true">
-      <el-select size="mini" v-model="query.type">
+      <el-select v-model="query.type">
         <el-option
           v-for="type in types"
           :key="type.name"
@@ -12,14 +12,14 @@
           :value="type.name">
         </el-option>
       </el-select>
-      <el-select size="mini" v-model="query.scope">
+      <el-select v-model="query.scope">
         <el-option value="today" label="今日"></el-option>
         <el-option value="week" label="近七天"></el-option>
         <el-option value="custom" label="自定义时间段"></el-option>
       </el-select>
       <el-date-picker
         v-if="query.scope === 'custom'"
-        size="mini"
+
         v-model="date"
         type="daterange"
         align="right"
@@ -30,7 +30,7 @@
         value-format="yyyy-MM-dd"
         :picker-options="pickerOptions">
       </el-date-picker>
-      <el-button size="mini" @click="doSearch" :loading="getLoading" type="primary" plain>
+      <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
         {{$t('admin.submit')}}
       </el-button>
     </el-form>

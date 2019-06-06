@@ -25,7 +25,7 @@
         <el-input type="number" min="0.01" max="10" v-model="form.ratio" placeholder="输入充值比例"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="saveWalletRatio" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain @click="saveWalletRatio" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
   </el-card>

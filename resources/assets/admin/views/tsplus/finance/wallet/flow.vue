@@ -12,9 +12,9 @@
           @select="handleUserSelect"
           value-key="name"
           :debounce="500"
-          size="mini"
+
         ></el-autocomplete>
-        <el-select v-model="query.state" size="mini">
+        <el-select v-model="query.state" >
           <el-option
             v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
             :key="item.value"
@@ -22,7 +22,7 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <el-button @click="doSearch" :loading="getLoading" size="mini" type="primary">{{$t('admin.search.root')}}
+        <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.search.root')}}
         </el-button>
       </el-form>
 
@@ -228,8 +228,8 @@
         const { getLoading, query } = this
         if (!getLoading) {
           this.gLoading(true)
-          this.$api.finance.getFlow(query)
-            .then(({ data: { data = [], current_page = 1, last_page = 1, total = 0 } }) => {
+          this.$api.finance.getFlow(query).
+            then(({ data: { data = [], current_page = 1, last_page = 1, total = 0 } }) => {
               this.$set(this, 'page', {
                 data,
                 last_page,
@@ -237,9 +237,9 @@
                 current_page
               })
               this.$set(this.query, 'page', current_page)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
+            }).
+            catch(this.showApiError).
+            finally(() => {
               this.gLoading(false)
             })
         }
@@ -247,6 +247,10 @@
     }
     ,
     beforeMount () {
+      this.$set(this, 'query', {
+        ...this.query,
+        state: this.$route.query.state ? parseInt(this.$route.query.state) : ''
+      })
       this.getFlow()
     }
   }

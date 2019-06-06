@@ -9,7 +9,7 @@
                   type="textarea"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="saveWalletRule" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain @click="saveWalletRule" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
   </el-card>

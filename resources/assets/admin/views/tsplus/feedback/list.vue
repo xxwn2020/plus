@@ -2,14 +2,14 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>意见反馈</span>
-      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+      <el-button plain style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
     </div>
     <el-form style="max-width: 100vw; margin-bottom: 20px;" ref="feedBackFilter" :model="query" :inline="true">
       <el-form-item>
-        <el-input size="mini" v-model="query.keyword" placeholder="搜索内容"></el-input>
+        <el-input v-model="query.keyword" placeholder="搜索内容"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-select size="mini" v-model="query.type">
+        <el-select v-model="query.type">
           <el-option
             v-for="type in types"
             :key="type.value"
@@ -19,7 +19,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="mini" type="primary" plain :loading="getLoading" @click="doSearch">{{$t('admin.submit')}}
+        <el-button type="primary" plain :loading="getLoading" @click="doSearch">{{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>

@@ -23,7 +23,7 @@
         <el-table-column
           :label="$t('admin.operation')">
           <template slot-scope="{row: cate}">
-            <el-button @click="editCate(cate)" type="primary" size="mini">{{$t('admin.edit')}}</el-button>
+            <el-button plain @click="editCate(cate)" type="primary" >{{$t('admin.edit')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,7 +44,7 @@
         <el-form-item class="cate-icon" :label="$t('admin.userConfig.certificate.icon')" prop="icon">
           <el-input :disabled="true" v-model="edit.icon">
             <a :href="edit.icon" target="_blank" v-if="edit.icon" class="preview" slot="prepend">预览</a>
-            <el-button type="primary" :loading="uploading" @click="triggerFileInput" class="upload" slot="append">
+            <el-button plain type="primary" :loading="uploading" @click="triggerFileInput" class="upload" slot="append">
               {{edit.icon ? '修改' : '上传'}}
             </el-button>
           </el-input>
@@ -55,8 +55,8 @@
         <input type="file" ref="iconFileInput" style="display:none;" @change="uploadIcon">
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" :loading="saveLoading" @click="saveCate">确 定</el-button>
+        <el-button plain @click="handleClose">取 消</el-button>
+        <el-button plain type="primary" :loading="saveLoading" @click="saveCate">确 定</el-button>
       </span>
     </el-dialog>
   </div>

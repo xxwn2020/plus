@@ -12,11 +12,10 @@
       >
       </el-alert>
       <el-form-item label="支付密码开关">
-        <el-button size="mini" :loading="saveLoading" v-if="form.switch" @click="savePayValidatePassword(false)"
-                   type="success">
-          已开启
+        <el-button plain :loading="saveLoading" v-if="form.switch" @click="savePayValidatePassword(false)"
+                   type="success">已开启
         </el-button>
-        <el-button size="mini" :loading="saveLoading" v-else @click="savePayValidatePassword(true)" type="danger">已关闭
+        <el-button plain :loading="saveLoading" v-else @click="savePayValidatePassword(true)" type="danger">已关闭
         </el-button>
       </el-form-item>
     </el-form>
@@ -39,29 +38,23 @@
         const { getLoading } = this
         if (!getLoading) {
           this.gLoading(true)
-          this.$api.finance.getPayValidatePassword()
-            .then(({ data: { switch: old } }) => {
-              this.$set(this.form, 'switch', old)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.gLoading(false)
-            })
+          this.$api.finance.getPayValidatePassword().then(({ data: { switch: old } }) => {
+            this.$set(this.form, 'switch', old)
+          }).catch(this.showApiError).finally(() => {
+            this.gLoading(false)
+          })
         }
       },
       savePayValidatePassword (status = true) {
         const { saveLoading } = this
         if (!saveLoading) {
           this.sLoading(true)
-          this.$api.finance.savePayValidatePassword({ switch: status })
-            .then(() => {
-              this.showSuccess()
-              this.$set(this.form, 'switch', status)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.sLoading(false)
-            })
+          this.$api.finance.savePayValidatePassword({ switch: status }).then(() => {
+            this.showSuccess()
+            this.$set(this.form, 'switch', status)
+          }).catch(this.showApiError).finally(() => {
+            this.sLoading(false)
+          })
         }
       }
     }

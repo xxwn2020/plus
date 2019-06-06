@@ -20,8 +20,8 @@
         <template v-if="hasPc">
           <el-form-item label="PC 开关" prop="technical">
             <el-radio-group v-model="form.pc.status" prop="status">
-              <el-radio label="开启">开启</el-radio>
-              <el-radio label="关闭">关闭</el-radio>
+              <el-radio border label="开启">开启</el-radio>
+              <el-radio border label="关闭">关闭</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="PC LOGO" prop="logo">
@@ -75,204 +75,189 @@
           <el-input placeholder v-model="form.icp"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button :loading="saveLoading" type="primary" @click="saveInfo">{{$t('admin.submit')}}</el-button>
-          <el-button>取消</el-button>
+          <el-button plain :loading="saveLoading" type="primary" @click="saveInfo">{{$t('admin.submit')}}</el-button>
+          <el-button plain>取消</el-button>
         </el-form-item>
       </el-form>
     </el-main>
   </el-card>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
-import axios from "axios";
-import md5 from "js-md5";
-import File from "@/api/file";
-export default {
-  name: "operationBasicSiteinfo",
-  data: () => ({
-    form: {
-      name: null,
-      keywords: null,
-      description: null,
-      icp: null,
-      copyright: null,
-      technical: null,
-      pc: {
-        status: 0,
-        states_code: null,
-        logo: null,
-        loginbg: null
-      }
-    },
-    logoUploading: false,
-    loginBgUploading: false,
-    logoPercentage: 0,
-    logoBgPercentage: 0,
-    getLoading: false,
-    saveLoading: false
-  }),
-  methods: {
-    ...mapActions("manageList", ["getList"]),
-    /* 保存 */
-    saveInfo() {
-      const { saveLoading, form } = this;
-      this.$refs.infoForm.validate(valid => {
-        if (valid && !saveLoading) {
-          this.$set(this, "saveLoading", true);
-          this.$api.baseinfo
-            .save(form)
-            .then(({ data }) => {
-              this.showSuccess(data);
+  import { mapActions, mapGetters } from 'vuex'
+  import axios from 'axios'
+  import md5 from 'js-md5'
+  import File from '@/api/file'
+
+  export default {
+    name: 'operationBasicSiteinfo',
+    data: () => ({
+      form: {
+        name: null,
+        keywords: null,
+        description: null,
+        icp: null,
+        copyright: null,
+        technical: null,
+        pc: {
+          status: 0,
+          states_code: null,
+          logo: null,
+          loginbg: null
+        }
+      },
+      logoUploading: false,
+      loginBgUploading: false,
+      logoPercentage: 0,
+      logoBgPercentage: 0,
+      getLoading: false,
+      saveLoading: false
+    }),
+    methods: {
+      ...mapActions('manageList', ['getList']),
+      /* 保存 */
+      saveInfo () {
+        const { saveLoading, form } = this
+        this.$refs.infoForm.validate(valid => {
+          if (valid && !saveLoading) {
+            this.$set(this, 'saveLoading', true)
+            this.$api.baseinfo.save(form).then(({ data }) => {
+              this.showSuccess(data)
+            }).catch(this.showApiError).finally(() => {
+              this.$set(this, 'saveLoading', false)
             })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, "saveLoading", false);
-            });
+          }
+        })
+      },
+      /* 文件上传 */
+      async uploadLoginBg ({ file }) {
+        const { data: task } = await this.createTask(file)
+        const { headers, method, uri, node } = task
+        this.loginBgUploading = true
+        const instance = axios.create()
+        instance.defaults.timeout = 100000
+        instance.defaults.onUploadProgress = ({ loaded, total }) => {
+          this.loginBgPercentage = parseInt((loaded / total).toFixed(2) * 100)
         }
-      });
-    },
-    /* 文件上传 */
-    async uploadLoginBg({ file }) {
-      const { data: task } = await this.createTask(file);
-      const { headers, method, uri, node } = task;
-      this.loginBgUploading = true;
-      const instance = axios.create();
-      instance.defaults.timeout = 100000;
-      instance.defaults.onUploadProgress = ({ loaded, total }) => {
-        this.loginBgPercentage = parseInt((loaded / total).toFixed(2) * 100);
-      };
-      instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s);
-      instance
-        .request({
+        instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s)
+        instance.request({
           method: method.toLowerCase(),
           url: uri,
           headers,
           data: file
+        }).then(() => {
+          this.$set(this, 'loginBgPercentage', 0)
+          this.$set(this.form.pc, 'loginbg', node)
+        }).catch(this.showApiError).finally(() => {
+          this.loginBgUploading = false
         })
-        .then(() => {
-          this.$set(this, "loginBgPercentage", 0);
-          this.$set(this.form.pc, "loginbg", node);
-        })
-        .catch(this.showApiError)
-        .finally(() => {
-          this.loginBgUploading = false;
-        });
-    },
+      },
 
-    async uploadLogo({ file }) {
-      const { data: task } = await this.createTask(file);
-      const { headers, method, uri, node } = task;
-      this.logoUploading = true;
-      const instance = axios.create();
-      instance.defaults.timeout = 100000;
-      instance.defaults.onUploadProgress = ({ loaded, total }) => {
-        this.logoPercentage = parseInt((loaded / total).toFixed(2) * 100);
-      };
-      instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s);
-      instance
-        .request({
+      async uploadLogo ({ file }) {
+        const { data: task } = await this.createTask(file)
+        const { headers, method, uri, node } = task
+        this.logoUploading = true
+        const instance = axios.create()
+        instance.defaults.timeout = 100000
+        instance.defaults.onUploadProgress = ({ loaded, total }) => {
+          this.logoPercentage = parseInt((loaded / total).toFixed(2) * 100)
+        }
+        instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s)
+        instance.request({
           method: method.toLowerCase(),
           url: uri,
           headers,
           data: file
+        }).then(() => {
+          this.$set(this, 'logoPercentage', 0)
+          this.$set(this.form.pc, 'logo', node)
+        }).catch(this.showApiError).finally(() => {
+          this.logoUploading = false
         })
-        .then(() => {
-          this.$set(this, "logoPercentage", 0);
-          this.$set(this.form.pc, "logo", node);
+      },
+      /**
+       * 获取文件md5
+       * @param file
+       * @returns {Promise<any>}
+       */
+      hashFile (file) {
+        return new Promise(resolve => {
+          let reader = new window.FileReader()
+          reader.onload = event => resolve(md5(event.target.result))
+          reader.readAsArrayBuffer(file)
         })
-        .catch(this.showApiError)
-        .finally(() => {
-          this.logoUploading = false;
-        });
-    },
-    /**
-     * 获取文件md5
-     * @param file
-     * @returns {Promise<any>}
-     */
-    hashFile(file) {
-      return new Promise(resolve => {
-        let reader = new window.FileReader();
-        reader.onload = event => resolve(md5(event.target.result));
-        reader.readAsArrayBuffer(file);
-      });
-    },
-    /**
-     * 服务器创建上传任务
-     * @param file
-     * @returns {Promise<any>}
-     */
-    async createTask(file) {
-      const result = await this.$api.storage.save({
-        filename: file.name,
-        size: file.size,
-        mime_type: file.type,
-        storage: {
-          channel: "public"
-        },
-        hash: await this.hashFile(file)
-      });
+      },
+      /**
+       * 服务器创建上传任务
+       * @param file
+       * @returns {Promise<any>}
+       */
+      async createTask (file) {
+        const result = await this.$api.storage.save({
+          filename: file.name,
+          size: file.size,
+          mime_type: file.type,
+          storage: {
+            channel: 'public'
+          },
+          hash: await this.hashFile(file)
+        })
 
-      return result;
-    },
-    /* get baseinfo from server */
-    getBaseInfo() {
-      const { getLoading } = this;
-      if (!getLoading) {
-        this.$set(this, "getLoading", true);
-        this.$api.baseinfo
-          .list()
-          .then(({ data }) => {
-            this.$set(this, "form", { ...this.form, ...data });
+        return result
+      },
+      /* get baseinfo from server */
+      getBaseInfo () {
+        const { getLoading } = this
+        if (!getLoading) {
+          this.$set(this, 'getLoading', true)
+          this.$api.baseinfo.list().then(({ data }) => {
+            this.$set(this, 'form', { ...this.form, ...data })
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'getLoading', false)
           })
-          .catch(this.showApiError)
-          .finally(() => {
-            this.$set(this, "getLoading", false);
-          });
-      }
-    }
-  },
-  mounted() {
-    this.getBaseInfo();
-    this.getList();
-  },
-  computed: {
-    /* 表单验证规则 */
-    rules() {
-      return {
-        name: [{ required: true, message: "站点名称必填", trigger: "blur" }]
-      };
-    },
-    /* 获取扩展包后台入口 */
-    ...mapGetters(["manageList"]),
-    /* 判断是否有pc包 */
-    hasPc() {
-      return Object.keys(this.manageList).includes("pc");
-    },
-    /* pc logo */
-    logoUrl() {
-      const {
-        form: {
-          pc: { logo = "" }
         }
-      } = this;
-      if (!logo) {
-        return null;
       }
-      return File.url(logo, { w: 100, h: 100 });
     },
-    /* pc 登录页面背景 */
-    loginBgUrl() {
-      const {
-        form: {
-          pc: { loginbg = "" }
+    mounted () {
+      this.getBaseInfo()
+      this.getList()
+    },
+    computed: {
+      /* 表单验证规则 */
+      rules () {
+        return {
+          name: [{ required: true, message: '站点名称必填', trigger: 'blur' }]
         }
-      } = this;
-      if (!loginbg) {
-        return null;
+      },
+      /* 获取扩展包后台入口 */
+      ...mapGetters(['manageList']),
+      /* 判断是否有pc包 */
+      hasPc () {
+        return Object.keys(this.manageList).includes('pc')
+      },
+      /* pc logo */
+      logoUrl () {
+        const {
+          form: {
+            pc: { logo = '' }
+          }
+        } = this
+        if (!logo) {
+          return null
+        }
+        return File.url(logo, { w: 100, h: 100 })
+      },
+      /* pc 登录页面背景 */
+      loginBgUrl () {
+        const {
+          form: {
+            pc: { loginbg = '' }
+          }
+        } = this
+        if (!loginbg) {
+          return null
+        }
+        return File.url(loginbg, { w: 100, h: 100 })
       }
-      return File.url(loginbg, { w: 100, h: 100 });
     }
   }
-};
 </script>

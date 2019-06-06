@@ -6,7 +6,7 @@
       </div>
       <el-form v-loading="configGetting" ref="form" :model="config" label-width="120px">
         <el-form-item :label="$t('admin.payment.iapSwitch')" prop="">
-          <el-radio-group size="mini" v-model="config.IAP_only">
+          <el-radio-group v-model="config.IAP_only">
             <el-radio border :label="true">开 启</el-radio>
             <el-radio border :label="false">关 闭</el-radio>
           </el-radio-group>
@@ -15,7 +15,7 @@
           <el-input v-model="config.rule" type="textarea" :autosize="{minRows: 2, maxRows:8 }"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button :loading="configSaving" @click="saveAppleIapSetting" type="primary">{{$t('admin.submit')}}
+          <el-button plain :loading="configSaving" @click="saveAppleIapSetting" type="primary">{{$t('admin.submit')}}
           </el-button>
         </el-form-item>
       </el-form>
@@ -44,10 +44,10 @@
         <el-table-column
           label="">
           <template slot="header" slot-scope="scope">
-            <el-button size="mini" @click="showAddDialog = true" type="text">添加IAP产品</el-button>
+            <el-button plain @click="showAddDialog = true" type="text">添加IAP产品</el-button>
           </template>
           <template slot-scope="{row}">
-            <el-button size="mini" :loading="deleting === row.product_id" @click="deleteIapItem(row.product_id)"
+            <el-button plain :loading="deleting === row.product_id" @click="deleteIapItem(row.product_id)"
                        type="danger">
               {{$t('admin.delete')}}
             </el-button>
@@ -74,8 +74,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button :loading="saveLoading" type="primary" @click="saveIapItem">确 定</el-button>
+        <el-button plain @click="closeDialog">取 消</el-button>
+        <el-button plain :loading="saveLoading" type="primary" @click="saveIapItem">确 定</el-button>
       </div>
     </el-dialog>
   </div>

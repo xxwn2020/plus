@@ -29,13 +29,13 @@
         <span>
           <el-button
             type="text"
-            size="mini"
+            plain
             @click="() => showAddForm(data)">
             添加子级地区
           </el-button>
           <el-button
             type="text"
-            size="mini"
+            plain
             @click="() => remove(node, data)">
             删除该地区
           </el-button>
@@ -66,8 +66,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" :loading="saveLoading" @click="save">确 定</el-button>
+        <el-button plain @click="handleClose">取 消</el-button>
+        <el-button plain type="primary" :loading="saveLoading" @click="save">确 定</el-button>
       </span>
     </el-dialog>
   </div>

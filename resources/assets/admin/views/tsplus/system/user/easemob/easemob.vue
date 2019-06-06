@@ -40,7 +40,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="saveLoading" @click="saveVendorSetting" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain :loading="saveLoading" @click="saveVendorSetting" type="primary">{{$t('admin.submit')}}
+        </el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -68,28 +69,22 @@
         const { form, saveLoading } = this
         if (!saveLoading) {
           this.sLoading(true)
-          this.$api.userConfig.saveVendorSetting({ params: form, type: 'easemob' })
-            .then(() => {
-              this.showSuccess()
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.sLoading(false)
-            })
+          this.$api.userConfig.saveVendorSetting({ params: form, type: 'easemob' }).then(() => {
+            this.showSuccess()
+          }).catch(this.showApiError).finally(() => {
+            this.sLoading(false)
+          })
         }
       },
       getVendorSetting () {
         const { getLoading } = this
         if (!getLoading) {
           this.gLoading(true)
-          this.$api.userConfig.getVendorSetting('easemob')
-            .then(({ data }) => {
-              this.$set(this, 'form', data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.gLoading(false)
-            })
+          this.$api.userConfig.getVendorSetting('easemob').then(({ data }) => {
+            this.$set(this, 'form', data)
+          }).catch(this.showApiError).finally(() => {
+            this.gLoading(false)
+          })
         }
       }
     }

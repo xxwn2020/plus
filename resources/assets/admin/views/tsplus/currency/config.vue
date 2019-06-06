@@ -29,7 +29,7 @@
               <el-input v-model="basic.recharge.rule" placeholder="积分充值规则" type="textarea"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button :loading="saveLoading" @click="saveBasicConfig" plain type="primary">{{$t('admin.submit')}}
+              <el-button plain :loading="saveLoading" @click="saveBasicConfig" plain type="primary">{{$t('admin.submit')}}
               </el-button>
             </el-form-item>
           </el-form>

@@ -5,25 +5,25 @@
     </div>
     <el-form v-loading="getLoading" ref="form" :model="form" label-width="120px">
       <el-form-item prop="recharge" :label="$t('admin.finance.rechargeSwitch')">
-        <el-radio-group size="mini" v-model="form.recharge">
+        <el-radio-group v-model="form.recharge">
           <el-radio border :label="true">开启</el-radio>
           <el-radio border :label="false">关闭</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item size="mini" prop="cash" :label="$t('admin.finance.cashSwitch')">
+      <el-form-item prop="cash" :label="$t('admin.finance.cashSwitch')">
         <el-radio-group v-model="form.cash">
           <el-radio border :label="true">开启</el-radio>
           <el-radio border :label="false">关闭</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item size="mini" prop="transform" :label="$t('admin.finance.walletTransform')">
+      <el-form-item prop="transform" :label="$t('admin.finance.walletTransform')">
         <el-radio-group v-model="form.transform">
           <el-radio border :label="true">开启</el-radio>
           <el-radio border :label="false">关闭</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button size="mini" type="primary" @click="saveWalletSwitch" :loading="saveLoading">{{$t('admin.submit')}}
+        <el-button plain type="primary" @click="saveWalletSwitch" :loading="saveLoading">{{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>

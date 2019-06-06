@@ -26,16 +26,16 @@
           v-if="inputVisible"
           v-model="inputValue"
           ref="saveTagInput"
-          size="mini"
+          plain
           @keyup.enter.native="handleInputConfirm"
           @blur="handleInputConfirm"
           placeholder="输入完成后，直接回车"
         >
         </el-input>
-        <el-button v-else class="button-new-tag" size="mini" @click="showInput">+ New Mime</el-button>
+        <el-button plain v-else class="button-new-tag" @click="showInput">+ New Mime</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button @click="saveMimes" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain @click="saveMimes" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
   </el-card>

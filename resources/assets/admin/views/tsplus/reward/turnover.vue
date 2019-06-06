@@ -3,9 +3,9 @@
     <div slot="header" class="clearfix">
       <span>打赏清单</span>
     </div>
-    <el-form style="max-width: 100vw; margin-bottom: 20px" ref="rewardsFilters" :model="query" :inline="true">
+    <el-form style="max-width: 100vw;margin-bottom: 20px;" ref="rewardsFilters" :model="query" :inline="true">
       <el-autocomplete
-        size="mini"
+
         :fetch-suggestions="queryUsers"
         v-model="query.username"
         placeholder="打赏者，模糊搜索"
@@ -13,7 +13,7 @@
         value-key="name"
         :debounce="500"
       ></el-autocomplete>
-      <el-select size="mini" v-model="query.type">
+      <el-select v-model="query.type">
         <el-option
           v-for="type in types"
           :key="type.name"
@@ -22,7 +22,7 @@
         </el-option>
       </el-select>
       <el-date-picker
-        size="mini"
+
         v-model="date"
         type="daterange"
         align="right"
@@ -33,7 +33,7 @@
         value-format="yyyy-MM-dd"
         :picker-options="pickerOptions">
       </el-date-picker>
-      <el-button size="mini" @click="doSearch" :loading="getLoading" type="primary" plain>
+      <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
         {{$t('admin.submit')}}
       </el-button>
     </el-form>

@@ -23,8 +23,8 @@
           </el-table-column>
           <el-table-column :label="$t('admin.operation')">
             <template slot-scope="{row: sensitive}">
-              <el-button type="primary" size="mini" @click="openDialog(sensitive)">编辑</el-button>
-              <el-button type="danger" size="mini" @click="delSensitive(sensitive)">删除</el-button>
+              <el-button plain type="primary" @click="openDialog(sensitive)">编辑</el-button>
+              <el-button plain type="danger" @click="delSensitive(sensitive)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -43,6 +43,7 @@
         <el-form-item prop="type" :label="$t('admin.category')">
           <el-radio-group v-model="word.type">
             <el-radio
+              border
               v-for="item in [{title: '替换', label: 'replace'}, {title: '提示', label: 'warning'}]"
               :key="item.label"
               :label="item.label"
@@ -58,8 +59,8 @@
       </el-form>
 
       <span slot="footer">
-        <el-button @click="cleanForm">{{$t('admin.cancel')}}</el-button>
-        <el-button type="primary" @click="saveWord">{{$t('admin.submit')}}</el-button>
+        <el-button plain @click="cleanForm">{{$t('admin.cancel')}}</el-button>
+        <el-button plain type="primary" @click="saveWord">{{$t('admin.submit')}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -89,70 +90,62 @@
     }),
     methods: {
       /* 关闭dialog */
-      cleanForm(done = null) {
+      cleanForm (done = null) {
         typeof done === 'function'
           ? done()
           : this.$set(this, 'showDialog', false)
 
-        this.$refs.word.resetFields()
+        this.$set(this, 'word', {
+          id: null,
+          type: null,
+          replace: null,
+          word: null
+        })
       },
-      openDialog(word) {
+      openDialog (word) {
         this.$set(this, 'word', word)
         this.$set(this, 'showDialog', true)
       },
-      delSensitive(word) {
+      delSensitive (word) {
         this.$confirm('此操作将删除此敏感词, 继续?', '提示', {
           type: 'warning'
-        })
-        .then(() => {
-          this.$api.sensitiveWords
-          .del(word.id)
-          .then(() => {
+        }).then(() => {
+          this.$api.sensitiveWords.del(word.id).then(() => {
             this.showSuccess(this.$t('admin.success'))
             this.fetchWords()
-          })
-          .catch(this.showApiError)
-        })
-        .catch(() => {
+          }).catch(this.showApiError)
+        }).catch(() => {
         })
       },
       /* 保存敏感词 */
-      saveWord() {
+      saveWord () {
         const { word, saveLoading } = this
-        if (! saveLoading) {
+        if (!saveLoading) {
           this.$set(this, 'saveLoading')
-          this.$api.sensitiveWords
-          .save(word, word.id)
-          .then(({ data }) => {
+          this.$api.sensitiveWords.save(word, word.id).then(({ data }) => {
             this.showSuccess(data)
             this.cleanForm()
             this.fetchWords()
-          })
-          .catch(this.showApiError)
-          .finally(() => {
+          }).catch(this.showApiError).finally(() => {
             this.$set(this, 'saveLoading', false)
           })
         }
       },
       /* 获取列表 */
-      fetchWords() {
+      fetchWords () {
         const { listLoading, query } = this
-        if (! listLoading) {
+        if (!listLoading) {
           this.$set(this, 'listLoading', true)
-          this.$api.sensitiveWords
-          .list(query)
-          .then(({ data, headers: { 'x-total': total = 0 } }) => {
+          this.$api.sensitiveWords.list(query).then(({ data, headers: { 'x-total': total = 0 } }) => {
             this.$set(this, 'total', total)
             this.$set(this, 'sensitiveWords', data)
-          })
-          .catch(this.showApiError)
-          .finally(() => {
+          }).catch(this.showApiError).finally(() => {
             this.$set(this, 'listLoading', false)
           })
         }
       }
     },
-    beforeMount() {
+    beforeMount () {
       this.fetchWords()
     }
   }

@@ -2,9 +2,9 @@
   <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>卡片名称</span>
-      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+      <el-button plain style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
     </div>
-    <el-form ref="queryForm" style="max-width: 100vw" :model="query" :inline="true">
+    <el-form ref="queryForm" style="max-width: 100vw; margin-bottom: 20px;" :model="query" :inline="true">
       <el-autocomplete
         :fetch-suggestions="queryUsers"
         v-model="query.name"

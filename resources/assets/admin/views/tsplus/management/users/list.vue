@@ -18,13 +18,13 @@
       >
         <div class="form-item" v-for="field in formFileds.fields" :key="field.id">
           <el-input
-            size="mini"
+
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'input'"
             v-model="query[field.id]"
           ></el-input>
           <el-cascader
-            size="mini"
+
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'cascader'"
             :options="field.options"
@@ -32,7 +32,7 @@
             @change="handleChange"
           ></el-cascader>
           <el-select
-            size="mini"
+
             :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
             v-if="field.type === 'select'"
             v-model="query[field.id]"
@@ -45,7 +45,7 @@
             ></el-option>
           </el-select>
           <el-date-picker
-            size="mini"
+
             v-if="field.type === 'dateTimeRange'"
             v-model="dateTimeRange"
             type="datetimerange"
@@ -58,7 +58,7 @@
         </div>
         <div>
           <el-button
-            size="mini"
+            plain
             type="primary"
             :loading="loading"
             @click="doSearch()"
@@ -92,10 +92,10 @@
           prop="id"
           :label="$t('admin.users.search.userId')"
         />
-        <el-table-column width="100" prop="name" :label="$t('admin.users.search.name')"/>
-        <el-table-column width="110" prop="phone" :label="$t('admin.users.search.phone')"/>
+        <el-table-column prop="name" :label="$t('admin.users.search.name')"/>
+        <el-table-column prop="phone" :label="$t('admin.users.search.phone')"/>
         <!-- <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"/> -->
-        <el-table-column width="60" prop="sex" :label="$t('admin.users.search.sex.root')">
+        <el-table-column prop="sex" :label="$t('admin.users.search.sex.root')">
           <template
             slot-scope="scope"
           >{{scope.row.sex === 0 ? $t('admin.users.search.sex.hide') : (scope.row.sex === 1 ?
@@ -111,22 +111,21 @@
         >
           <template slot-scope="{row: user}">
             {{user.currency.sum}}
-            <el-button :loading="savingCurrency === user.id" size="mini" @click="setCurrency(user.id)" type="primary"
-                       plain>设置积分
+            <el-button :loading="savingCurrency === user.id" @click="setCurrency(user.id)" type="primary" plain>设置积分
             </el-button>
           </template>
         </el-table-column>
         <el-table-column fixed="right" :label="$t('admin.operation')">
           <template slot-scope="scope">
             <el-button
-              size="mini"
+              plain
               type="primary"
               @click="goTo({name: 'management-users-edit', params: {uid: scope.row.id}})"
             >{{$t('admin.edit')}}
             </el-button>
             <template>
               <el-button
-                size="mini"
+                plain
                 type="primary"
                 v-if="scope.row.recommended === null"
                 @click="handleRecommend(scope.row)"
@@ -134,7 +133,7 @@
               </el-button>
               <el-button
                 v-else
-                size="mini"
+                plain
                 type="danger"
                 @click="handleUnRecommend(scope.row)"
               >{{ $t('admin.users.unrecommend') }}
@@ -142,13 +141,13 @@
             </template>
             <template v-if="scope.row.famous === null">
               <el-button
-                size="mini"
+                plain
                 type="primary"
                 @click="handleFollowedFamous(scope.row, 1)"
               >{{ $t('admin.users.followTa') }}
               </el-button>
               <el-button
-                size="mini"
+                plain
                 type="primary"
                 @click="handleFollowedFamous(scope.row, 2)"
               >{{ $t('admin.users.followEachOthers') }}
@@ -156,7 +155,7 @@
             </template>
             <template v-else>
               <el-button
-                size="mini"
+                plain
                 type="danger"
                 @click="handleUnFamous(scope.row)"
               >{{ $t('admin.users.cancelFollow') }}
@@ -164,14 +163,14 @@
             </template>
             <el-button
               v-if="!scope.row.deleted_at"
-              size="mini"
+              plain
               type="danger"
               @click="handleTrash(scope.row)"
             >{{$t('admin.users.disable')}}
             </el-button>
             <el-button
               v-else
-              size="mini"
+              plain
               type="primary"
               @click="handleRestore(scope.row)"
             >{{$t('admin.users.restore')}}

@@ -23,7 +23,7 @@
         <el-input v-model.number="form.height.max" placeholder="placeholder"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="saveLoading" @click="saveImageDimension" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain :loading="saveLoading" @click="saveImageDimension" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
   </el-card>

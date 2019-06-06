@@ -30,17 +30,17 @@
           <el-input type="password" v-model="configure.password" placeholder="请输入SMTP服务账号密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button :loading="saveLoading" @click="saveMailConfigure" type="primary" size="mini">
+          <el-button plain :loading="saveLoading" @click="saveMailConfigure" type="primary" >
             {{$t('admin.submit')}}
           </el-button>
-          <el-button size="mini" type="info" @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
+          <el-button plain type="info" @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>邮件发送测试</span>
-        <el-button style="padding: 3px 0" type="text">发送</el-button>
+        <el-button plain style="padding: 3px 0" type="text">发送</el-button>
       </div>
       <el-form ref="testEmail" :model="form" label-width="80px">
         <el-form-item prop="mail" label="邮件地址">
@@ -50,9 +50,9 @@
           <el-input v-model="form.content" placeholder="邮件内容"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button :loading="sendLoading" @click="sendTestMail" type="primary" size="mini">{{$t('admin.submit')}}
+          <el-button plain :loading="sendLoading" @click="sendTestMail" type="primary" >{{$t('admin.submit')}}
           </el-button>
-          <el-button @click="cleanFrom" type="info" size="mini">重置</el-button>
+          <el-button plain @click="cleanFrom" type="info" >重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>

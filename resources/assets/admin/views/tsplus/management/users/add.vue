@@ -29,8 +29,8 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="saveUser">{{$t('admin.submit')}}</el-button>
-          <el-button @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
+          <el-button plain type="primary" @click="saveUser">{{$t('admin.submit')}}</el-button>
+          <el-button plain @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
         </el-form-item>
       </el-form>
     </el-main>

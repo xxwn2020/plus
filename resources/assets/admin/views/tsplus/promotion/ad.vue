@@ -3,11 +3,11 @@
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{$t('admin.promotion.ad.root')}}</span>
-        <el-button @click="$router.push({name: 'Promotion-AddAd'})" type="text">{{$t('admin.add')}}</el-button>
+        <el-button plain @click="$router.push({name: 'Promotion-AddAd'})" type="text">{{$t('admin.add')}}</el-button>
       </div>
       <el-form ref="adFilter" :model="query" :inline="true">
         <el-form-item>
-          <el-select size="mini" v-model="query.space_id">
+          <el-select v-model="query.space_id">
             <el-option label="全部" :value="0"/>
             <el-option
               v-for="item in adSpaces"
@@ -17,10 +17,10 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-input size="mini" v-model="query.keyword" placeholder="广告搜索"></el-input>
+          <el-input v-model="query.keyword" placeholder="广告搜索"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button plain type="primary" :loading="getLoading" @click="doSearch" size="mini">{{$t('admin.submit')}}
+          <el-button plain type="primary" :loading="getLoading" @click="doSearch" >{{$t('admin.submit')}}
           </el-button>
         </el-form-item>
       </el-form>
@@ -77,8 +77,8 @@
           :label="$t('admin.operation')"
         >
           <template slot-scope="{row:ad}">
-            <el-button size="mini" @click="$router.push({name: 'Promotion-EditAd', params: {id: ad.id}})" plain type="primary">{{$t('admin.edit')}}</el-button>
-            <el-button size="mini" :loading="deleting === ad.id" @click="delAd(ad.id)" plain type="danger">{{$t('admin.delete')}}</el-button>
+            <el-button plain @click="$router.push({name: 'Promotion-EditAd', params: {id: ad.id}})" plain type="primary">{{$t('admin.edit')}}</el-button>
+            <el-button plain :loading="deleting === ad.id" @click="delAd(ad.id)" plain type="danger">{{$t('admin.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -31,7 +31,7 @@
                   :placeholder="$t('admin.storage.filesystems.expiresTimePlaceholder')"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="saveLocalFileSystem" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
+        <el-button plain @click="saveLocalFileSystem" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>

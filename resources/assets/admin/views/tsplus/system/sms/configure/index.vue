@@ -3,7 +3,7 @@
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>短信配置</span>
-        <el-button :loading="saveLoading" @click="saveSmsConfigure" style="padding: 3px 0" type="text">
+        <el-button plain :loading="saveLoading" @click="saveSmsConfigure" style="padding: 3px 0" type="text">
           保存设置
         </el-button>
       </div>

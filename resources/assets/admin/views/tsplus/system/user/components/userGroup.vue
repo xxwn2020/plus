@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="saveLoading" @click="saveUserRole" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button  plain :loading="saveLoading" @click="saveUserRole" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
   </el-card>

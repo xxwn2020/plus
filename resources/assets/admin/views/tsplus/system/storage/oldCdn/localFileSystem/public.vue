@@ -1,7 +1,7 @@
 <template>
   <el-form ref="form" :model="form" label-width="80px">
     <el-form-item>
-      <el-button @click="savePublicConfiguration" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
+      <el-button plain @click="savePublicConfiguration" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
       </el-button>
     </el-form-item>
   </el-form>

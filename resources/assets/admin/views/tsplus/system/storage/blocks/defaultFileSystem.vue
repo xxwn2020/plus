@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="saveDefaultFileSystem" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
+        <el-button plain @click="saveDefaultFileSystem" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>

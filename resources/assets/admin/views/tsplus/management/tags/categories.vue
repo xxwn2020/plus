@@ -4,6 +4,7 @@
       <div slot="header">
         <span>{{$t('admin.tags.list')}}</span>
         <el-button
+          plain
           @click="showEditDialog = true"
           style="float: right; padding: 3px 0"
           type="text"
@@ -28,13 +29,13 @@
           <el-table-column :label="$t('admin.operation')">
             <template slot-scope="{row: category}">
               <el-button
-                size="mini"
+                plain
                 type="primary"
                 @click="editCategory(category)"
               >{{ $t('admin.edit') }}</el-button>
 
               <el-button
-                size="mini"
+                plain
                 type="danger"
                 @click="delCategory(category)"
               >{{$t('admin.delete')}}</el-button>
@@ -67,8 +68,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cleanForm">取 消</el-button>
+        <el-button plain @click="cleanForm">取 消</el-button>
         <el-button
+          plain
           :loading="saveLoading"
           type="primary"
           @click="saveCategory"

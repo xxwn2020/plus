@@ -96,11 +96,12 @@
 
         <el-form-item>
           <el-button
+            plain
             type="primary"
             :loading="saveLoading"
             @click="saveCertificated"
           >{{ $t('admin.submit') }}</el-button>
-          <el-button @click="goBack(true)">{{ $t('admin.cancel') }}</el-button>
+          <el-button plain @click="goBack(true)">{{ $t('admin.cancel') }}</el-button>
         </el-form-item>
       </el-form>
     </el-main>

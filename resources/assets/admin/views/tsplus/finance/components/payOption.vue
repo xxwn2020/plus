@@ -25,13 +25,13 @@
           type="number"
           v-model="inputValue"
           ref="saveTagInput"
-          size="mini"
+
           @keyup.enter.native="handleInputConfirm"
           @blur="handleInputConfirm"
           placeholder="enter添加列表"
         >
         </el-input>
-        <el-button :loading="saveLoading" v-if="showButton" class="button-new-tag"
+        <el-button plain :loading="saveLoading" v-if="showButton" class="button-new-tag"
                    size="small" @click="showInput">+ 添加
         </el-button>
       </div>

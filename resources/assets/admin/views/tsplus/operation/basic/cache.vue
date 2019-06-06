@@ -9,7 +9,7 @@
         <el-form-item label="数据缓存">
           <el-button
             type="danger"
-            size="mini"
+            plain
             :loading="dataCacheLoading"
             @click="cleanDataCache"
           >清理数据缓存</el-button>
@@ -18,7 +18,7 @@
         <el-form-item label="配置缓存">
           <el-button
             type="danger"
-            size="mini"
+            plain
             :loading="configCacheLoading"
             @click="cleanConfigCache"
           >重置配置缓存</el-button>
@@ -27,7 +27,7 @@
         <el-form-item label="路由缓存">
           <el-button
             type="danger"
-            size="mini"
+            plain
             :loading="routeCacheLoading"
             @click="cleanRouteCache"
           >重置路由缓存</el-button>

@@ -4,6 +4,7 @@
       <div slot="header">
         <span>{{$t('admin.abilities.root')}}</span>
         <el-button
+          plain
           @click="showDialogForm = true"
           style="float: right; padding: 3px 0"
           type="text"
@@ -29,7 +30,7 @@
           <el-table-column :label="$t('admin.operation')">
             <template slot-scope="scope">
               <el-button
-                size="mini"
+                plain
                 type="danger"
                 @click="deleteAbility(scope.row)"
               >{{$t('admin.delete') }}</el-button>
@@ -55,8 +56,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialogForm">取 消</el-button>
-        <el-button :loading="saveLoading" type="primary" @click="saveAbility">保 存</el-button>
+        <el-button plain @click="closeDialogForm">取 消</el-button>
+        <el-button plain :loading="saveLoading" type="primary" @click="saveAbility">保 存</el-button>
       </div>
     </el-dialog>
   </div>

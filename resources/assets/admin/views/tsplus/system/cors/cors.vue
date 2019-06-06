@@ -35,14 +35,14 @@
               label="操作"
             >
               <template slot-scope="{row}">
-                <el-button size="mini" type="danger" @click="delOption(showField.field, row)">{{$t('admin.delete')}}
+                <el-button plain type="danger" @click="delOption(showField.field, row)">{{$t('admin.delete')}}
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="display: flex; margin-top: 10px;">
             <el-input style="flex: 9; padding-right: 10px;" v-model="form[showField.inputName]"></el-input>
-            <el-button :disabled="!form[showField.inputName]" @click="addOption(showField.inputName, showField.field)"
+            <el-button plain :disabled="!form[showField.inputName]" @click="addOption(showField.inputName, showField.field)"
                        type="primary">
               {{$t('admin.add')}}
             </el-button>
@@ -52,9 +52,9 @@
           <el-input v-model="cors.maxAge"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini" :loading="saveLoading" @click="saveData" type="primary">{{$t('admin.submit')}}
+          <el-button plain :loading="saveLoading" @click="saveData" type="primary">{{$t('admin.submit')}}
           </el-button>
-          <el-button size="mini" @click="goBack(true)" type="info">{{$t('admin.cancel')}}
+          <el-button plain @click="goBack(true)" type="info">{{$t('admin.cancel')}}
           </el-button>
         </el-form-item>
       </el-form>

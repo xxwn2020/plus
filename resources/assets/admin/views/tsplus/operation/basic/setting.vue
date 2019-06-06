@@ -22,6 +22,7 @@
       <el-form-item prop="reward.status" label="打赏开关">
         <el-radio-group v-model="setting.reward.status">
           <el-radio
+            border
             v-for="item in [{label: false, title: '关闭'},{label: true, title: '开启'}]"
             :key="item.key"
             :label="item.label"
@@ -49,6 +50,7 @@
       <el-form-item prop="anonymous.status" label="匿名开关">
         <el-radio-group v-model="setting.anonymous.status">
           <el-radio
+            border
             v-for="item in [{label: false, title: '关闭'},{label: true, title: '开启'}]"
             :key="item.key"
             :label="item.label"
@@ -79,11 +81,12 @@
       </el-form-item>
       <el-form-item class="submit-item">
         <el-button
+          plain
           type="primary"
           :loading="saveLoading"
           @click="saveConfigures"
         >{{ $t('admin.submit') }}</el-button>
-        <el-button @click="goBack(true)">取消</el-button>
+        <el-button plain @click="goBack(true)">取消</el-button>
       </el-form-item>
     </el-form>
   </el-main>

@@ -86,10 +86,10 @@
             <el-link :href="report.view" target="_blank">查看</el-link>
             <template v-if="report.status === 0">
               <el-button plain type="primary" @click="fillMark(report.id, 'deal')" :loading="report.id === deal"
-                         size="mini">通过
+                         >通过
               </el-button>
               <el-button plain type="primary" @click="fillMark(report.id, 'reject')" :loading="report.id === reject"
-                         size="mini">驳回
+                         >驳回
               </el-button>
             </template>
           </template>

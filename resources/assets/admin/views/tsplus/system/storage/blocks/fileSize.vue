@@ -24,7 +24,7 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="saveConfigure" :loading="saveLoading">
+        <el-button plain type="primary" @click="saveConfigure" :loading="saveLoading">
           {{$t('admin.submit')}}
         </el-button>
       </el-form-item>

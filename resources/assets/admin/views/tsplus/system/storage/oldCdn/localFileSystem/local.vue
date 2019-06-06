@@ -11,7 +11,7 @@
       <el-input v-model="form.public" placeholder=""></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button :loading="saveLoading" @click="saveLocalConfiguration" type="primary">{{$t('admin.submit')}}
+      <el-button plain :loading="saveLoading" @click="saveLocalConfiguration" type="primary">{{$t('admin.submit')}}
       </el-button>
     </el-form-item>
   </el-form>

@@ -3,15 +3,15 @@
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{adId ? $t('admin.promotion.ad.edit') : $t('admin.promotion.ad.add')}}</span>
-        <el-button @click="goBack(true)" style="float: right; padding: 3px 0" type="text">{{$t('admin.back')}}
+        <el-button plain @click="goBack(true)" style="float: right; padding: 3px 0" type="text">{{$t('admin.back')}}
         </el-button>
       </div>
       <el-form v-loading="getLoading" ref="addAd" :model="ad" label-width="120px">
         <el-form-item :label="$t('admin.promotion.ad.title')" prop="title">
-          <el-input v-model="ad.title" :placeholder="$t('admin.promotion.ad.titleDesc')" size="mini"></el-input>
+          <el-input v-model="ad.title" :placeholder="$t('admin.promotion.ad.titleDesc')" ></el-input>
         </el-form-item>
         <el-form-item :label="$t('admin.promotion.ad.position')" prop="space_id">
-          <el-select size="mini" v-model="ad.space_id" :placeholder="$t('admin.promotion.ad.positionDesc')">
+          <el-select v-model="ad.space_id" :placeholder="$t('admin.promotion.ad.positionDesc')">
             <el-option
               v-for="item in adSpaces"
               :key="item.id"
@@ -21,7 +21,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('admin.promotion.ad.type')" prop="type">
-          <el-select size="mini" v-model="ad.type" :placeholder="$t('admin.promotion.ad.typeDesc')">
+          <el-select v-model="ad.type" :placeholder="$t('admin.promotion.ad.typeDesc')">
             <el-option
               v-for="item in types"
               :key="item"
@@ -54,20 +54,20 @@
               <el-input disabled v-model="ad.data[index]"
                         :placeholder="rule.split('|')[2]"
                         v-else-if="index === 'image'">
-                <el-button @click="uploadImage('imageUpload')" slot="append"
+                <el-button plain @click="uploadImage('imageUpload')" slot="append"
                            icon="el-icon-upload"></el-button>
               </el-input>
               <el-input disabled v-model="ad.data[index]"
                         :placeholder="rule.split('|')[2]"
                         v-else-if="index === 'avatar'">
-                <el-button @click="uploadImage('avatarUpload')" slot="append"
+                <el-button plain @click="uploadImage('avatarUpload')" slot="append"
                            icon="el-icon-upload"></el-button>
               </el-input>
             </el-form-item>
           </template>
         </template>
         <el-form-item :label="$t('admin.promotion.ad.sort')" prop="sort">
-          <el-input v-model="ad.sort" :placeholder="$t('admin.promotion.ad.sortDesc')" size="mini"
+          <el-input v-model="ad.sort" :placeholder="$t('admin.promotion.ad.sortDesc')"
                     type="number"></el-input>
         </el-form-item>
         <el-form-item>

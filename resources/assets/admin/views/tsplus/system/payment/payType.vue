@@ -23,7 +23,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="saveLoading" @click="saveRechargeTypes" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain :loading="saveLoading" @click="saveRechargeTypes" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
   </el-card>

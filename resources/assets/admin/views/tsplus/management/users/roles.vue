@@ -25,6 +25,7 @@
           </el-form-item>
           <el-form-item>
             <el-button
+              plain
               :loading="settingLoading"
               type="primary"
               @click="saveDefaultRole"
@@ -38,6 +39,7 @@
       <div slot="header">
         <span>{{ $t('admin.roles.management') }}</span>
         <el-button
+          plain
           @click="showAddForm = true"
           style="float: right; padding: 3px 0"
           type="text"
@@ -59,11 +61,11 @@
           </el-table-column>
           <el-table-column label="更多操作">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="editRole(scope.row)">编辑</el-button>
+              <el-button plain type="primary" @click="editRole(scope.row)">编辑</el-button>
               <el-button
                 v-if="!scope.row.non_delete"
                 type="danger"
-                size="mini"
+                plain
                 @click="delRole(scope.row)"
               >删除</el-button>
             </template>
@@ -84,8 +86,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cleanForm">取 消</el-button>
-        <el-button :loading="saveLoading" type="primary" @click="saveRole">新 增</el-button>
+        <el-button plain @click="cleanForm">取 消</el-button>
+        <el-button plain :loading="saveLoading" type="primary" @click="saveRole">新 增</el-button>
       </div>
     </el-dialog>
     <el-dialog
@@ -109,8 +111,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeEditForm">取 消</el-button>
-        <el-button :loading="saveLoading" type="primary" @click="saveAbilities">保 存</el-button>
+        <el-button plain @click="closeEditForm">取 消</el-button>
+        <el-button plain :loading="saveLoading" type="primary" @click="saveAbilities">保 存</el-button>
       </div>
     </el-dialog>
   </div>

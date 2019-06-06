@@ -16,7 +16,7 @@
         <el-input type="number" v-model="form.sort" placeholder=""></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="saveLoading" @click="savePopularCity" type="primary">{{$t('admin.submit')}}</el-button>
+        <el-button plain :loading="saveLoading" @click="savePopularCity" type="primary">{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -34,7 +34,7 @@
       <el-table-column
         :label="$t('admin.operation')">
         <template slot-scope="{row:city}">
-          <el-button :loading="deleting === city.name" type="danger" @click="delPopularCity(city)" size="mini">
+          <el-button plain :loading="deleting === city.name" type="danger" @click="delPopularCity(city)" >
             {{$t('admin.delete')}}
           </el-button>
         </template>

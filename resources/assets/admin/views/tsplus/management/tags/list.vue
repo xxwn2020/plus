@@ -30,9 +30,9 @@
           <el-table-column prop="weight" :label="$t('admin.tags.weight')"></el-table-column>
           <el-table-column :label="$t('admin.operation')">
             <template slot-scope="{row: tag}">
-              <el-button size="mini" type="primary" @click="editTag(tag)">{{ $t('admin.edit') }}
+              <el-button plain type="primary" @click="editTag(tag)">{{ $t('admin.edit') }}
               </el-button>
-              <el-button size="mini" type="danger" @click="deleteTag(tag)">{{ $t('admin.delete') }}
+              <el-button plain type="danger" @click="deleteTag(tag)">{{ $t('admin.delete') }}
               </el-button>
             </template>
           </el-table-column>
@@ -69,8 +69,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cleanForm">取 消</el-button>
-        <el-button :loading="saveLoading" type="primary" @click="saveTag">{{$t('admin.submit')}}</el-button>
+        <el-button plain @click="cleanForm">取 消</el-button>
+        <el-button plain :loading="saveLoading" type="primary" @click="saveTag">{{$t('admin.submit')}}</el-button>
       </div>
     </el-dialog>
   </div>

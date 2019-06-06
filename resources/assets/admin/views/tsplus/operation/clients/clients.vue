@@ -8,8 +8,8 @@
         <el-form ref="clientSettings" :model="settings" label-width="120px">
           <el-form-item :label="$t('admin.client.web.open')" prop="web.open">
             <el-radio-group v-model="settings.web.open">
-              <el-radio :label="true">{{$t('admin.state.open')}}</el-radio>
-              <el-radio :label="false">{{$t('admin.state.close')}}</el-radio>
+              <el-radio border :label="true">{{$t('admin.state.open')}}</el-radio>
+              <el-radio border :label="false">{{$t('admin.state.close')}}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('admin.client.web.url')" prop="web.url">
@@ -17,15 +17,15 @@
           </el-form-item>
           <el-form-item :label="$t('admin.client.spa.open')" prop="spa.open">
             <el-radio-group v-model="settings.spa.open">
-              <el-radio :label="true">{{$t('admin.state.open')}}</el-radio>
-              <el-radio :label="false">{{$t('admin.state.close')}}</el-radio>
+              <el-radio border :label="true">{{$t('admin.state.open')}}</el-radio>
+              <el-radio border :label="false">{{$t('admin.state.close')}}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('admin.client.spa.url')" prop="spa.url">
             <el-input v-model="settings.spa.url" :placeholder="$t('admin.client.spa.url')"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="saveClientSetting" :loading="saveLoading">{{$t('admin.submit')}}
+            <el-button plain type="primary" @click="saveClientSetting" :loading="saveLoading">{{$t('admin.submit')}}
             </el-button>
           </el-form-item>
         </el-form>

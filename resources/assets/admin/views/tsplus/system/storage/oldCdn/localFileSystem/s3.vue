@@ -19,7 +19,7 @@
       <el-input v-model="form.bucket" placeholder=""></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button @click="saveS3Configuration" type="primary">{{$t('admin.submit')}}</el-button>
+      <el-button plain @click="saveS3Configuration" type="primary">{{$t('admin.submit')}}</el-button>
     </el-form-item>
   </el-form>
 </template>
