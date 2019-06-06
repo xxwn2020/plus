@@ -75,7 +75,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function url(string $filename, array $extra = [])
-    : string {
+    : string
+    {
         // 过滤目录分隔符.
         $filename = $this->filterSlash($filename);
 
@@ -130,7 +131,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author BS <414606094@qq.com>
      */
     protected function makeSignURL(string $filename, array $extra)
-    : string {
+    : string
+    {
         return $this->client->signUrl(
             $this->bucket,
             $filename,
@@ -151,7 +153,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function makePublicURL(string $filename, array $extra)
-    : string {
+    : string
+    {
         return $this->resolveQueryString(
             sprintf('%s/%s', $this->getBaseURI(), $filename),
             $this->getProcess($filename, $extra)
@@ -168,7 +171,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author BS <414606094@qq.com>
      */
     protected function getProcess(string $filename, array $extra)
-    : array {
+    : array
+    {
         if ($this->isImage($filename)) {
             $width = max(0, intval(Arr::get($extra, 'width', 0)));
             $height = max(0, intval(Arr::get($extra, 'height', 0)));
@@ -227,7 +231,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function isImage(string $filename)
-    : bool {
+    : bool
+    {
         return in_array(app('files')->extension($filename),
             ['psd', 'png', 'jpg', 'jpeg', 'webp', 'bmp', 'gif', 'tiff']);
     }
@@ -243,7 +248,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function resolveQueryString(string $url, array $query = [])
-    : string {
+    : string
+    {
         // -1 表示获取全部。
         $pares = parse_url($url, -1);
         if ($pares === false) {
@@ -294,7 +300,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function filterSlash(string $filename)
-    : string {
+    : string
+    {
         // 将 windows 系统目录分隔符也去除.
         $filename = str_replace('\\', '/',
             str_replace(DIRECTORY_SEPARATOR, '/', $filename));
@@ -320,7 +327,8 @@ class AliOss implements FileUrlGeneratorContract
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function getBaseURI(string $endpoint = '')
-    : string {
+    : string
+    {
         $endpoint = $this->isCname ? $this->endpoint
             : $this->bucket.'.'.$this->endpoint;
         // 去除协议头，保留 hostname 部分。
