@@ -8,6 +8,7 @@ import Promotion from './modules/promotion'
 import Currency from './modules/currency'
 import Feedback from './modules/feedback'
 import Reward from './modules/reward'
+import Package from './modules/packages'
 
 export default [
   ManagementRouter,
@@ -19,5 +20,6 @@ export default [
   Promotion,
   Currency,
   Reward,
-  Feedback
+  Feedback,
+  Package
 ]

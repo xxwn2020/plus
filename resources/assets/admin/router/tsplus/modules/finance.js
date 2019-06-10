@@ -4,7 +4,7 @@ const FinanceRouter = {
   component: () => import(/* webpackChunkName: 'system' */ '@/layout'),
   name: 'Finance-Wrap',
   meta: { title: 'finance.root', icon: 'tree' },
-  redirect: '/finance/wallet',
+  redirect: '/finance/wallet/statistics',
   children: [
     {
       path: 'wallet',

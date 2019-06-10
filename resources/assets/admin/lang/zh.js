@@ -63,6 +63,11 @@ export default {
     i18n: '国际化',
     externalLink: '外链',
     /** TSPlust */
+    packages: {
+      root: '扩展包',
+      list: '应用列表',
+      manage: '应用管理'
+    },
     templates: {
       root: '网页模版',
       aboutUs: '关于我们',
