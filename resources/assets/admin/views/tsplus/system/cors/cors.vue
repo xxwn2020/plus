@@ -1,12 +1,12 @@
 <template>
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>跨域设置</span>
-    </div>
-    <div>
-    </div>
-    <el-main v-loading="getLoading">
-      <el-form ref="cors" :model="cors">
+  <el-main>
+    <el-card shadow="never" class="box-card">
+      <div slot="header" class="clearfix">
+        <span>跨域设置</span>
+      </div>
+      <div>
+      </div>
+      <el-form v-loading="getLoading" ref="cors" :model="cors">
         <el-alert
           title="以下设置，请咨询开发人员后再进行设置"
           type="warning"
@@ -42,7 +42,8 @@
           </el-table>
           <div style="display: flex; margin-top: 10px;">
             <el-input style="flex: 9; padding-right: 10px;" v-model="form[showField.inputName]"></el-input>
-            <el-button plain :disabled="!form[showField.inputName]" @click="addOption(showField.inputName, showField.field)"
+            <el-button plain :disabled="!form[showField.inputName]"
+                       @click="addOption(showField.inputName, showField.field)"
                        type="primary">
               {{$t('admin.add')}}
             </el-button>
@@ -58,8 +59,8 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </el-main>
-  </el-card>
+    </el-card>
+  </el-main>
 </template>
 
 <script>

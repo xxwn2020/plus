@@ -1,10 +1,9 @@
 <template>
   <div>
-    <el-card style="margin-bottom: 20px;">
+    <el-card shadow="never" style="margin-bottom: 20px;">
       <div slot="header">
         <span>{{ $t('admin.roles.default') }}</span>
       </div>
-      <el-main>
         <el-alert
           :title="$t('admin.roles.defaultRoleText')"
           type="warning"
@@ -34,10 +33,9 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </el-main>
     </el-card>
 
-    <el-card>
+    <el-card shadow="never">
       <div slot="header">
         <span>{{ $t('admin.roles.management') }}</span>
         <el-button
@@ -53,7 +51,6 @@
         :title="$t('admin.roles.deletedRoleWarn')"
         type="warning"
       ></el-alert>
-      <el-main>
         <el-table v-loading="tableLoading" :data="roles" border stripe>
           <el-table-column prop="name" label="角色唯一的标识"/>
           <el-table-column prop="display_name" label="角色展示名称"/>
@@ -74,7 +71,6 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-main>
     </el-card>
     <el-dialog :before-close="cleanForm" title="添加角色" :visible.sync="showAddForm">
       <el-form :model="role">

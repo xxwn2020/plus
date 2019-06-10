@@ -1,6 +1,6 @@
 <template>
   <div class="ability-list-page">
-    <el-card>
+    <el-card shadow="never">
       <div slot="header">
         <span>{{$t('admin.abilities.root')}}</span>
         <el-button
@@ -10,35 +10,23 @@
         >{{$t('admin.abilities.add')}}
         </el-button>
       </div>
-      <!-- <el-main>
-        <el-form :inline="true" :model="query" ref="abilityFilter">
-          <div class="form-item">
-            <el-input v-model="query.display_name" :placeholder="$t('admin.abilities.displayName')"></el-input>
-          </div>
-          <div class="form-item">
-            <el-button type="primary" @click="doSearch">{{ $t('admin.filter') }}</el-button>
-          </div>
-        </el-form>
-      </el-main>-->
-      <el-main v-loading="listLoading">
-        <el-table :data="abilities" border stripe>
-          <el-table-column prop="id" :label="$t('admin.idField')"></el-table-column>
-          <el-table-column prop="name" :label="$t('admin.abilities.name')"></el-table-column>
-          <el-table-column prop="display_name" :label="$t('admin.abilities.displayName')"></el-table-column>
-          <el-table-column prop="description" :label="$t('admin.abilities.description')"></el-table-column>
-          <el-table-column prop="updated_at" :label="$t('admin.updatedAt')"></el-table-column>
-          <el-table-column :label="$t('admin.operation')">
-            <template slot-scope="scope">
-              <el-button
-                plain
-                type="danger"
-                @click="deleteAbility(scope.row)"
-              >{{$t('admin.delete') }}
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
+      <el-table v-loading="listLoading" :data="abilities" border stripe>
+        <el-table-column prop="id" :label="$t('admin.idField')"></el-table-column>
+        <el-table-column prop="name" :label="$t('admin.abilities.name')"></el-table-column>
+        <el-table-column prop="display_name" :label="$t('admin.abilities.displayName')"></el-table-column>
+        <el-table-column prop="description" :label="$t('admin.abilities.description')"></el-table-column>
+        <el-table-column prop="updated_at" :label="$t('admin.updatedAt')"></el-table-column>
+        <el-table-column :label="$t('admin.operation')">
+          <template slot-scope="scope">
+            <el-button
+              plain
+              type="danger"
+              @click="deleteAbility(scope.row)"
+            >{{$t('admin.delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
     <el-dialog
       :before-close="closeDialogForm"

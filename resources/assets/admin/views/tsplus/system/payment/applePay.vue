@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{$t('admin.payment.iapSetting')}}</span>
       </div>

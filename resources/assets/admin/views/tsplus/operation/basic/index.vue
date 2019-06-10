@@ -1,12 +1,14 @@
 <template>
   <div>
     <nav-bar-in-page/>
-    <router-view></router-view>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
   </div>
 </template>
 <script>
-export default {
-  name: "OperationBasic"
-};
+  export default {
+    name: 'OperationBasic'
+  }
 </script>
 

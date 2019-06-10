@@ -1,10 +1,9 @@
 <template>
-  <el-card :body-style="{ padding: '0px' }">
+  <el-card shadow="never">
     <div slot="header">
       <span>{{ $t('admin.users.edit') }}</span>
       <el-button @click="goBack(true)" style="float: right; padding: 3px 0" type="text">返回列表</el-button>
     </div>
-    <el-main>
       <el-form :model="user" ref="form" label-width="80px">
         <el-form-item label="用户名">
           <el-input v-model="user.name"></el-input>
@@ -34,7 +33,6 @@
           <el-button @click="goBack(true)">取消</el-button>
         </el-form-item>
       </el-form>
-    </el-main>
   </el-card>
 </template>
 <script>

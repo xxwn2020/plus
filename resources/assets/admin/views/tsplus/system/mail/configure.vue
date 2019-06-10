@@ -1,5 +1,5 @@
 <template>
-  <div class="mail-configure">
+  <el-main class="mail-configure">
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>{{$t('admin.mail.root')}}</span>
@@ -30,14 +30,14 @@
           <el-input type="password" v-model="configure.password" placeholder="请输入SMTP服务账号密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button plain :loading="saveLoading" @click="saveMailConfigure" type="primary" >
+          <el-button plain :loading="saveLoading" @click="saveMailConfigure" type="primary">
             {{$t('admin.submit')}}
           </el-button>
           <el-button plain type="info" @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card class="box-card">
+    <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>邮件发送测试</span>
         <el-button plain style="padding: 3px 0" type="text">发送</el-button>
@@ -50,13 +50,13 @@
           <el-input v-model="form.content" placeholder="邮件内容"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button plain :loading="sendLoading" @click="sendTestMail" type="primary" >{{$t('admin.submit')}}
+          <el-button plain :loading="sendLoading" @click="sendTestMail" type="primary">{{$t('admin.submit')}}
           </el-button>
-          <el-button plain @click="cleanFrom" type="info" >重置</el-button>
+          <el-button plain @click="cleanFrom" type="info">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-  </div>
+  </el-main>
 </template>
 
 <script>
@@ -86,15 +86,12 @@
         const { form, sendLoading } = this
         if (!sendLoading) {
           this.$set(this, 'sendLoading', true)
-          this.$api.mail.test(form)
-            .then(({ data }) => {
-              this.showSuccess(data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'sendLoading', false)
-              this.resetForm('testEmail')
-            })
+          this.$api.mail.test(form).then(({ data }) => {
+            this.showSuccess(data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'sendLoading', false)
+            this.resetForm('testEmail')
+          })
         }
       },
       /* 更新配置 */
@@ -102,14 +99,11 @@
         const { saveLoading, configure } = this
         if (!saveLoading) {
           this.$set(this, 'saveLoading', true)
-          this.$api.mail.save(configure)
-            .then(({ data }) => {
-              this.showSuccess(data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'saveLoading', false)
-            })
+          this.$api.mail.save(configure).then(({ data }) => {
+            this.showSuccess(data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'saveLoading', false)
+          })
         }
       },
       /* 获取配置 */
@@ -117,14 +111,11 @@
         const { listLoading } = this
         if (!listLoading) {
           this.$set(this, 'listLoading', true)
-          this.$api.mail.list()
-            .then(({ data }) => {
-              this.$set(this, 'configure', data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'listLoading', false)
-            })
+          this.$api.mail.list().then(({ data }) => {
+            this.$set(this, 'configure', data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'listLoading', false)
+          })
         }
 
       }

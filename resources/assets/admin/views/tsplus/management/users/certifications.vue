@@ -1,6 +1,6 @@
 <template>
   <div class="certification-list-page">
-    <el-card>
+    <el-card shadow="never">
       <div slot="header">
         <span>{{$t('admin.certifications.list')}}</span>
         <el-button
@@ -10,117 +10,115 @@
         >{{$t('admin.certifications.create')}}
         </el-button>
       </div>
-      <el-main>
-        <el-form class="filterForm" ref="filterForm" :model="query" :inline="true">
-          <el-form-item>
-            <el-autocomplete
-              :fetch-suggestions="queryUsers"
-              v-model="query.name"
-              placeholder="可模糊搜索用户名"
-              @select="selectUser"
-              value-key="name"
-              :debounce="500"
-            ></el-autocomplete>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="query.status">
-              <el-option
-                v-for="item in statuss.data"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="query.certification_name" placeholder="placeholder">
-              <el-option label="全部" value=""/>
-              <el-option
-                v-for="item in categories"
-                :key="item.name"
-                :label="item.display_name"
-                :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
-          </el-form-item>
-        </el-form>
-        <el-pagination
-          class="top"
-          @size-change="handleSizeChange"
-          @current-change="pageChange"
-          :current-page="page.current_page"
-          :page-sizes="[15, 30, 50]"
-          :page-size="query.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total"
-        ></el-pagination>
-        <el-table v-loading="getLoading" :data="page.data" border stripe>
-          <el-table-column prop="id" label="#ID"></el-table-column>
-          <el-table-column prop="data.name" :label="$t('admin.name')"></el-table-column>
-          <el-table-column prop="data.phone" :label="$t('admin.phone')"></el-table-column>
-          <el-table-column prop="data.number" :label="$t('admin.identify')"></el-table-column>
-          <el-table-column prop="data.desc" :label="$t('admin.certifications.description')"></el-table-column>
-          <el-table-column prop="data.org_name" :label="$t('admin.certifications.orgName')"></el-table-column>
-          <el-table-column prop="data.org_address" :label="$t('admin.certifications.orgAddress')"></el-table-column>
-          <el-table-column prop="category.display_name" label="认证类型"></el-table-column>
-          <el-table-column label="证件照片">
-            <template slot-scope="scope">
-              <div v-if="scope.row.certification_name === 'org'">
-                <a target="_blank" :href="url(scope.row.front)">证件照片</a>
-              </div>
-              <div v-else>
-                <a target="_blank" :href="url(scope.row.front)">证件照片正面</a>
-                <br>
-                <a target="_blank" :href="url(scope.row.back)">证件照片反面</a>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column width="80px" :label="$t('admin.status')">
-            <template slot-scope="{row: certification}">
-              <el-button plain type="primary" v-if="certification.status === 1">已审</el-button>
-              <el-button plain type="warning" v-else>待审</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column width="90px" :label="$t('admin.createdAt')">
-            <template slot-scope="{row: certification}">{{certification.created_at | localTime }}</template>
-          </el-table-column>
-          <el-table-column :label="$t('admin.operation')">
-            <template slot-scope="{row: certification}">
-              <div v-if="certification.status === 0">
-                <el-button :loading="operating === certification.id"
-                           @click="auditCertification(certification.id, 'pass')" plain type="primary">通过
-                </el-button>
-                <el-button :loading="operating === certification.id"
-                           @click="auditCertification(certification.id, 'reject')" plain type="warning">驳回
-                </el-button>
-              </div>
-              <div v-else>
-                <el-button
-                  @click="goTo({name: 'management-users-certifications-edit', params: {id: certification.id}})"
-                  plain
-                  type="primary"
-                  v-if="certification.status === 1"
-                >{{$t('admin.edit')}}
-                </el-button>
-                <el-button plain v-else type="danger">已驳回</el-button>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          class="bottom"
-          @size-change="handleSizeChange"
-          @current-change="pageChange"
-          :current-page="page.current_page"
-          :page-sizes="[15, 30, 50]"
-          :page-size="query.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total"
-        ></el-pagination>
-      </el-main>
+      <el-form class="filterForm" ref="filterForm" :model="query" :inline="true">
+        <el-form-item>
+          <el-autocomplete
+            :fetch-suggestions="queryUsers"
+            v-model="query.name"
+            placeholder="可模糊搜索用户名"
+            @select="selectUser"
+            value-key="name"
+            :debounce="500"
+          ></el-autocomplete>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="query.status">
+            <el-option
+              v-for="item in statuss.data"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="query.certification_name" placeholder="placeholder">
+            <el-option label="全部" value=""/>
+            <el-option
+              v-for="item in categories"
+              :key="item.name"
+              :label="item.display_name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        </el-form-item>
+      </el-form>
+      <el-pagination
+        class="top"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
+      <el-table v-loading="getLoading" :data="page.data" border stripe>
+        <el-table-column prop="id" label="#ID"></el-table-column>
+        <el-table-column prop="data.name" :label="$t('admin.name')"></el-table-column>
+        <el-table-column prop="data.phone" :label="$t('admin.phone')"></el-table-column>
+        <el-table-column prop="data.number" :label="$t('admin.identify')"></el-table-column>
+        <el-table-column prop="data.desc" :label="$t('admin.certifications.description')"></el-table-column>
+        <el-table-column prop="data.org_name" :label="$t('admin.certifications.orgName')"></el-table-column>
+        <el-table-column prop="data.org_address" :label="$t('admin.certifications.orgAddress')"></el-table-column>
+        <el-table-column prop="category.display_name" label="认证类型"></el-table-column>
+        <el-table-column label="证件照片">
+          <template slot-scope="scope">
+            <div v-if="scope.row.certification_name === 'org'">
+              <a target="_blank" :href="url(scope.row.front)">证件照片</a>
+            </div>
+            <div v-else>
+              <a target="_blank" :href="url(scope.row.front)">证件照片正面</a>
+              <br>
+              <a target="_blank" :href="url(scope.row.back)">证件照片反面</a>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column width="80px" :label="$t('admin.status')">
+          <template slot-scope="{row: certification}">
+            <el-button plain type="primary" v-if="certification.status === 1">已审</el-button>
+            <el-button plain type="warning" v-else>待审</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column width="90px" :label="$t('admin.createdAt')">
+          <template slot-scope="{row: certification}">{{certification.created_at | localTime }}</template>
+        </el-table-column>
+        <el-table-column :label="$t('admin.operation')">
+          <template slot-scope="{row: certification}">
+            <div v-if="certification.status === 0">
+              <el-button :loading="operating === certification.id"
+                         @click="auditCertification(certification.id, 'pass')" plain type="primary">通过
+              </el-button>
+              <el-button :loading="operating === certification.id"
+                         @click="auditCertification(certification.id, 'reject')" plain type="warning">驳回
+              </el-button>
+            </div>
+            <div v-else>
+              <el-button
+                @click="goTo({name: 'management-users-certifications-edit', params: {id: certification.id}})"
+                plain
+                type="primary"
+                v-if="certification.status === 1"
+              >{{$t('admin.edit')}}
+              </el-button>
+              <el-button plain v-else type="danger">已驳回</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        class="bottom"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
     </el-card>
   </div>
 </template>

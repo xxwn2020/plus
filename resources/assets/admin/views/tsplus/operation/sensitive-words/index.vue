@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-main>
     <el-card shadow="never">
       <div slot="header">
         <span>{{ $t('admin.sensitive.root') }}</span>
@@ -99,7 +99,7 @@
         <el-button plain type="primary" @click="saveWord">{{$t('admin.submit')}}</el-button>
       </span>
     </el-dialog>
-  </div>
+  </el-main>
 </template>
 
 <script>

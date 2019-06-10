@@ -3,24 +3,22 @@
     <div slot="header" class="clearfix">
       <span>短信记录</span>
     </div>
-    <el-main>
-      <el-form :inline="true" ref="query" :model="query"  class="filterForm">
-        <el-form-item label="" prop="keyword">
-          <el-input v-model="query.keyword" placeholder="输入要搜索的手机号码"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="">
-          <el-select v-model="query.state">
-            <el-option :label="$t('admin.all')" :value="-1"></el-option>
-            <el-option label="未发送" :value="0"></el-option>
-            <el-option label="发送成功" :value="1"></el-option>
-            <el-option label="发送失败" :value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button plain @click="doSearch" type="primary">{{ $t('admin.filter') }}</el-button>
-        </el-form-item>
-      </el-form>
-    </el-main>
+    <el-form :inline="true" ref="query" :model="query" class="filterForm">
+      <el-form-item label="" prop="keyword">
+        <el-input v-model="query.keyword" placeholder="输入要搜索的手机号码"></el-input>
+      </el-form-item>
+      <el-form-item label="" prop="">
+        <el-select v-model="query.state">
+          <el-option :label="$t('admin.all')" :value="-1"></el-option>
+          <el-option label="未发送" :value="0"></el-option>
+          <el-option label="发送成功" :value="1"></el-option>
+          <el-option label="发送失败" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain @click="doSearch" type="primary">{{ $t('admin.filter') }}</el-button>
+      </el-form-item>
+    </el-form>
     <el-pagination
       class="top"
       @size-change="handleSizeChange"

@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>意见反馈</span>
       <!--      <el-button plain style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->

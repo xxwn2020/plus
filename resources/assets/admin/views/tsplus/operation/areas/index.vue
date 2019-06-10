@@ -1,29 +1,29 @@
 <template>
-  <div class="areas">
-    <el-main>
-      <popular-cities style="margin-bottom: 20px"></popular-cities>
-      <el-card v-loading="getLoading" shadow="never">
-        <div slot="header">
-          <span>地区管理</span>
-        </div>
-        <el-input
-          placeholder="输入关键字进行过滤"
-          v-model="filterText">
-        </el-input>
-        <el-tree
-          class="areas-tree"
-          accordion
-          ref="tree2"
-          :data="countries"
-          node-key="id"
-          :props="{label: 'name', children: 'childNodes'}"
-          :default-expand-all="false"
-          :filter-node-method="filterNode"
-          :expand-on-click-node="false"
-          :default-expanded-keys="defaultExpandedKeys"
-          @node-expand="nodeExpand"
-          @node-collapse="nodeCollapse"
-        >
+  <el-main class="areas">
+    <popular-cities style="margin-bottom: 20px"></popular-cities>
+    <el-card shadow="never">
+      <div slot="header">
+        <span>地区管理</span>
+      </div>
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+      <el-tree
+        v-loading="getLoading"
+        class="areas-tree"
+        accordion
+        ref="tree2"
+        :data="countries"
+        node-key="id"
+        :props="{label: 'name', children: 'childNodes'}"
+        :default-expand-all="false"
+        :filter-node-method="filterNode"
+        :expand-on-click-node="false"
+        :default-expanded-keys="defaultExpandedKeys"
+        @node-expand="nodeExpand"
+        @node-collapse="nodeCollapse"
+      >
           <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
         <span>
@@ -39,9 +39,8 @@
           </el-button>
         </span>
       </span>
-        </el-tree>
-      </el-card>
-    </el-main>
+      </el-tree>
+    </el-card>
     <el-dialog
       title="添加区域"
       :visible.sync="dialogVisible"
@@ -68,7 +67,7 @@
         <el-button plain type="primary" :loading="saveLoading" @click="save">确 定</el-button>
       </span>
     </el-dialog>
-  </div>
+  </el-main>
 </template>
 <script>
 

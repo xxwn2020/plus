@@ -1,25 +1,23 @@
 <template>
-  <div class="about-us">
-    <el-main>
-      <el-card v-loading="getLoading" shadow="never" class="box-card">
-        <div slot="header" class="clearfix">
-          <span>{{$t('admin.templates.aboutUs')}}</span>
-        </div>
-        <el-form style="max-width: 100vw" ref="aboutUsForm" :model="form" label-width="120px">
-          <el-form-item :label="$t('admin.templates.aboutUrl')" prop="url">
-            <el-input v-model="form.url" :placeholder="$t('admin.templates.priority')"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('admin.templates.aboutUsContent')">
-            <mavon-editor placeholder="输入关于我们的markdown内容" v-model="form.content" @imgAdd="$imgAdd" ref="editor"
-                          :apiHost="domain"/>
-          </el-form-item>
-          <el-form-item>
-            <el-button plain @click="saveAboutUs" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-    </el-main>
-  </div>
+  <el-main class="about-us">
+    <el-card shadow="never" class="box-card">
+      <div slot="header" class="clearfix">
+        <span>{{$t('admin.templates.aboutUs')}}</span>
+      </div>
+      <el-form v-loading="getLoading" style="max-width: 100vw" ref="aboutUsForm" :model="form" label-width="120px">
+        <el-form-item :label="$t('admin.templates.aboutUrl')" prop="url">
+          <el-input v-model="form.url" :placeholder="$t('admin.templates.priority')"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('admin.templates.aboutUsContent')">
+          <mavon-editor placeholder="输入关于我们的markdown内容" v-model="form.content" @imgAdd="$imgAdd" ref="editor"
+                        :apiHost="domain"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button plain @click="saveAboutUs" :loading="saveLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </el-main>
 </template>
 
 <script>

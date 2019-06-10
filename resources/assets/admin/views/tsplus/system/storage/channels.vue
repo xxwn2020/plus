@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-main>
     <el-alert
       :title="$t('admin.storage.channels.channelIntro')"
       type="error"
@@ -32,11 +32,12 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button plain type="primary" @click="savePublicChannel" :loading="saveLoading">{{$t('admin.submit')}}</el-button>
+          <el-button plain type="primary" @click="savePublicChannel" :loading="saveLoading">{{$t('admin.submit')}}
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
-  </div>
+  </el-main>
 </template>
 
 <script>

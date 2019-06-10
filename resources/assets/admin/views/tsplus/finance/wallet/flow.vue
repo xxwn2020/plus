@@ -1,113 +1,111 @@
 <template>
-  <el-card :body-style="{ padding: '0px' }" shadow="never" class="box-card">
+  <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>资金流水</span>
     </div>
-    <el-main>
-      <el-form class="el-form filterForm" :inline="true" ref="form" :model="query">
-        <el-form-item>
-          <el-autocomplete
-            :fetch-suggestions="queryUsers"
-            v-model="query.username"
-            placeholder="可模糊搜索用户名"
-            @select="handleUserSelect"
-            value-key="name"
-            :debounce="500"
-          ></el-autocomplete>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="query.state">
-            <el-option
-              v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.search.root')}}
-          </el-button>
-        </el-form-item>
-      </el-form>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
-      <el-table
-        border
-        v-loading="getLoading"
-        :data="page.data"
-        style="width: 100%">
-        <el-table-column
-          prop="id"
-          label="#">
-        </el-table-column>
-        <el-table-column
-          prop="owner_id"
-          label="用户ID">
-        </el-table-column>
-        <el-table-column
-          label="操作">
-          <template slot-scope="{row}">
-            {{row.target_type | targetType }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="title"
-          label="标题"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="body"
-          label="内容"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="type"
-          label="增减"
-        >
-          <template slot-scope="{row}">
-            {{ row.type | actions }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="amount"
-          label="金额"
-        >
-        </el-table-column>
-        <el-table-column
-          label="状态"
-        >
-          <template slot-scope="{row}">
-            {{row.state | state}}
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="时间"
-        >
-          <template slot-scope="{row}">
-            {{row.created_at | localTime }}
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        class="bottom"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
-    </el-main>
+    <el-form class="el-form filterForm" :inline="true" ref="form" :model="query">
+      <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="可模糊搜索用户名"
+          @select="handleUserSelect"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="query.state">
+          <el-option
+            v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.search.root')}}
+        </el-button>
+      </el-form-item>
+    </el-form>
+    <el-pagination
+      class="top"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
+    <el-table
+      border
+      v-loading="getLoading"
+      :data="page.data"
+      style="width: 100%">
+      <el-table-column
+        prop="id"
+        label="#">
+      </el-table-column>
+      <el-table-column
+        prop="owner_id"
+        label="用户ID">
+      </el-table-column>
+      <el-table-column
+        label="操作">
+        <template slot-scope="{row}">
+          {{row.target_type | targetType }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="title"
+        label="标题"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="body"
+        label="内容"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="type"
+        label="增减"
+      >
+        <template slot-scope="{row}">
+          {{ row.type | actions }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="amount"
+        label="金额"
+      >
+      </el-table-column>
+      <el-table-column
+        label="状态"
+      >
+        <template slot-scope="{row}">
+          {{row.state | state}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="时间"
+      >
+        <template slot-scope="{row}">
+          {{row.created_at | localTime }}
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      class="bottom"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
   </el-card>
 </template>
 

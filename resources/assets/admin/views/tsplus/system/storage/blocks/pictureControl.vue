@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
       <span>{{ $t('admin.storage.basic.picture') }}</span>
     </div>

@@ -1,6 +1,9 @@
 <template>
-  <el-main v-loading="getLoading">
-    <el-form :model="setting" ref="setting" label-width="80px">
+  <el-card shadow="never" class="box-card">
+    <div slot="header" class="clearfix">
+      <span>站点配置</span>
+    </div>
+    <el-form v-loading="getLoading" :model="setting" ref="setting" label-width="80px">
       <el-alert
         class="setting-alert"
         :closable="false"
@@ -14,7 +17,8 @@
             v-for="item in [{label: false, title: '关闭'},{label: true, title: '开启'}]"
             :key="item.key"
             :label="item.label"
-          >{{item.title}}</el-radio>
+          >{{item.title}}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -26,7 +30,8 @@
             v-for="item in [{label: false, title: '关闭'},{label: true, title: '开启'}]"
             :key="item.key"
             :label="item.label"
-          >{{item.title}}</el-radio>
+          >{{item.title}}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-alert
@@ -54,7 +59,8 @@
             v-for="item in [{label: false, title: '关闭'},{label: true, title: '开启'}]"
             :key="item.key"
             :label="item.label"
-          >{{item.title}}</el-radio>
+          >{{item.title}}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-alert
@@ -85,84 +91,78 @@
           type="primary"
           :loading="saveLoading"
           @click="saveConfigures"
-        >{{ $t('admin.submit') }}</el-button>
+        >{{ $t('admin.submit') }}
+        </el-button>
         <el-button plain @click="goBack(true)">取消</el-button>
       </el-form-item>
     </el-form>
-  </el-main>
+  </el-card>
 </template>
 <script>
-export default {
-  name: "OperationBasicSetting",
-  data: () => ({
-    activeNames: "1",
-    setting: {
-      gold: {
-        status: true
+  export default {
+    name: 'OperationBasicSetting',
+    data: () => ({
+      activeNames: '1',
+      setting: {
+        gold: {
+          status: true
+        },
+        reward: {
+          status: true,
+          amounts: ''
+        },
+        reserved_nickname: '',
+        client_email: '',
+        user_invite_template: '',
+        anonymous: {
+          status: false,
+          rule: ''
+        },
+        about_url: null
       },
-      reward: {
-        status: true,
-        amounts: ""
-      },
-      reserved_nickname: "",
-      client_email: "",
-      user_invite_template: "",
-      anonymous: {
-        status: false,
-        rule: ""
-      },
-      about_url: null
-    },
-    getLoading: false,
-    saveLoading: false
-  }),
-  computed: {},
-  methods: {
-    /* 保存配置 */
-    saveConfigures() {
-      const { setting, saveLoading } = this;
-      if (!saveLoading) {
-        this.$set(this, "saveLoading", true);
-        this.$api.configures
-          .save({ site: setting })
-          .then(({ data }) => {
-            this.showSuccess(data);
+      getLoading: false,
+      saveLoading: false
+    }),
+    computed: {},
+    methods: {
+      /* 保存配置 */
+      saveConfigures () {
+        const { setting, saveLoading } = this
+        if (!saveLoading) {
+          this.$set(this, 'saveLoading', true)
+          this.$api.configures.save({ site: setting }).then(({ data }) => {
+            this.showSuccess(data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'saveLoading', false)
           })
-          .catch(this.showApiError)
-          .finally(() => {
-            this.$set(this, "saveLoading", false);
-          });
+        }
+      },
+      /* 获取配置 */
+      fetchConfigures () {
+        const { getLoading } = this
+        if (!getLoading) {
+          this.$set(this, 'getLoading', true)
+          this.$api.configures.list().then(({ data }) => {
+            this.$set(this, 'setting', data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'getLoading', false)
+          })
+        }
       }
     },
-    /* 获取配置 */
-    fetchConfigures() {
-      const { getLoading } = this;
-      if (!getLoading) {
-        this.$set(this, "getLoading", true);
-        this.$api.configures
-          .list()
-          .then(({ data }) => {
-            this.$set(this, "setting", data);
-          })
-          .catch(this.showApiError)
-          .finally(() => {
-            this.$set(this, "getLoading", false);
-          });
-      }
+    mounted () {
+      this.fetchConfigures()
     }
-  },
-  mounted() {
-    this.fetchConfigures();
   }
-};
 </script>
 <style lang="css">
-.submit-item {
-  margin-top: 20px;
-}
-.setting-alert {
-  max-width: 500px;
-  margin-bottom: 10px;
-}
+  .submit-item {
+    margin-top: 20px;
+  }
+
+  .setting-alert {
+    max-width: 500px;
+    margin-bottom: 10px;
+  }
 </style>
 

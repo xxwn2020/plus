@@ -1,5 +1,5 @@
 <template>
-  <el-card class="user-list-page">
+  <el-card shadow="never" class="user-list-page">
     <div slot="header">
       <span>{{$t('admin.users.userList')}}</span>
       <el-button

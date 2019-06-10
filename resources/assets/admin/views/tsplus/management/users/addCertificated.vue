@@ -1,9 +1,8 @@
 <template>
-  <el-card class="add-certificated-page">
+  <el-card shadow="never" class="add-certificated-page">
     <div slot="header">
       <span>{{ $t('admin.certifications.add') }}</span>
     </div>
-    <el-main>
       <el-form :rules="rules" :model="certificated" ref="certificated" label-width>
         <el-form-item prop="username" :label="$t('admin.username')">
           <el-autocomplete
@@ -114,7 +113,6 @@
           <el-button plain @click="goBack(true)">{{ $t('admin.cancel') }}</el-button>
         </el-form-item>
       </el-form>
-    </el-main>
   </el-card>
 </template>
 <script>

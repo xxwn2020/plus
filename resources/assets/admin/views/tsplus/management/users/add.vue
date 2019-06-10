@@ -1,9 +1,8 @@
 <template>
-  <el-card>
+  <el-card shadow="never">
     <div slot="header">
       <span>{{$t('admin.users.create')}}</span>
     </div>
-    <el-main>
       <el-form :model="user" ref="addUserForm" label-width="80px">
         <el-form-item :label="$t('admin.uname')">
           <el-input v-model="user.name"></el-input>
@@ -33,7 +32,6 @@
           <el-button plain @click="goBack(true)">{{$t('admin.cancel')}}</el-button>
         </el-form-item>
       </el-form>
-    </el-main>
   </el-card>
 </template>
 <script>

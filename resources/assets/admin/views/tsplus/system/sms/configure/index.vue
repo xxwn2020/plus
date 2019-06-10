@@ -1,5 +1,5 @@
 <template>
-  <el-main class="configure">
+  <div class="configure">
     <el-card shadow="never" class="box-card">
       <div slot="header" class="clearfix">
         <span>短信配置</span>
@@ -43,7 +43,7 @@
         </template>
       </el-form>
     </el-card>
-  </el-main>
+  </div>
 
 </template>
 
