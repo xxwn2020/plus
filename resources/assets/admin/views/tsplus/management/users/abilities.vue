@@ -4,11 +4,11 @@
       <div slot="header">
         <span>{{$t('admin.abilities.root')}}</span>
         <el-button
-          plain
           @click="showDialogForm = true"
           style="float: right; padding: 3px 0"
           type="text"
-        >{{$t('admin.abilities.add')}}</el-button>
+        >{{$t('admin.abilities.add')}}
+        </el-button>
       </div>
       <!-- <el-main>
         <el-form :inline="true" :model="query" ref="abilityFilter">
@@ -33,7 +33,8 @@
                 plain
                 type="danger"
                 @click="deleteAbility(scope.row)"
-              >{{$t('admin.delete') }}</el-button>
+              >{{$t('admin.delete') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -63,122 +64,109 @@
   </div>
 </template>
 <script>
-import setQuery from "@/mixins/setQuery";
-export default {
-  mixins: [setQuery],
-  name: "ManagementUserAbilities",
-  data: () => ({
-    abilities: [],
-    query: {
-      page: 1,
-      limit: 1,
-      display_name: null
-    },
-    ability: {
-      id: null,
-      name: null,
-      display_name: null,
-      decription: null
-    },
-    showDialogForm: false,
-    listLoading: false,
-    saveLoading: false
-  }),
-  methods: {
-    /* 保存节点 */
-    saveAbility() {
-      const { ability, saveLoading } = this;
-      if (!saveLoading) {
-        this.$set(this, "saveLoading", true);
-        this.$api.abilities
-          .save(ability, ability.id)
-          .then(({ data }) => {
-            this.$message({
-              type: "success",
-              message: this.$t("admin.success")
-            });
-            this.closeDialogForm();
-            this.fetchData();
-          })
-          .catch(this.showApiError)
-          .finally(() => {
-            this.$set(this, "saveLoading", false);
-          });
-      }
-    },
-    /* 删除权限节点 */
-    deleteAbility(ability) {
-      this.$confirm(
-        this.$t("admin.abilities.deleteAbility"),
-        this.$t("admin.notice"),
-        {
-          confirmButtonText: this.$t("admin.confirm"),
-          cancelButtonText: this.$t("admin.cancel"),
-          type: "warning"
-        }
-      )
-        .then(() => {
-          this.$api.abilities
-            .del(ability.id)
-            .then(() => {
-              this.$message({
-                type: "success",
-                message: this.$t("admin.success")
-              });
-              this.fetchData();
-            })
-            .catch(this.showApiError)
-            .finally(() => {});
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: this.$t("admin.canceled")
-          });
-        });
-    },
-    /* 关闭对话框 */
-    closeDialogForm(done = null) {
-      const { ability } = this;
-      typeof donw === "function"
-        ? done()
-        : this.$set(this, "showDialogForm", false);
+  import setQuery from '@/mixins/setQuery'
 
-      this.$set(this, "ability", {
+  export default {
+    mixins: [setQuery],
+    name: 'ManagementUserAbilities',
+    data: () => ({
+      abilities: [],
+      query: {
+        page: 1,
+        limit: 1,
+        display_name: null
+      },
+      ability: {
         id: null,
         name: null,
         display_name: null,
         decription: null
-      });
-    },
-    /* 混入公用方法 */
-    fetchData() {
-      this.fetchAbilities();
-    },
-    /* 获取权限节点列表 */
-    fetchAbilities() {
-      const { listLoading, query } = this;
-      if (!listLoading) {
-        this.$set(this, "listLoading", true);
-        this.$api.abilities
-          .list(query)
-          .then(({ data }) => {
-            this.$set(this, "abilities", data);
+      },
+      showDialogForm: false,
+      listLoading: false,
+      saveLoading: false
+    }),
+    methods: {
+      /* 保存节点 */
+      saveAbility () {
+        const { ability, saveLoading } = this
+        if (!saveLoading) {
+          this.$set(this, 'saveLoading', true)
+          this.$api.abilities.save(ability, ability.id).then(({ data }) => {
+            this.$message({
+              type: 'success',
+              message: this.$t('admin.success')
+            })
+            this.closeDialogForm()
+            this.fetchData()
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'saveLoading', false)
           })
-          .catch(this.showApiError)
-          .finally(() => {
-            this.$set(this, "listLoading", false);
-          });
+        }
+      },
+      /* 删除权限节点 */
+      deleteAbility (ability) {
+        this.$confirm(
+          this.$t('admin.abilities.deleteAbility'),
+          this.$t('admin.notice'),
+          {
+            confirmButtonText: this.$t('admin.confirm'),
+            cancelButtonText: this.$t('admin.cancel'),
+            type: 'warning'
+          }
+        ).then(() => {
+          this.$api.abilities.del(ability.id).then(() => {
+            this.$message({
+              type: 'success',
+              message: this.$t('admin.success')
+            })
+            this.fetchData()
+          }).catch(this.showApiError).finally(() => {})
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: this.$t('admin.canceled')
+          })
+        })
+      },
+      /* 关闭对话框 */
+      closeDialogForm (done = null) {
+        const { ability } = this
+        typeof donw === 'function'
+          ? done()
+          : this.$set(this, 'showDialogForm', false)
+
+        this.$set(this, 'ability', {
+          id: null,
+          name: null,
+          display_name: null,
+          decription: null
+        })
+      },
+      /* 混入公用方法 */
+      fetchData () {
+        this.fetchAbilities()
+      },
+      /* 获取权限节点列表 */
+      fetchAbilities () {
+        const { listLoading, query } = this
+        if (!listLoading) {
+          this.$set(this, 'listLoading', true)
+          this.$api.abilities.list(query).then(({ data }) => {
+            this.$set(this, 'abilities', data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'listLoading', false)
+          })
+        }
       }
+    },
+    beforeMount () {
+      this.fetchData()
     }
-  },
-  beforeMount() {
-    this.fetchData();
   }
-};
 </script>
 <style lang='less'>
-.ability-list-page {
-}
+  .ability-list-page {
+  }
 </style>
 

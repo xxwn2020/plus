@@ -1,35 +1,43 @@
 <template>
   <el-card shadow="never" class="box-card">
     <div slot="header" class="clearfix">
-      <span>卡片名称</span>
-      <el-button plain style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+      <span>积分流水</span>
+      <!--      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
     </div>
-    <el-form ref="queryForm" style="max-width: 100vw; margin-bottom: 20px;" :model="query" :inline="true">
-      <el-autocomplete
-        :fetch-suggestions="queryUsers"
-        v-model="query.name"
-        placeholder="可模糊搜索用户名"
-        @select="selectUser"
-        value-key="name"
-        :debounce="500"
-      ></el-autocomplete>
-      <el-select v-model="query.action" placeholder="筛选流水类型">
-        <el-option
-          v-for="item in [{label: '全部', value: null},{label:'收入', value: 1},{label:'支出', value: -1}]"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-select v-model="query.state" placeholder="流水状态">
-        <el-option
-          v-for="item in [{label: '全部', value: null},{label:'等待', value: 0},{label:'成功', value: 1},{label:'失败', value: -1}]"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button @click="doSearch" :loading="getLoading" type="primary" plain>{{$t('admin.submit')}}</el-button>
+    <el-form ref="queryForm" class="filterForm" :model="query" :inline="true">
+      <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.name"
+          placeholder="可模糊搜索用户名"
+          @select="selectUser"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="query.action" placeholder="筛选流水类型">
+          <el-option
+            v-for="item in [{label: '全部', value: null},{label:'收入', value: 1},{label:'支出', value: -1}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="query.state" placeholder="流水状态">
+          <el-option
+            v-for="item in [{label: '全部', value: null},{label:'等待', value: 0},{label:'成功', value: 1},{label:'失败', value: -1}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="doSearch" :loading="getLoading" type="primary" plain>{{$t('admin.submit')}}</el-button>
+      </el-form-item>
     </el-form>
     <el-pagination
       class="top"
@@ -98,9 +106,10 @@
 
 <script>
   import setQuery from '@/mixins/setQuery'
+  import searchUser from '@/mixins/searchUser'
 
   export default {
-    mixins: [setQuery],
+    mixins: [setQuery, searchUser],
     data: () => ({
       page: {},
       query: {

@@ -21,10 +21,10 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
+use function Zhiyi\Plus\setting;
 
 class CurrencyAppleController extends Controller
 {
@@ -36,7 +36,12 @@ class CurrencyAppleController extends Controller
      */
     public function getConfig()
     {
-        return response()->json(setting('pay', 'iapConfig') ?? [], 200);
+        $config = setting('pay', 'iapConfig') ?? [];
+
+        return response()->json([
+            'IAP_only' => $config['IAP_only'] ?? false,
+            'rule'     => $config['rule'] ?? '',
+        ], 200);
     }
 
     /**
@@ -45,6 +50,7 @@ class CurrencyAppleController extends Controller
      * @param  Request  $request
      *
      * @return JsonResponse
+     * @throws \Throwable
      * @author BS <414606094@qq.com>
      */
     public function setConfig(Request $request)

@@ -11,6 +11,10 @@
 
 form.el-form {
   max-width: 500px;
+
+  &.filterForm {
+    max-width: 100vw;
+  }
 }
 
 .el-form {

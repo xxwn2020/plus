@@ -4,28 +4,32 @@
       <span>资金流水</span>
     </div>
     <el-main>
-      <el-form class="el-form" :inline="true" ref="form" :model="query" label-width="80px">
-        <el-autocomplete
-          :fetch-suggestions="queryUsers"
-          v-model="query.username"
-          placeholder="可模糊搜索用户名"
-          @select="handleUserSelect"
-          value-key="name"
-          :debounce="500"
-
-        ></el-autocomplete>
-        <el-select v-model="query.state" >
-          <el-option
-            v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.search.root')}}
-        </el-button>
+      <el-form class="el-form filterForm" :inline="true" ref="form" :model="query">
+        <el-form-item>
+          <el-autocomplete
+            :fetch-suggestions="queryUsers"
+            v-model="query.username"
+            placeholder="可模糊搜索用户名"
+            @select="handleUserSelect"
+            value-key="name"
+            :debounce="500"
+          ></el-autocomplete>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="query.state">
+            <el-option
+              v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.search.root')}}
+          </el-button>
+        </el-form-item>
       </el-form>
-
       <el-pagination
         class="top"
         @size-change="handleSizeChange"
@@ -37,6 +41,7 @@
         :total="page.total"
       ></el-pagination>
       <el-table
+        border
         v-loading="getLoading"
         :data="page.data"
         style="width: 100%">
@@ -247,9 +252,10 @@
     }
     ,
     beforeMount () {
+      const { '$route': { query: { state = '' } = {} } = {} } = this
       this.$set(this, 'query', {
         ...this.query,
-        state: this.$route.query.state ? parseInt(this.$route.query.state) : ''
+        state: state !== '' ? parseInt(state) : state
       })
       this.getFlow()
     }

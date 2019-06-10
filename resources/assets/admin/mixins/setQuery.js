@@ -7,18 +7,14 @@ export default {
     }
   }),
   watch: {
-    '$route': function (to) {
+    '$route': function(to) {
       this.query = {
         ...this.query,
         ...{
           ...this.$route.query,
           ...{
             limit: parseInt(to.query.limit || 15),
-            page: parseInt(to.query.page || 1),
-            role: parseInt(to.query.role || 0),
-            trashed: parseInt(to.query.trashed || 0),
-            follow: parseInt(to.query.follow || 0),
-            recommend: parseInt(to.query.recommend || 0)
+            page: parseInt(to.query.page || 1)
           }
         }
       }
@@ -48,16 +44,12 @@ export default {
     /**
      * 设置query
      * @param {*} query
+     * @param routeName
      */
     setQuery (query = {}, routeName = this.routeName) {
       let oldQ = Object.assign({}, this.query)
       let oldQuery = JSON.parse(JSON.stringify(oldQ))
       query = { ...oldQuery, ...query }
-      Object.keys(query).map(key => {
-        if (!query[key] && !['state'].includes(key)) {
-          delete query[key]
-        }
-      })
       this.$router.push({
         name: routeName,
         query
@@ -74,11 +66,7 @@ export default {
         ...this.$route.query,
         ...{
           limit: parseInt(this.$route.query.limit || 15),
-          page: parseInt(this.$route.query.page || 1),
-          role: parseInt(this.$route.query.role || 0),
-          trashed: parseInt(this.$route.query.trashed || 0),
-          follow: parseInt(this.$route.query.follow || 0),
-          recommend: parseInt(this.$route.query.recommend || 0)
+          page: parseInt(this.$route.query.page || 1)
         }
       }
     }

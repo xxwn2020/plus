@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card :body-style="{ padding: '0px' }">
+    <el-card shadow="never">
       <div slot="header">
         <span>{{ $t('admin.sensitive.root') }}</span>
         <el-button
@@ -10,25 +10,61 @@
         >{{ $t('admin.sensitive.add') }}
         </el-button>
       </div>
-      <el-main v-loading="listLoading">
-        <el-table :data="sensitiveWords" border stripe>
-          <el-table-column
-            v-for="col in [{id: 'id', label: '#'},{id: 'word', label: '敏感词'},{id: 'replace', label: '替换词'}]"
-            :prop="col.id"
-            :key="col.id"
-            :label="col.label"
-          />
-          <el-table-column :label="$t('admin.category')">
-            <template slot-scope="{row: {type}}">{{type === 'replace' ? '替换' : '提示'}}</template>
-          </el-table-column>
-          <el-table-column :label="$t('admin.operation')">
-            <template slot-scope="{row: sensitive}">
-              <el-button plain type="primary" @click="openDialog(sensitive)">编辑</el-button>
-              <el-button plain type="danger" @click="delSensitive(sensitive)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
+      <el-form ref="sensitiveFilterForm" :inline="true" :model="query" class="filterForm">
+        <el-form-item>
+          <el-input v-model="query.word" placeholder="检索敏感词"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="query.type">
+            <el-option
+              v-for="item in [{value: '', label: '全部'},{value: 'replace', label: '替换'},{value: 'warning', label: '提示'}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="doSearch" :loading="listLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        </el-form-item>
+      </el-form>
+      <el-pagination
+        class="top"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
+      <el-table v-loading="listLoading" :data="page.data" border stripe>
+        <el-table-column
+          v-for="col in [{id: 'id', label: '#'},{id: 'word', label: '敏感词'},{id: 'replace', label: '替换词'}]"
+          :prop="col.id"
+          :key="col.id"
+          :label="col.label"
+        />
+        <el-table-column :label="$t('admin.category')">
+          <template slot-scope="{row: {type}}">{{type === 'replace' ? '替换' : '提示'}}</template>
+        </el-table-column>
+        <el-table-column :label="$t('admin.operation')">
+          <template slot-scope="{row: sensitive}">
+            <el-button plain type="primary" @click="openDialog(sensitive)">编辑</el-button>
+            <el-button plain type="danger" @click="delSensitive(sensitive)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        class="bottom"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
     </el-card>
     <el-dialog
       :title="`${word.id ? '修改' : '新增'}敏感词`"
@@ -67,10 +103,13 @@
 </template>
 
 <script>
+  import setQuery from '@/mixins/setQuery'
+
   export default {
+    mixins: [setQuery],
     name: 'OperationSensitiveWords',
     data: () => ({
-      sensitiveWords: [],
+      page: {},
       listLoading: false,
       saveLoading: false,
       showDialog: false,
@@ -83,12 +122,15 @@
       query: {
         limit: 15,
         offset: 0,
-        work: null
+        word: '',
+        type: ''
       },
-      total: 0,
-      canload: true
+      total: 0
     }),
     methods: {
+      fetchData () {
+        this.fetchWords()
+      },
       /* 关闭dialog */
       cleanForm (done = null) {
         typeof done === 'function'
@@ -136,9 +178,8 @@
         const { listLoading, query } = this
         if (!listLoading) {
           this.$set(this, 'listLoading', true)
-          this.$api.sensitiveWords.list(query).then(({ data, headers: { 'x-total': total = 0 } }) => {
-            this.$set(this, 'total', total)
-            this.$set(this, 'sensitiveWords', data)
+          this.$api.sensitiveWords.list(query).then(({ data }) => {
+            this.$set(this, 'page', data)
           }).catch(this.showApiError).finally(() => {
             this.$set(this, 'listLoading', false)
           })

@@ -3,39 +3,46 @@
     <div slot="header" class="clearfix">
       <span>打赏清单</span>
     </div>
-    <el-form style="max-width: 100vw;margin-bottom: 20px;" ref="rewardsFilters" :model="query" :inline="true">
-      <el-autocomplete
+    <el-form class="filterForm" ref="rewardsFilters" :model="query" :inline="true">
+      <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="打赏者，模糊搜索"
+          @select="selectUser"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="query.type">
+          <el-option
+            v-for="type in types"
+            :key="type.name"
+            :label="type.alias"
+            :value="type.name">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-date-picker
+          v-model="date"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
 
-        :fetch-suggestions="queryUsers"
-        v-model="query.username"
-        placeholder="打赏者，模糊搜索"
-        @select="selectUser"
-        value-key="name"
-        :debounce="500"
-      ></el-autocomplete>
-      <el-select v-model="query.type">
-        <el-option
-          v-for="type in types"
-          :key="type.name"
-          :label="type.alias"
-          :value="type.name">
-        </el-option>
-      </el-select>
-      <el-date-picker
-
-        v-model="date"
-        type="daterange"
-        align="right"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        value-format="yyyy-MM-dd"
-        :picker-options="pickerOptions">
-      </el-date-picker>
-      <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
-        {{$t('admin.submit')}}
-      </el-button>
+      <el-form-item>
+        <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
+          {{$t('admin.submit')}}
+        </el-button>
+      </el-form-item>
     </el-form>
     <el-pagination
       class="top"

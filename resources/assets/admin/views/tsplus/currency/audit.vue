@@ -3,24 +3,39 @@
     <div slot="header" class="clearfix">
       <span>提现列表</span>
     </div>
-    <el-form style="max-width: 100vw; margin-bottom: 20px" ref="cashFilterForm" :model="query" :inline="true">
-      <el-autocomplete
-
-        :fetch-suggestions="queryUsers"
-        v-model="query.username"
-        placeholder="申请人，模糊搜索"
-        @select="selectUser"
-        value-key="name"
-        :debounce="500"
-      ></el-autocomplete>
-      <el-select v-model="query.state">
-        <el-option value="" label="全部"></el-option>
-        <el-option :value="0" label="等待"></el-option>
-        <el-option :value="1" label="成功"></el-option>
-        <el-option :value="-1" label="失败"></el-option>
-      </el-select>
-      <el-button plain :loading="getLoading" @click="doSearch" type="primary">{{$t('admin.submit')}}</el-button>
+    <el-form class="filterForm" ref="cashFilterForm" :model="query" :inline="true">
+      <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="申请人，模糊搜索"
+          @select="selectUser"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="query.state">
+          <el-option value="" label="全部"></el-option>
+          <el-option :value="0" label="等待"></el-option>
+          <el-option :value="1" label="成功"></el-option>
+          <el-option :value="-1" label="失败"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain :loading="getLoading" @click="doSearch" type="primary">{{$t('admin.submit')}}</el-button>
+      </el-form-item>
     </el-form>
+    <el-pagination
+      class="top"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
     <el-table
       v-loading="getLoading"
       :data="page.data"
@@ -63,6 +78,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      class="bottom"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
   </el-card>
 </template>
 

@@ -25,5 +25,11 @@ export default {
     admin.post(`/certification/categories/${name}/icon/upload`, params, {
       validateStatus: s => (s === 201)
     })
+  ),
+  /* 审核认证 */
+  auditCertificate: ({ id, type, params }) => (
+    admin.patch(`/certifications/${id}/${type}`, params, {
+      validateStatus: s => (s === 201)
+    })
   )
 }

@@ -4,7 +4,7 @@
       <span>短信记录</span>
     </div>
     <el-main>
-      <el-form :inline="true" ref="query" :model="query" label-width="80px">
+      <el-form :inline="true" ref="query" :model="query"  class="filterForm">
         <el-form-item label="" prop="keyword">
           <el-input v-model="query.keyword" placeholder="输入要搜索的手机号码"></el-input>
         </el-form-item>
@@ -17,7 +17,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button  plain @click="doSearch" type="primary">{{ $t('admin.filter') }}</el-button>
+          <el-button plain @click="doSearch" type="primary">{{ $t('admin.filter') }}</el-button>
         </el-form-item>
       </el-form>
     </el-main>
@@ -86,22 +86,26 @@
       smsLogs: [],
       listLoading: false
     }),
+    beforeMount () {
+      const { '$route': { query: { state = -1 } } = {} } = this
+      this.$set(this, 'query', {
+        ...this.query,
+        state: parseInt(state)
+      })
+    },
     methods: {
       /* 获取短信记录列表 */
       fetchSmsLogs () {
         const { query, listLoading } = this
         if (!listLoading) {
           this.$set(this, 'listLoading', true)
-          this.$api.sms.smsLogs(query)
-            .then(({ data, headers: { 'x-sms-total': total = 0 } }) => {
-                this.$set(this, 'smsLogs', data)
-                this.$set(this.page, 'total', ~~total)
-              }
-            )
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'listLoading', false)
-            })
+          this.$api.sms.smsLogs(query).then(({ data, headers: { 'x-sms-total': total = 0 } }) => {
+              this.$set(this, 'smsLogs', data)
+              this.$set(this.page, 'total', ~~total)
+            }
+          ).catch(this.showApiError).finally(() => {
+            this.$set(this, 'listLoading', false)
+          })
         }
       },
       /* mixin */

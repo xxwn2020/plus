@@ -11,43 +11,60 @@
         >{{$t('admin.tags.add')}}
         </el-button>
       </div>
-      <el-main v-loading="listLoading">
-        <el-pagination
-          class="top"
-          @size-change="handleSizeChange"
-          @current-change="pageChange"
-          :current-page="page.current_page"
-          :page-sizes="[15, 30, 50]"
-          :page-size="query.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total"
-        ></el-pagination>
-        <el-table :data="tags" border stripe>
-          <el-table-column prop="id" label="#"></el-table-column>
-          <el-table-column prop="name" :label="$t('admin.tags.name')"></el-table-column>
-          <el-table-column prop="category.name" :label="$t('admin.tags.category')"></el-table-column>
-          <el-table-column prop="taggable_count" :label="$t('admin.tags.taggableCount')"></el-table-column>
-          <el-table-column prop="weight" :label="$t('admin.tags.weight')"></el-table-column>
-          <el-table-column :label="$t('admin.operation')">
-            <template slot-scope="{row: tag}">
-              <el-button plain type="primary" @click="editTag(tag)">{{ $t('admin.edit') }}
-              </el-button>
-              <el-button plain type="danger" @click="deleteTag(tag)">{{ $t('admin.delete') }}
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          class="bottom"
-          @size-change="handleSizeChange"
-          @current-change="pageChange"
-          :current-page="page.current_page"
-          :page-sizes="[15, 30, 50]"
-          :page-size="query.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total"
-        ></el-pagination>
-      </el-main>
+      <el-form class="filterForm" ref="tagsFilterForm" :model="query" :inline="true">
+        <el-form-item>
+          <el-input v-model="query.keyword" placeholder="标签名检索"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="query.category" placeholder="placeholder">
+            <el-option label="全部" value=""></el-option>
+            <el-option
+              v-for="category in categories"
+              :key="category.id"
+              :label="category.name"
+              :value="category.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button plain :loading="listLoading" @click="doSearch" type="primary">{{$t('admin.submit')}}</el-button>
+        </el-form-item>
+      </el-form>
+      <el-pagination
+        class="top"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
+      <el-table v-loading="listLoading" :data="tags" border stripe>
+        <el-table-column prop="id" label="#"></el-table-column>
+        <el-table-column prop="name" :label="$t('admin.tags.name')"></el-table-column>
+        <el-table-column prop="category.name" :label="$t('admin.tags.category')"></el-table-column>
+        <el-table-column prop="taggable_count" :label="$t('admin.tags.taggableCount')"></el-table-column>
+        <el-table-column prop="weight" :label="$t('admin.tags.weight')"></el-table-column>
+        <el-table-column :label="$t('admin.operation')">
+          <template slot-scope="{row: tag}">
+            <el-button plain type="primary" @click="editTag(tag)">{{ $t('admin.edit') }}
+            </el-button>
+            <el-button plain type="danger" @click="deleteTag(tag)">{{ $t('admin.delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        class="bottom"
+        @size-change="handleSizeChange"
+        @current-change="pageChange"
+        :current-page="page.current_page"
+        :page-sizes="[15, 30, 50]"
+        :page-size="query.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
     </el-card>
     <el-dialog
       :before-close="cleanForm"
@@ -85,8 +102,8 @@
       query: {
         limit: 15,
         page: 1,
-        category: null,
-        keyword: null
+        category: '',
+        keyword: ''
       },
       tag: {
         id: null,

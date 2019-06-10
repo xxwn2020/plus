@@ -3,36 +3,42 @@
     <div slot="header" class="clearfix">
       <span>打赏统计</span>
     </div>
-    <el-form style="margin-bottom:20px; max-width: 100vw" ref="rewardStatisticsForm" :model="query" :inline="true">
-      <el-select v-model="query.type">
-        <el-option
-          v-for="type in types"
-          :key="type.name"
-          :label="type.alias"
-          :value="type.name">
-        </el-option>
-      </el-select>
-      <el-select v-model="query.scope">
-        <el-option value="today" label="今日"></el-option>
-        <el-option value="week" label="近七天"></el-option>
-        <el-option value="custom" label="自定义时间段"></el-option>
-      </el-select>
-      <el-date-picker
-        v-if="query.scope === 'custom'"
-
-        v-model="date"
-        type="daterange"
-        align="right"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        value-format="yyyy-MM-dd"
-        :picker-options="pickerOptions">
-      </el-date-picker>
-      <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
-        {{$t('admin.submit')}}
-      </el-button>
+    <el-form class="filterForm" ref="rewardStatisticsForm" :model="query" :inline="true">
+      <el-form-item>
+        <el-select v-model="query.type">
+          <el-option
+            v-for="type in types"
+            :key="type.name"
+            :label="type.alias"
+            :value="type.name">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="query.scope">
+          <el-option value="today" label="今日"></el-option>
+          <el-option value="week" label="近七天"></el-option>
+          <el-option value="custom" label="自定义时间段"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="query.scope === 'custom'">
+        <el-date-picker
+          v-model="date"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
+          {{$t('admin.submit')}}
+        </el-button>
+      </el-form-item>
     </el-form>
     <line-chart v-loading="getLoading" :chart-data="option"/>
   </el-card>

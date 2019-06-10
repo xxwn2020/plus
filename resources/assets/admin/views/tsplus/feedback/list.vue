@@ -2,9 +2,9 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>意见反馈</span>
-      <el-button plain style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+      <!--      <el-button plain style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
     </div>
-    <el-form style="max-width: 100vw; margin-bottom: 20px;" ref="feedBackFilter" :model="query" :inline="true">
+    <el-form class="filterForm" ref="feedBackFilter" :model="query" :inline="true">
       <el-form-item>
         <el-input v-model="query.keyword" placeholder="搜索内容"></el-input>
       </el-form-item>

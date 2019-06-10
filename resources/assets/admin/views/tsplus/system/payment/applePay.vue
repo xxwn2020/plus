@@ -123,19 +123,15 @@
         if (!deleting) {
           this.$confirm('删除操作不可恢复，确认要继续吗?', '提示', {
             type: 'warning'
-          })
-            .then(() => {
-              this.$set(this, 'deleting', id)
-              this.$api.finance.deleteIapItem(id)
-                .then(({ data }) => {
-                  this.showSuccess(data)
-                  this.getIapItems()
-                })
-                .catch(this.showApiError)
-                .finally(() => {
-                  this.$set(this, 'deleting', null)
-                })
+          }).then(() => {
+            this.$set(this, 'deleting', id)
+            this.$api.finance.deleteIapItem(id).then(({ data }) => {
+              this.showSuccess(data)
+              this.getIapItems()
+            }).catch(this.showApiError).finally(() => {
+              this.$set(this, 'deleting', null)
             })
+          })
         }
       },
       saveIapItem () {
@@ -143,16 +139,13 @@
         if (!saveLoading) {
           form.amount *= 100
           this.sLoading(true)
-          this.$api.finance.saveIapItem(form)
-            .then(({ data }) => {
-              this.closeDialog()
-              this.getIapItems()
-              this.showSuccess(data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.sLoading(false)
-            })
+          this.$api.finance.saveIapItem(form).then(({ data }) => {
+            this.closeDialog()
+            this.getIapItems()
+            this.showSuccess(data)
+          }).catch(this.showApiError).finally(() => {
+            this.sLoading(false)
+          })
         }
       },
       /* 获取iap配置信息 */
@@ -160,42 +153,33 @@
         const { configGetting } = this
         if (!configGetting) {
           this.$set(this, 'configGetting', true)
-          this.$api.finance.getAppleIapSetting()
-            .then(({ data }) => {
-              this.$set(this, 'config', data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'configGetting', false)
-            })
+          this.$api.finance.getAppleIapSetting().then(({ data }) => {
+            this.$set(this, 'config', data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'configGetting', false)
+          })
         }
       },
       saveAppleIapSetting () {
         const { configSaving, config } = this
         if (!configSaving) {
           this.$set(this, 'configSaving', true)
-          this.$api.finance.saveAppleIapSetting(config)
-            .then(({ data }) => {
-              this.showSuccess(data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.$set(this, 'configSaving', false)
-            })
+          this.$api.finance.saveAppleIapSetting(config).then(({ data }) => {
+            this.showSuccess(data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'configSaving', false)
+          })
         }
       },
       getIapItems () {
         const { getLoading } = this
         if (!getLoading) {
           this.gLoading(true)
-          this.$api.finance.getIapItems()
-            .then(({ data }) => {
-              this.$set(this, 'items', data)
-            })
-            .catch(this.showApiError)
-            .finally(() => {
-              this.gLoading(false)
-            })
+          this.$api.finance.getIapItems().then(({ data }) => {
+            this.$set(this, 'items', data)
+          }).catch(this.showApiError).finally(() => {
+            this.gLoading(false)
+          })
         }
       }
     },

@@ -3,8 +3,8 @@
     <div slot="header" class="clearfix">
       <span>{{$t('admin.finance.cashes')}}</span>
     </div>
-    <el-main>
-      <el-form class="el-form" :inline="true" ref="cashForm" style="max-width: none" :model="query">
+    <el-form class="el-form filterForm" :inline="true" ref="cashForm" :model="query">
+      <el-form-item>
         <el-autocomplete
           :fetch-suggestions="queryUsers"
           v-model="query.username"
@@ -12,122 +12,128 @@
           @select="handleUserSelect"
           value-key="name"
           :debounce="500"
-
         ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
         <el-select v-model="query.status">
           <el-option value="all" label="全部"></el-option>
           <el-option :value="0" label="待审批"></el-option>
           <el-option :value="1" label="已审批"></el-option>
           <el-option :value="2" label="被拒绝"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-select v-model="query.order">
           <el-option value="desc" label="最后申请"></el-option>
           <el-option value="asc" label="最先申请"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-button plain type="primary" :loading="getLoading" @click="doSearch">{{$t('admin.search.root')}}
         </el-button>
-      </el-form>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
-      <el-table
-        class="el-table"
-        v-loading="getLoading"
-        :data="page.data"
-        style="width: 100%">
-        <el-table-column
-          label="用户(ID)"
-        >
-          <template slot-scope="{row}">
-            {{row.user.name}}({{row.user.id}})
+      </el-form-item>
+    </el-form>
+    <el-pagination
+      class="top"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
+    <el-table
+      border
+      class="el-table"
+      v-loading="getLoading"
+      :data="page.data"
+      style="width: 100%">
+      <el-table-column
+        label="用户(ID)"
+      >
+        <template slot-scope="{row}">
+          {{row.user.name}}({{row.user.id}})
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="金额[元]"
+      >
+        <template slot-scope="{row}">
+          {{row.value / 100}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="账号">
+        <template slot-scope="{row}">
+          {{
+          row.type === 'alipay' ? '支付宝：' : '微信：'
+          }} {{row.account}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="状态">
+        <template slot-scope="{row}">
+          <template v-if="row.status === 1">
+            <el-button plain disabled type="success">{{$t('admin.state.accept')}}
+            </el-button>
+            <el-alert
+              class="remark"
+              :title="row.remark"
+              type="success"
+              :closable="false"
+            >
+            </el-alert>
           </template>
-        </el-table-column>
-        <el-table-column
-          label="金额[元]"
-        >
-          <template slot-scope="{row}">
-            {{row.value / 100}}
+          <template v-else-if="row.status === 2">
+            <el-button plain disabled type="danger">{{$t('admin.state.refuse')}}
+            </el-button>
+            <el-alert
+              class="remark"
+              :title="row.remark"
+              type="error"
+              :closable="false"
+            >
+            </el-alert>
           </template>
-        </el-table-column>
-        <el-table-column
-          label="账号">
-          <template slot-scope="{row}">
-            {{
-            row.type === 'alipay' ? '支付宝：' : '微信：'
-            }} {{row.account}}
+          <template v-else>
+            <el-button plain disabled type="info">{{$t('admin.state.waiting')}}</el-button>
           </template>
-        </el-table-column>
-        <el-table-column
-          label="状态">
-          <template slot-scope="{row}">
-            <template v-if="row.status === 1">
-              <el-button plain disabled type="success">{{$t('admin.state.accept')}}
-              </el-button>
-              <el-alert
-                class="remark"
-                :title="row.remark"
-                type="success"
-                :closable="false"
-              >
-              </el-alert>
-            </template>
-            <template v-else-if="row.status === 2">
-              <el-button plain disabled type="danger">{{$t('admin.state.refuse')}}
-              </el-button>
-              <el-alert
-                class="remark"
-                :title="row.remark"
-                type="error"
-                :closable="false"
-              >
-              </el-alert>
-            </template>
-            <template v-else>
-              <el-button plain disabled type="info">{{$t('admin.state.waiting')}}</el-button>
-            </template>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="申请时间">
+        <template slot-scope="{row}">
+          {{row.created_at | localTime }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('admin.operation')"
+      >
+        <template slot-scope="{row}">
+          <template v-if="row.status === 0">
+            <el-button plain :loading="loadingItem === row.id" @click="operation(row.id, 'passed')"
+                       type="primary"
+            >同意
+            </el-button>
+            <el-button plain :loading="loadingItem === row.id" @click="operation(row.id, 'refuse')"
+                       type="danger"
+            >拒绝
+            </el-button>
           </template>
-        </el-table-column>
-        <el-table-column
-          label="申请时间">
-          <template slot-scope="{row}">
-            {{row.created_at | localTime }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('admin.operation')"
-        >
-          <template slot-scope="{row}">
-            <template v-if="row.status === 0">
-              <el-button plain :loading="loadingItem === row.id" @click="operation(row.id, 'passed')"
-                         type="primary"
-                         >同意
-              </el-button>
-              <el-button plain :loading="loadingItem === row.id" @click="operation(row.id, 'refuse')"
-                         type="danger"
-                         >拒绝
-              </el-button>
-            </template>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        class="bottom"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
-    </el-main>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      class="bottom"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
   </el-card>
 </template>
 
@@ -175,24 +181,19 @@
             return s.length > 0
           },
           inputErrorMessage: '请填写备注'
+        }).then(({ value }) => {
+          this.$set(this, 'loadingItem', id)
+          this.$api.finance.auditCash({ cashId: id, type, params: { remark: value } }).then(({ data }) => {
+            this.showSuccess(data)
+            const item = this.page.data.find(i => (i.id === id))
+            this.$set(item, 'remark', value)
+            this.$set(item, 'status', type === 'passed' ? 1 : 2)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'loadingItem', null)
+          })
+        }).catch(() => {
+          this.showInfo('已放弃审核')
         })
-          .then(({ value }) => {
-            this.$set(this, 'loadingItem', id)
-            this.$api.finance.auditCash({ cashId: id, type, params: { remark: value } })
-              .then(({ data }) => {
-                this.showSuccess(data)
-                const item = this.page.data.find(i => (i.id === id))
-                this.$set(item, 'remark', value)
-                this.$set(item, 'status', type === 'passed' ? 1 : 2)
-              })
-              .catch(this.showApiError)
-              .finally(() => {
-                this.$set(this, 'loadingItem', null)
-              })
-          })
-          .catch(() => {
-            this.showInfo('已放弃审核')
-          })
       },
       /* mixins */
       fetchData () {
@@ -235,6 +236,11 @@
       }
     },
     beforeMount () {
+      const { '$route': { query: { status = 'all' } = {} } = {} } = this
+      this.$set(this, 'query', {
+        ...this.query,
+        status: status !== 'all' ? parseInt(status) : status
+      })
       this.getWalletCashes()
     }
   }

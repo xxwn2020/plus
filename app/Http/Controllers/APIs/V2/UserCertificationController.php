@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
+use stdClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Zhiyi\Plus\Models\FileWith as FileWithModel;
@@ -32,40 +33,57 @@ class UserCertificationController extends Controller
     /**
      * Get a user certification.
      *
-     * @param \Illuminate\Http\Request $request [description]
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $response [description]
+     * @param  Request  $request  [description]
+     * @param  ResponseFactoryContract  $response  [description]
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function show(Request $request, ResponseFactoryContract $response)
     {
         $user = $request->user();
-        if (! $user->certification) {
-            return $response->json($user->certification, 200);
+        $certification = $user->certification;
+        if (! $certification) {
+            return $response->json($certification, 200);
         }
-        $info = $user->certification->data;
+
         $fileInfo = [];
-        foreach ($info['files'] as $key => $file) {
-            $file = FileWithModel::where('id', $file)->with('file')->first();
-            $fileInfo[$key] = new \stdClass();
+        if ($certification->front && $certification->back) {
+            $certification->data['files'] = [
+                $certification->front,
+                $certification->back,
+            ];
+        }
+
+        return response()->json($certification);
+
+        foreach (
+            $certification->data->files as
+            $key => $file
+        ) {
+            $file = FileWithModel::query()->where('id', $file)->with('file')
+                ->first();
+            $fileInfo[$key] = new stdClass();
             $fileInfo[$key]->file = $file->id;
             $fileInfo[$key]->size = $file->size;
             $fileInfo[$key]->mime = $file->file->mime;
         }
         $fileInfo = collect(array_values($fileInfo));
-        $user->certification->files = $fileInfo;
+        $certification->files = $fileInfo;
 
-        return $response->json($user->certification, 200);
+        return $response->json($certification, 200);
     }
 
     /**
      * Send certification.
      *
-     * @param \Zhiyi\Plus\Http\Requests\API2\UserCertification $request
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $response
-     * @param \Zhiyi\Plus\Models\Certification $certification
-     * @param \Zhiyi\Plus\Models\FileWith $fileWithModel
+     * @param  UserCertificationRequest  $request
+     * @param  ResponseFactoryContract  $response
+     * @param  CertificationModel  $certification
+     * @param  FileWithModel  $fileWithModel
+     *
      * @return mixed
+     * @throws \Throwable
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function store(
@@ -79,16 +97,23 @@ class UserCertificationController extends Controller
         $data = $request->only(['name', 'phone', 'number', 'desc']);
         $files = $this->findNotWithFileModels($request, $fileWithModel);
 
-        $data['files'] = $files->pluck('id');
+        $fileWithes = $files->pluck('id');
         if ($type === 'org') {
-            $data = array_merge($data, $request->only(['org_name', 'org_address']));
+            $data = array_merge($data,
+                $request->only(['org_name', 'org_address']));
         }
-
+        $certification->front = $fileWithes[0];
+        $certification->back = $fileWithes[1];
         $certification->certification_name = $type;
         $certification->data = $data;
         $certification->status = 0;
 
-        return $certification->getConnection()->transaction(function () use ($user, $files, $certification, $response) {
+        return $certification->getConnection()->transaction(function () use (
+            $user,
+            $files,
+            $certification,
+            $response
+        ) {
             $files->each(function ($file) use ($user) {
                 $file->channel = 'certification:file';
                 $file->raw = $user->id;
@@ -96,16 +121,18 @@ class UserCertificationController extends Controller
             });
             $user->certification()->save($certification);
 
-            return $response->json(['message' => '提交成功，等待审核'])->setStatusCode(201);
+            return $response->json(['message' => '提交成功，等待审核'])
+                ->setStatusCode(201);
         });
     }
 
     /**
      * Update certification.
      *
-     * @param \Zhiyi\Plus\Http\Requests\API2\UserCertification $request
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $response
-     * @param \Zhiyi\Plus\Models\FileWith $fileWithModel
+     * @param  UserCertificationRequest  $request
+     * @param  ResponseFactoryContract  $response
+     * @param  FileWithModel  $fileWithModel
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -124,7 +151,8 @@ class UserCertificationController extends Controller
 
         $updateData = $request->only(['name', 'phone', 'number', 'desc']);
         if ($type === 'org') {
-            $updateData = array_merge($updateData, $request->only(['org_name', 'org_address']));
+            $updateData = array_merge($updateData,
+                $request->only(['org_name', 'org_address']));
         }
 
         $files = $this->findNotWithFileModels($request, $fileWithModel);
@@ -136,11 +164,18 @@ class UserCertificationController extends Controller
             $updateData['files'] = $fileIds;
         }
 
-        $certification->certification_name = $type ?: $certification->certification_name;
-        $certification->data = array_merge($certification->data, array_filter($updateData));
+        $certification->certification_name = $type
+            ?: $certification->certification_name;
+        $certification->data = array_merge($certification->data,
+            array_filter($updateData));
         $certification->status = 0;
 
-        return $user->getConnection()->transaction(function () use ($user, $files, $certification, $response) {
+        return $user->getConnection()->transaction(function () use (
+            $user,
+            $files,
+            $certification,
+            $response
+        ) {
             $files->each(function ($file) use ($user) {
                 $file->channel = 'certification:file';
                 $file->raw = $user->id;
@@ -155,13 +190,17 @@ class UserCertificationController extends Controller
     /**
      * File not with file models.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Zhiyi\Plus\Models\FileWith $fileWithModel
-     * @return \Illuminate\Support\Collection
+     * @param  Request  $request
+     * @param  FileWithModel  $fileWithModel
+     *
+     * @return Collection
      * @author Seven Du <shiweidu@outlook.com>
      */
-    protected function findNotWithFileModels(Request $request, FileWithModel $fileWithModel): Collection
-    {
+    protected function findNotWithFileModels(
+        Request $request,
+        FileWithModel $fileWithModel
+    )
+    : Collection {
         $files = new Collection(
             array_filter((array) $request->input('files', []))
         );

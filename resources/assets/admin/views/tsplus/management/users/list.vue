@@ -9,186 +9,180 @@
       >{{$t('admin.users.create')}}
       </el-button>
     </div>
-    <el-main>
-      <el-form
-        style="max-width: 100vw;"
-        :inline="true"
-        :model="query"
-        ref="userFilterForm"
+    <el-form
+      class="filterForm"
+      :inline="true"
+      :model="query"
+      ref="userFilterForm"
+    >
+      <div class="form-item" v-for="field in formFileds.fields" :key="field.id">
+        <el-input
+          :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
+          v-if="field.type === 'input'"
+          v-model="query[field.id]"
+        ></el-input>
+        <el-cascader
+          :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
+          v-if="field.type === 'cascader'"
+          :options="field.options"
+          v-model="query[field.id]"
+          @change="handleChange"
+        ></el-cascader>
+        <el-select
+          :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
+          v-if="field.type === 'select'"
+          v-model="query[field.id]"
+        >
+          <el-option
+            v-for="item in field.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-date-picker
+          v-if="field.type === 'dateTimeRange'"
+          v-model="dateTimeRange"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :range-separator="field.options.rangeSeparator"
+          :start-placeholder="$t('admin.startDateTime')"
+          :end-placeholder="$t('admin.endDateTime')"
+          align="right"
+        ></el-date-picker>
+      </div>
+      <div>
+        <el-button
+          plain
+          type="primary"
+          :loading="loading"
+          @click="doSearch()"
+        >{{ $t('admin.search.root') }}
+        </el-button>
+      </div>
+    </el-form>
+
+    <el-pagination
+      class="top"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
+    <el-table
+      :default-sort="defaultSort"
+      @sort-change="sortChange"
+      v-loading="loading"
+      :data="users"
+      border
+      stripe
+    >
+      <el-table-column
+        sortable="custom"
+        fixed
+        width="80"
+        prop="id"
+        :label="$t('admin.users.search.userId')"
+      />
+      <el-table-column prop="name" :label="$t('admin.users.search.name')"/>
+      <el-table-column prop="phone" :label="$t('admin.users.search.phone')"/>
+      <!-- <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"/> -->
+      <el-table-column prop="sex" :label="$t('admin.users.search.sex.root')">
+        <template
+          slot-scope="scope"
+        >{{scope.row.sex === 0 ? $t('admin.users.search.sex.hide') : (scope.row.sex === 1 ?
+          $t('admin.users.search.sex.male') : $t('admin.users.search.sex.female'))}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="email" :label="$t('admin.users.search.email')"/>
+      <el-table-column :label="$t('admin.users.search.createdAt')">
+        <template slot-scope="scope">{{ scope.row.created_at | localTime}}</template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('admin.users.search.currency')"
       >
-        <div class="form-item" v-for="field in formFileds.fields" :key="field.id">
-          <el-input
-
-            :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
-            v-if="field.type === 'input'"
-            v-model="query[field.id]"
-          ></el-input>
-          <el-cascader
-
-            :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
-            v-if="field.type === 'cascader'"
-            :options="field.options"
-            v-model="query[field.id]"
-            @change="handleChange"
-          ></el-cascader>
-          <el-select
-
-            :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
-            v-if="field.type === 'select'"
-            v-model="query[field.id]"
-          >
-            <el-option
-              v-for="item in field.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-date-picker
-
-            v-if="field.type === 'dateTimeRange'"
-            v-model="dateTimeRange"
-            type="datetimerange"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            :range-separator="field.options.rangeSeparator"
-            :start-placeholder="$t('admin.startDateTime')"
-            :end-placeholder="$t('admin.endDateTime')"
-            align="right"
-          ></el-date-picker>
-        </div>
-        <div>
+        <template slot-scope="{row: user}">
+          {{user.currency.sum}}
+          <el-button :loading="savingCurrency === user.id" @click="setCurrency(user.id)" type="primary" plain>设置积分
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" :label="$t('admin.operation')">
+        <template slot-scope="scope">
           <el-button
             plain
             type="primary"
-            :loading="loading"
-            @click="doSearch()"
-          >{{ $t('admin.search.root') }}
+            @click="goTo({name: 'management-users-edit', params: {uid: scope.row.id}})"
+          >{{$t('admin.edit')}}
           </el-button>
-        </div>
-      </el-form>
-
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
-      <el-table
-        :default-sort="defaultSort"
-        @sort-change="sortChange"
-        v-loading="loading"
-        :data="users"
-        border
-        stripe
-      >
-        <el-table-column
-          sortable="custom"
-          fixed
-          width="80"
-          prop="id"
-          :label="$t('admin.users.search.userId')"
-        />
-        <el-table-column prop="name" :label="$t('admin.users.search.name')"/>
-        <el-table-column prop="phone" :label="$t('admin.users.search.phone')"/>
-        <!-- <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"/> -->
-        <el-table-column prop="sex" :label="$t('admin.users.search.sex.root')">
-          <template
-            slot-scope="scope"
-          >{{scope.row.sex === 0 ? $t('admin.users.search.sex.hide') : (scope.row.sex === 1 ?
-            $t('admin.users.search.sex.male') : $t('admin.users.search.sex.female'))}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="email" :label="$t('admin.users.search.email')"/>
-        <el-table-column :label="$t('admin.users.search.createdAt')">
-          <template slot-scope="scope">{{ scope.row.created_at | localTime}}</template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('admin.users.search.currency')"
-        >
-          <template slot-scope="{row: user}">
-            {{user.currency.sum}}
-            <el-button :loading="savingCurrency === user.id" @click="setCurrency(user.id)" type="primary" plain>设置积分
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" :label="$t('admin.operation')">
-          <template slot-scope="scope">
+          <template>
             <el-button
               plain
               type="primary"
-              @click="goTo({name: 'management-users-edit', params: {uid: scope.row.id}})"
-            >{{$t('admin.edit')}}
-            </el-button>
-            <template>
-              <el-button
-                plain
-                type="primary"
-                v-if="scope.row.recommended === null"
-                @click="handleRecommend(scope.row)"
-              >{{ $t('admin.users.recommend') }}
-              </el-button>
-              <el-button
-                v-else
-                plain
-                type="danger"
-                @click="handleUnRecommend(scope.row)"
-              >{{ $t('admin.users.unrecommend') }}
-              </el-button>
-            </template>
-            <template v-if="scope.row.famous === null">
-              <el-button
-                plain
-                type="primary"
-                @click="handleFollowedFamous(scope.row, 1)"
-              >{{ $t('admin.users.followTa') }}
-              </el-button>
-              <el-button
-                plain
-                type="primary"
-                @click="handleFollowedFamous(scope.row, 2)"
-              >{{ $t('admin.users.followEachOthers') }}
-              </el-button>
-            </template>
-            <template v-else>
-              <el-button
-                plain
-                type="danger"
-                @click="handleUnFamous(scope.row)"
-              >{{ $t('admin.users.cancelFollow') }}
-              </el-button>
-            </template>
-            <el-button
-              v-if="!scope.row.deleted_at"
-              plain
-              type="danger"
-              @click="handleTrash(scope.row)"
-            >{{$t('admin.users.disable')}}
+              v-if="scope.row.recommended === null"
+              @click="handleRecommend(scope.row)"
+            >{{ $t('admin.users.recommend') }}
             </el-button>
             <el-button
               v-else
               plain
-              type="primary"
-              @click="handleRestore(scope.row)"
-            >{{$t('admin.users.restore')}}
+              type="danger"
+              @click="handleUnRecommend(scope.row)"
+            >{{ $t('admin.users.unrecommend') }}
             </el-button>
           </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        class="bottom"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
-    </el-main>
+          <template v-if="scope.row.famous === null">
+            <el-button
+              plain
+              type="primary"
+              @click="handleFollowedFamous(scope.row, 1)"
+            >{{ $t('admin.users.followTa') }}
+            </el-button>
+            <el-button
+              plain
+              type="primary"
+              @click="handleFollowedFamous(scope.row, 2)"
+            >{{ $t('admin.users.followEachOthers') }}
+            </el-button>
+          </template>
+          <template v-else>
+            <el-button
+              plain
+              type="danger"
+              @click="handleUnFamous(scope.row)"
+            >{{ $t('admin.users.cancelFollow') }}
+            </el-button>
+          </template>
+          <el-button
+            v-if="!scope.row.deleted_at"
+            plain
+            type="danger"
+            @click="handleTrash(scope.row)"
+          >{{$t('admin.users.disable')}}
+          </el-button>
+          <el-button
+            v-else
+            plain
+            type="primary"
+            @click="handleRestore(scope.row)"
+          >{{$t('admin.users.restore')}}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      class="bottom"
+      @size-change="handleSizeChange"
+      @current-change="pageChange"
+      :current-page="page.current_page"
+      :page-sizes="[15, 30, 50]"
+      :page-size="query.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+    ></el-pagination>
   </el-card>
 </template>
 
@@ -313,6 +307,16 @@
       loading: false,
       savingCurrency: 0
     }),
+    beforeMount () {
+      const { '$route': { query: { recommend = 0, trashed = 0, follow = 0, role = 0 } = {} } = {} } = this
+      this.$set(this, 'query', {
+        ...this.query,
+        recommend: parseInt(recommend),
+        trashed: parseInt(trashed),
+        follow: parseInt(follow),
+        role: parseInt(role)
+      })
+    },
     computed: {
       formFileds () {
         return this.formFormatter

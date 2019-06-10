@@ -4,16 +4,20 @@
       <div slot="header" class="clearfix">
         <span>{{$t('admin.reports.root')}}</span>
       </div>
-      <el-form ref="queryForm" :model="query" :inline="true">
-        <el-select v-model="query.state">
-          <el-option
-            v-for="item in [{label: '全部', value: null},{label: '待审核', value: 0},{label: '已通过', value: 1}, {label: '已驳回', value: 2}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
+      <el-form class="filterForm" ref="queryForm" :model="query" :inline="true">
+        <el-form-item>
+          <el-select v-model="query.state">
+            <el-option
+              v-for="item in [{label: '全部', value: null},{label: '待审核', value: 0},{label: '已通过', value: 1}, {label: '已驳回', value: 2}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
+        </el-form-item>
       </el-form>
       <el-pagination
         class="top"
@@ -86,10 +90,10 @@
             <el-link :href="report.view" target="_blank">查看</el-link>
             <template v-if="report.status === 0">
               <el-button plain type="primary" @click="fillMark(report.id, 'deal')" :loading="report.id === deal"
-                         >通过
+              >通过
               </el-button>
               <el-button plain type="primary" @click="fillMark(report.id, 'reject')" :loading="report.id === reject"
-                         >驳回
+              >驳回
               </el-button>
             </template>
           </template>
@@ -128,9 +132,10 @@
       mark: null
     }),
     beforeMount () {
+      const { '$route': { query: { state = null } = {} } = {} } = this
       this.query = {
         ...this.query,
-        state: this.$route.query.state ? parseInt(this.$route.query.state) : null
+        state: state !== null ? parseInt(state) : state
       }
     },
     filters: {

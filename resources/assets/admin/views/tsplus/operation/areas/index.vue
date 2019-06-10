@@ -29,13 +29,11 @@
         <span>
           <el-button
             type="text"
-            plain
             @click="() => showAddForm(data)">
             添加子级地区
           </el-button>
           <el-button
             type="text"
-            plain
             @click="() => remove(node, data)">
             删除该地区
           </el-button>
@@ -108,7 +106,7 @@
       countries () {
         const { format = [] } = this
         return format.length ? format.filter(area => (
-            area.pid === 0
+          area.pid === 0
         )) : []
       },
       format () {
@@ -124,7 +122,7 @@
           return {}
         }
         return areas.find(item => (
-            item.id === pid
+          item.id === pid
         ))
       }
     },
@@ -165,8 +163,8 @@
           done()
         }
         this.$set(this, 'form', {
-          name: null,
-          extends: null,
+          name: '',
+          extends: '',
           pid: 0
         })
         this.$set(this, 'dialogVisible', false)

@@ -4,23 +4,48 @@
       <div slot="header">
         <span>{{$t('admin.certifications.list')}}</span>
         <el-button
-          plain
           @click="goTo({name: 'management-users-certifications-add'})"
           style="float: right; padding: 3px 0"
           type="text"
         >{{$t('admin.certifications.create')}}
         </el-button>
       </div>
-      <el-main v-loading="getLoading">
-        <el-form ref="filterForm" :model="query" :inline="true">
-          <el-select v-model="query.status">
-            <el-option
-              v-for="item in optionsList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+      <el-main>
+        <el-form class="filterForm" ref="filterForm" :model="query" :inline="true">
+          <el-form-item>
+            <el-autocomplete
+              :fetch-suggestions="queryUsers"
+              v-model="query.name"
+              placeholder="可模糊搜索用户名"
+              @select="selectUser"
+              value-key="name"
+              :debounce="500"
+            ></el-autocomplete>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="query.status">
+              <el-option
+                v-for="item in statuss.data"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="query.certification_name" placeholder="placeholder">
+              <el-option label="全部" value=""/>
+              <el-option
+                v-for="item in categories"
+                :key="item.name"
+                :label="item.display_name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
+          </el-form-item>
         </el-form>
         <el-pagination
           class="top"
@@ -32,7 +57,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="page.total"
         ></el-pagination>
-        <el-table :data="page.data" border stripe>
+        <el-table v-loading="getLoading" :data="page.data" border stripe>
           <el-table-column prop="id" label="#ID"></el-table-column>
           <el-table-column prop="data.name" :label="$t('admin.name')"></el-table-column>
           <el-table-column prop="data.phone" :label="$t('admin.phone')"></el-table-column>
@@ -54,28 +79,33 @@
             </template>
           </el-table-column>
           <el-table-column width="80px" :label="$t('admin.status')">
-            <template slot-scope="scope">
-              <el-button plain type="primary" v-if="scope.row.status === 1">已审</el-button>
+            <template slot-scope="{row: certification}">
+              <el-button plain type="primary" v-if="certification.status === 1">已审</el-button>
               <el-button plain type="warning" v-else>待审</el-button>
             </template>
           </el-table-column>
           <el-table-column width="90px" :label="$t('admin.createdAt')">
-            <template slot-scope="scope">{{scope.row.created_at | localTime }}</template>
+            <template slot-scope="{row: certification}">{{certification.created_at | localTime }}</template>
           </el-table-column>
           <el-table-column :label="$t('admin.operation')">
-            <template slot-scope="scope">
-              <div v-if="scope.row.status !== 1">
-                <el-button plain type="primary" v-if="scope.row.status === 1">已审</el-button>
-                <el-button plain type="warning" v-else>待审</el-button>
+            <template slot-scope="{row: certification}">
+              <div v-if="certification.status === 0">
+                <el-button :loading="operating === certification.id"
+                           @click="auditCertification(certification.id, 'pass')" plain type="primary">通过
+                </el-button>
+                <el-button :loading="operating === certification.id"
+                           @click="auditCertification(certification.id, 'reject')" plain type="warning">驳回
+                </el-button>
               </div>
               <div v-else>
                 <el-button
-                  @click="goTo({name: 'management-users-certifications-edit', params: {id: scope.row.id}})"
+                  @click="goTo({name: 'management-users-certifications-edit', params: {id: certification.id}})"
                   plain
                   type="primary"
-                  v-if="scope.row.status === 1"
+                  v-if="certification.status === 1"
                 >{{$t('admin.edit')}}
                 </el-button>
+                <el-button plain v-else type="danger">已驳回</el-button>
               </div>
             </template>
           </el-table-column>
@@ -97,28 +127,84 @@
 <script>
   import File from '@/api/file'
   import setQuery from '@/mixins/setQuery'
+  import searchUser from '@/mixins/searchUser'
 
   export default {
     name: 'ManagementUserCertifications',
-    mixins: [setQuery],
+    mixins: [setQuery, searchUser],
     data: () => ({
       query: {
         page: 1,
         limit: 15,
-        certification_name: null,
-        keyword: null,
-        status: null
+        certification_name: '',
+        user: 0,
+        status: '',
+        name: ''
       },
-
+      statuss: {
+        display: ['待审核', '已审核', '已驳回'],
+        data: [
+          { label: '全部', value: '' },
+          { label: '待审核', value: 0 },
+          { label: '已审核', value: 1 },
+          { label: '已驳回', value: 2 }
+        ]
+      },
       page: {},
-      getLoading: false
+      counts: {},
+      getLoading: false,
+      categories: [],
+      operating: 0
     }),
+    beforeMount () {
+      const { '$route': { query: { status = '' } = {} } = {} } = this
+      this.$set(this, 'query', {
+        ...this.query,
+        status: status !== '' ? parseInt(status) : ''
+      })
+    },
+    created () {
+
+      this.fetchCategories()
+    },
     methods: {
+      /* 使用远程搜索结果 */
+      selectUser (user) {
+        const { id, name } = user
+        this.$set(this.query, 'user', id)
+        this.$set(this, 'search', name)
+      },
+      auditCertification (id, type) {
+        let params = {}
+        this.$prompt('输入备注', '提示').then(({ value }) => {
+          if (type === 'reject') {
+            params.reject_content = value
+          } else {
+            params.desc = value
+          }
+          this.$set(this, 'operating', id)
+          this.$api.certifications.auditCertificate({ id, type, params }).then(({ data }) => {
+            this.showSuccess(data)
+          }).catch(this.showApiError).finally(() => {
+            this.$set(this, 'operating', 0)
+          })
+        }).catch(() => {
+          this.showInfo('已取消')
+        })
+      },
       url (node) {
         return File.url(node, { w: 50, h: 50 })
       },
       fetchData () {
         this.fetchCertifications()
+      },
+      /* 认证分类 */
+      fetchCategories () {
+        this.$api.certifications.getCates().then(({ data }) => {
+          this.$set(this, 'categories', data)
+        }).catch(this.showApiError).finally(() => {
+
+        })
       },
       fetchCertifications () {
         const { query, getLoading } = this

@@ -54,7 +54,7 @@ var upload = function(blob, fileInfo, url, callback) {
     })
   }
   var file = new File([blob], fileInfo.name, {
-    type: 'image/png',
+    type: fileInfo.type,
     lastModified: new Date()
   })
   reader.readAsArrayBuffer(file)
