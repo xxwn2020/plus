@@ -21,10 +21,10 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
-use function Zhiyi\Plus\setting;
 
 class CurrencyAppleController extends Controller
 {

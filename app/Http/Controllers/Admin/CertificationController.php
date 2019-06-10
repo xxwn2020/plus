@@ -63,7 +63,6 @@ class CertificationController extends Controller
         $items = $query->orderBy('updated_at', 'desc')
             ->paginate($limit);
 
-
         $data['items'] = $items;
         $data['counts'] = $this->certificationCount();
 
@@ -188,8 +187,7 @@ class CertificationController extends Controller
         Request $request,
         Certification $certification
         // FileWithModel $fileWithModel
-    )
-    {
+    ) {
         $this->validate($request, $this->rules($request),
             $this->messages($request));
 
@@ -225,7 +223,8 @@ class CertificationController extends Controller
     }
 
     public function rules(Request $request)
-    : array {
+    : array
+    {
         if (strtolower($request->getMethod()) === 'patch') {
             return $this->updateRules($request);
         }
@@ -252,7 +251,8 @@ class CertificationController extends Controller
     }
 
     public function updateRules(Request $request)
-    : array {
+    : array
+    {
         $baseRules = [
             'type'   => [
                 'bail', 'required', 'nullable', 'string', 'in:user,org',

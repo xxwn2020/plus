@@ -44,8 +44,8 @@ class SensitiveController extends Controller
 
         $query = SensitiveModel::query()->when(in_array($type,
             ['warning', 'replace']), function ($query) use ($type) {
-            return $query->where('type', $type);
-        })
+                return $query->where('type', $type);
+            })
             ->when((bool) $word, function ($query) use ($word) {
                 return $query->where('word', 'like', sprintf('%%%s%%', $word));
             });
