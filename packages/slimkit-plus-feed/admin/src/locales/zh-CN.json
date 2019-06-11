@@ -1,0 +1,21 @@
+{
+  "route": {
+    "statistics": "动态统计",
+    "setting": "动态设置"
+  },
+  "setting": "动态设置",
+  "statistics": "动态统计",
+  "reward-switch": "打赏开关",
+  "close": "关 闭",
+  "open": "开 启",
+  "save": "保 存",
+  "reward-intro": "关闭后无法对动态进行打赏操作",
+  "payControl": "付费开关",
+  "payItems": "金额选项",
+  "payItems-intro": "发布付费动态时的金额选项，最少为0.01元\\n少于0.01元时会出现意想不到的支付错误，请慎重填写\\n3个选项，请用半角\",\"隔开",
+  "payControl-intro": "用于控制客户端发送动态是否可以设置付费，关闭付费后，选项和文字收费长度将失效。",
+  "textLength": "收费文字长度",
+  "textLength-intro": "付费文字大于多少个字之后开始收费；内容必须要大于这个长度，才能设置收费。",
+  "addItem": "添加选项",
+  "itemInputIntro": "请使用回车确定"
+}

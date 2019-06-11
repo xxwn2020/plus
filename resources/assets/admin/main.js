@@ -15,7 +15,6 @@ import i18n from './lang' // Internationalization
 import './icons' // icon
 import './permission' // permission control
 import './utils/errorLog'
-// import components from './components'
 import Api from './api'
 import mixins from './mixins'
 
@@ -35,12 +34,6 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.component('nav-bar-in-page', NavBarInPage)
-
-// Vue.prototype.$messageBundle = plusMessageBunld
-
-// components.forEach(component => {
-//   Vue.component(component.name, component)
-// })
 
 Vue.config.productionTip = false
 

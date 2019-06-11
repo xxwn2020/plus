@@ -1,8 +1,15 @@
 {
     "/js/admin.js": "/js/admin.js",
-    "/finance.js": "/finance.js",
-    "/management.js": "/management.js",
-    "/operation.js": "/operation.js",
-    "/system.js": "/system.js",
-    "/js/admin.6808b100ca6fe6201cd4.hot-update.js": "/js/admin.6808b100ca6fe6201cd4.hot-update.js"
+    "/js/chunk-currency.js": "/js/chunk-currency.js",
+    "/js/chunk-feedback.js": "/js/chunk-feedback.js",
+    "/js/chunk-finance.js": "/js/chunk-finance.js",
+    "/js/chunk-management.js": "/js/chunk-management.js",
+    "/js/chunk-operation.js": "/js/chunk-operation.js",
+    "/js/chunk-package.js": "/js/chunk-package.js",
+    "/js/chunk-promotion.js": "/js/chunk-promotion.js",
+    "/js/chunk-report.js": "/js/chunk-report.js",
+    "/js/chunk-reward.js": "/js/chunk-reward.js",
+    "/js/chunk-system.js": "/js/chunk-system.js",
+    "/js/chunk-template.js": "/js/chunk-template.js",
+    "/js/chunk-vendors~template.js": "/js/chunk-vendors~template.js"
 }

@@ -23,10 +23,10 @@ namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\AdminControllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Comment;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedPinned;
+use function Zhiyi\Plus\setting;
 
 class HomeController extends Controller
 {
@@ -39,8 +39,8 @@ class HomeController extends Controller
     public function show()
     {
         return view('feed:view::admin', [
-            'base_url' => route('feed:admin'),
-            'csrf_token' => csrf_token(),
+            'base_url'     => route('feed:admin'),
+            'csrf_token'   => csrf_token(),
             'wallet_ratio' => setting('wallet', 'ratio', 100),
         ]);
     }
@@ -51,8 +51,12 @@ class HomeController extends Controller
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function statistics(Request $request, Feed $feedModel, Comment $commentModel, Carbon $datetime)
-    {
+    public function statistics(
+        Request $request,
+        Feed $feedModel,
+        Comment $commentModel,
+        Carbon $datetime
+    ) {
         $type = $request->query('type', 'all');
         // $now = $datetime->now();
         $feedPinned = $commentPinned = new FeedPinned();
@@ -65,26 +69,34 @@ class HomeController extends Controller
             case 'today':
                 $datetime = $datetime->today();
                 $feedModel = $feedModel->where('created_at', '>', $datetime);
-                $commentModel = $commentModel->where('created_at', '>', $datetime);
+                $commentModel = $commentModel->where('created_at', '>',
+                    $datetime);
                 $feedPinned = $feedPinned->where('created_at', '>', $datetime);
-                $commentPinned = $commentPinned->where('created_at', '>', $datetime);
+                $commentPinned = $commentPinned->where('created_at', '>',
+                    $datetime);
                 break;
             // 查询昨日统计
             case 'yesterday':
                 $stime = $datetime->yesterday();
                 $etime = $datetime->today();
-                $feedModel = $feedModel->whereBetween('created_at', [$stime, $etime]);
-                $commentModel = $commentModel->whereBetween('created_at', [$stime, $etime]);
-                $feedPinned = $feedPinned->whereBetween('created_at', [$stime, $etime]);
-                $commentPinned = $commentPinned->whereBetween('created_at', [$stime, $etime]);
+                $feedModel = $feedModel->whereBetween('created_at',
+                    [$stime, $etime]);
+                $commentModel = $commentModel->whereBetween('created_at',
+                    [$stime, $etime]);
+                $feedPinned = $feedPinned->whereBetween('created_at',
+                    [$stime, $etime]);
+                $commentPinned = $commentPinned->whereBetween('created_at',
+                    [$stime, $etime]);
                 break;
             // 查询一周统计
             case 'week':
                 $datetime = $datetime->subDays(7);
                 $feedModel = $feedModel->where('created_at', '>', $datetime);
-                $commentModel = $commentModel->where('created_at', '>', $datetime);
+                $commentModel = $commentModel->where('created_at', '>',
+                    $datetime);
                 $feedPinned = $feedPinned->where('created_at', '>', $datetime);
-                $commentPinned = $commentPinned->where('created_at', '>', $datetime);
+                $commentPinned = $commentPinned->where('created_at', '>',
+                    $datetime);
                 break;
         }
 
@@ -92,7 +104,8 @@ class HomeController extends Controller
         $feedsCount = $feedModel->count();
 
         // 动态评论总数
-        $commentsCount = $commentModel->where('commentable_type', 'feeds')->count();
+        $commentsCount = $commentModel->where('commentable_type', 'feeds')
+            ->count();
 
         // $feedPinned = $feedPinned->whereDate('expires_at', '>=', $now)->count();
 
@@ -101,45 +114,47 @@ class HomeController extends Controller
             ->where('channel', 'feed')
             ->count();
 
-        $commentPinnedCount = $commentPinned->where('channel', 'comment')->count();
+        $commentPinnedCount = $commentPinned->where('channel', 'comment')
+            ->count();
 
         // 付费动态总数
         $payFeedsCount = $feedModel->whereExists(function ($query) {
-            return $query->from('paid_nodes')->where('channel', 'feed')->whereRaw('paid_nodes.raw = feeds.id');
+            return $query->from('paid_nodes')->where('channel', 'feed')
+                ->whereRaw('paid_nodes.raw = feeds.id');
         })
-        // ->orWhere(function ($query) {
-        //     return $query->whereHas('images', function ($query) {
-        //         return $query->whereExists(function ($query) {
-        //             return $query->from('paid_nodes')->where('channel', 'file')->whereRaw('paid_nodes.raw = file_withs.id');
-        //         });
-        //     });
-        // })
-        ->count();
+            // ->orWhere(function ($query) {
+            //     return $query->whereHas('images', function ($query) {
+            //         return $query->whereExists(function ($query) {
+            //             return $query->from('paid_nodes')->where('channel', 'file')->whereRaw('paid_nodes.raw = file_withs.id');
+            //         });
+            //     });
+            // })
+            ->count();
 
         // 付费总金额
         // TODO 目前只统计文字付费动态金额
         $payCount = $feedModel->whereExists(function ($query) {
-            return $query->from('paid_nodes')->where('channel', 'feed')->whereRaw('paid_nodes.raw = feeds.id');
+            return $query->from('paid_nodes')->where('channel', 'feed')
+                ->whereRaw('paid_nodes.raw = feeds.id');
         })->get()->map(function ($feed) {
             return $feed->paidNode->amount;
         })->sum();
 
         return response()->json([
-            'feedsCount' => $feedsCount,
+            'feedsCount'    => $feedsCount,
             'commentsCount' => $commentsCount,
             'payFeedsCount' => $payFeedsCount,
-            'payCount' => $payCount,
-            'topFeed' => $feedPinnedCount,
-            'topComment' => $commentPinnedCount,
-            'status' => [
-                'reward' => setting('feed', 'reward-switch'),
-            ],
+            'payCount'      => $payCount,
+            'topFeed'       => $feedPinnedCount,
+            'topComment'    => $commentPinnedCount,
         ])->setStatusCode(200);
     }
 
     /**
      * 关闭应用打赏.
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request  [description]
+     *
      * @return [type]           [description]
      */
     public function handleRewardStatus(Request $request)

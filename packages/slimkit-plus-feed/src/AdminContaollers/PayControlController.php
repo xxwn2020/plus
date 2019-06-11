@@ -21,8 +21,8 @@ declare(strict_types=1);
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\AdminControllers;
 
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
+use function Zhiyi\Plus\setting;
 
 class PayControlController extends Controller
 {
@@ -30,11 +30,12 @@ class PayControlController extends Controller
     public function getCurrentStatus()
     {
         return response()->json([
-            'open' => setting('feed', 'pay-switch', false),
-            'payItems' => implode(',', setting('feed', 'pay-items', [])),
+            'open'       => setting('feed', 'pay-switch', false),
+            'payItems'   => setting('feed', 'pay-items', []),
             'textLength' => setting('feed', 'pay-word-limit', 50),
+            'reward'     => setting('feed', 'reward', false),
         ])
-        ->setStatusCode(200);
+            ->setStatusCode(200);
     }
 
     /**
@@ -45,6 +46,7 @@ class PayControlController extends Controller
         $paySwitcg = $request->input('open');
         $payWordLimit = intval($request->input('textLength'));
         $paidItems = $request->input('payItems');
+        $reward = $request->input('reward');
 
         if (is_bool($paySwitcg)) {
             setting('feed')->set('pay-switch', $paySwitcg);
@@ -55,10 +57,11 @@ class PayControlController extends Controller
         }
 
         if ($paidItems) {
-            $paidItems = array_filter(
-                explode(',', $paidItems)
-            );
             setting('feed')->set('pay-items', $paidItems);
+        }
+
+        if ($reward) {
+            setting('feed')->set('reward', $reward);
         }
 
         return response()->json(['message' => '设置成功'])->setStatusCode(201);

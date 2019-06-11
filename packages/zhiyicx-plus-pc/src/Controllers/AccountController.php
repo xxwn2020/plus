@@ -19,14 +19,17 @@
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentPc\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use GuzzleHttp\Exception\GuzzleException;
 use function Zhiyi\Component\ZhiyiPlus\PlusComponentPc\api;
 
 class AccountController extends BaseController
 {
     /**
      * 基本设置.
-     * @author Foreach
+     *
      * @return mixed
+     * @author Foreach
      */
     public function index()
     {
@@ -40,8 +43,10 @@ class AccountController extends BaseController
 
     /**
      * 认证
-     * @author 28youth
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author 28youth
      */
     public function authenticate()
     {
@@ -53,13 +58,17 @@ class AccountController extends BaseController
             $templet = 'authinfo';
         }
 
+        dd($data['info']);
+
         return view('pcview::account.'.$templet, $data, $this->PlusData);
     }
 
     /**
      * 更新认证
-     * @author 28youth
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author 28youth
      */
     public function updateAuthenticate()
     {
@@ -69,13 +78,16 @@ class AccountController extends BaseController
             return redirect('/settings/authenticate');
         }
 
-        return view('pcview::account.update_authenticate', $data, $this->PlusData);
+        return view('pcview::account.update_authenticate', $data,
+            $this->PlusData);
     }
 
     /**
      * 标签管理.
-     * @author 28youth
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author 28youth
      */
     public function tags()
     {
@@ -88,8 +100,9 @@ class AccountController extends BaseController
 
     /**
      * 密码修改.
-     * @author 28youth
+     *
      * @return mixed
+     * @author 28youth
      */
     public function security()
     {
@@ -102,9 +115,12 @@ class AccountController extends BaseController
 
     /**
      * 我的钱包.
-     * @author Foreach
-     * @param  int|int $type    [类型]
+     *
+     * @param  int|int  $type  [类型]
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author Foreach
      */
     public function wallet(int $type = 1)
     {
@@ -119,9 +135,13 @@ class AccountController extends BaseController
 
     /**
      * 钱包记录列表.
+     *
+     * @param  Request  $request
+     *
+     * @return JsonResponse
+     * @throws GuzzleException
+     * @throws \Throwable
      * @author Foreach
-     * @param  Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function records(Request $request)
     {
@@ -151,19 +171,22 @@ class AccountController extends BaseController
         $data['type'] = $type;
         $data['loadcount'] = $request->query('loadcount');
 
-        $html = view('pcview::account.walletrecords', $data, $this->PlusData)->render();
+        $html = view('pcview::account.walletrecords', $data,
+            $this->PlusData)->render();
 
         return response()->json([
-            'status'  => true,
-            'data' => $html,
-            'after' => $after,
+            'status' => true,
+            'data'   => $html,
+            'after'  => $after,
         ]);
     }
 
     /**
      * 充值
-     * @author Foreach
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author Foreach
      */
     public function pay()
     {
@@ -175,9 +198,11 @@ class AccountController extends BaseController
 
     /**
      * ping++充值调起.
-     * @author Foreach
-     * @param  Request $request
+     *
+     * @param  Request  $request
+     *
      * @return mixed
+     * @author Foreach
      */
     public function gateway(Request $request)
     {
@@ -188,8 +213,9 @@ class AccountController extends BaseController
 
     /**
      * 提现.
-     * @author Foreach
+     *
      * @return mixed
+     * @author Foreach
      */
     public function draw()
     {
@@ -200,19 +226,21 @@ class AccountController extends BaseController
 
     /**
      * 获取绑定信息.
-     * @author ZsyD
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author ZsyD
      */
     public function getMyBinds()
     {
         $this->PlusData['account_cur'] = 'binds';
 
         $data = [
-            'phone' => false,
-            'email' => false,
-            'qq' => false,
+            'phone'  => false,
+            'email'  => false,
+            'qq'     => false,
             'wechat' => false,
-            'weibo' => false,
+            'weibo'  => false,
         ];
         // 手机邮箱绑定状态
         $user = api('GET', '/api/v2/user');
@@ -231,9 +259,12 @@ class AccountController extends BaseController
 
     /**
      * 我的积分.
-     * @author szlvincent
-     * @param  int|int $type    [类型]
+     *
+     * @param  int|int  $type  [类型]
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author szlvincent
      */
     public function currency(int $type = 1)
     {
@@ -247,9 +278,13 @@ class AccountController extends BaseController
 
     /**
      * 积分记录列表.
+     *
+     * @param  Request  $request
+     *
+     * @return JsonResponse
+     * @throws GuzzleException
+     * @throws \Throwable
      * @author szlvincent
-     * @param  Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function currencyRecords(Request $request)
     {
@@ -287,33 +322,39 @@ class AccountController extends BaseController
         }
         $data['currency'] = $currency;
         $data['type'] = $type;
-        $html = view('pcview::account.currencyrecords', $data, $this->PlusData)->render();
+        $html = view('pcview::account.currencyrecords', $data,
+            $this->PlusData)->render();
 
         return response()->json([
-            'status'  => true,
-            'data' => $html,
-            'after' => $after,
+            'status' => true,
+            'data'   => $html,
+            'after'  => $after,
         ]);
     }
 
     /**
      * 积分充值
-     * @author szlvincent
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author szlvincent
      */
     public function currencyPay()
     {
         $this->PlusData['account_cur'] = 'currency';
         $data['currency'] = api('GET', '/api/v2/currency');
-        $data['currency']['recharge-options'] = explode(',', $data['currency']['recharge-options']);
+        $data['currency']['recharge-options'] = explode(',',
+            $data['currency']['recharge-options']);
 
         return view('pcview::account.currencypay', $data, $this->PlusData);
     }
 
     /**
      * 积分提取.
-     * @author szlvincent
+     *
      * @return mixed
+     * @throws GuzzleException
+     * @author szlvincent
      */
     public function currencyDraw()
     {
