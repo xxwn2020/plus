@@ -23,10 +23,10 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 use DB;
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Plus\Models\CurrencyOrder as OrderModel;
 use Zhiyi\Plus\Packages\Currency\Processes\Common;
+use function Zhiyi\Plus\setting;
 
 class CurrencyController extends Controller
 {
@@ -79,7 +79,7 @@ class CurrencyController extends Controller
         $type = strtolower((string) $request->query('type'));
         if ($type == 'detail') {
             setting('currency')->set('settings', [
-                'recharge-ratio'   => (int) $request->input('recharge-ratio'),
+                'recharge-ratio'   => $request->input('recharge-ratio'),
                 'recharge-options' => $request->input('recharge-option'),
                 'recharge-max'     => $request->input('recharge-max'),
                 'recharge-min'     => $request->input('recharge-min'),

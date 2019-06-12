@@ -29,7 +29,8 @@
               <el-input v-model="basic.recharge.rule" placeholder="积分充值规则" type="textarea"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button plain :loading="saveLoading" @click="saveBasicConfig" plain type="primary">{{$t('admin.submit')}}
+              <el-button plain :loading="saveLoading" @click="saveBasicConfig" plain type="primary">
+                {{$t('admin.submit')}}
               </el-button>
             </el-form-item>
           </el-form>
@@ -51,14 +52,14 @@
               />
               <el-input v-model="options['recharge-option']" placeholder="placeholder"></el-input>
             </el-form-item>
-            <el-form-item label="兑换比例" prop="recharge-ratio">
+            <el-form-item label="兑换比例">
               <el-alert
                 title="兑换比例，人民币一元可兑换的积分数量，默认1:100，此项「「万万不可」」随意修改"
                 type="warning"
                 :closable="false"
               >
               </el-alert>
-              <el-input v-model="options['recharge-ratio']" placeholder="placeholder"></el-input>
+              <el-input v-model="rechargeRatio" placeholder="placeholder"></el-input>
             </el-form-item>
             <el-form-item label="单笔最大充值额度" prop="recharge-max">
               <el-input v-model="options['recharge-max']" placeholder="单笔最大提现额度"></el-input>
@@ -114,6 +115,17 @@
     beforeMount () {
       this.fetchConfig()
     },
+    computed: {
+      rechargeRatio: {
+        get () {
+          return this.options['recharge-ratio'] * 100
+        }
+        ,
+        set (val) {
+          this.$set(this.options, 'recharge-ratio', val / 100)
+        }
+      }
+    },
     methods: {
       fetchConfig () {
         const { getLoading } = this
@@ -134,7 +146,7 @@
             conf['recharge-min'] = detail_conf['recharge-min']
             conf['recharge-max'] = detail_conf['recharge-max']
             conf['recharge-option'] = detail_conf['recharge-options']
-            conf['recharge-ratio'] = detail_conf['recharge-ratio'] * 100
+            conf['recharge-ratio'] = detail_conf['recharge-ratio']
           }).catch(this.showApiError).finally(() => {
             this.gLoading(false)
           })
@@ -154,8 +166,6 @@
       saveOptionalConfig () {
         const { options, optionSaveLoading } = this
         if (!optionSaveLoading) {
-          options['recharge-ratio'] /= 100
-          console.log(options)
           this.$set(this, 'optionSaveLoading', true)
           this.$api.currency.saveOptionalConfig(options).then(({ data }) => {
             this.showSuccess()
