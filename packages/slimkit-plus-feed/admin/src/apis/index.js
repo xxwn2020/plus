@@ -1,4 +1,4 @@
-import http, { admin, normError } from '@/apis/http'
+import http, { admin, adminBase, normError } from '@/apis/http'
 
 const api = {
   saveConfig: params => (
@@ -12,7 +12,25 @@ const api = {
     })
   ),
   http,
-  normError
+  normError,
+  getStatistics: (params) => (
+    admin.get('/statistics', {
+      params,
+      validateStatus: s => (s === 200)
+    })
+  ),
+  fetchFeeds: params => (
+    admin.get('/feeds', {
+      params,
+      validateStatus: s => (s === 200)
+    })
+  ),
+  users: params => (
+    adminBase.get('/admin/users', {
+      params,
+      validateStatus: s => (s === 200)
+    })
+  )
 }
 
 api.install = Vue => (Vue.prototype.$api = api)

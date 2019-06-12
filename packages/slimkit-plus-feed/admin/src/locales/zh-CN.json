@@ -1,7 +1,8 @@
 {
   "route": {
     "statistics": "动态统计",
-    "setting": "动态设置"
+    "setting": "动态设置",
+    "feeds": "动态管理"
   },
   "setting": "动态设置",
   "statistics": "动态统计",
@@ -17,5 +18,6 @@
   "textLength": "收费文字长度",
   "textLength-intro": "付费文字大于多少个字之后开始收费；内容必须要大于这个长度，才能设置收费。",
   "addItem": "添加选项",
-  "itemInputIntro": "请使用回车确定"
+  "itemInputIntro": "请使用回车确定",
+  "feeds": "动态管理"
 }

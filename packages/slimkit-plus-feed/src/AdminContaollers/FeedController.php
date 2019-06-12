@@ -20,10 +20,10 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\AdminControllers;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Zhiyi\plus\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Zhiyi\Plus\Models\UserCount;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
@@ -36,13 +36,18 @@ class FeedController extends Controller
     /**
      * Get feeds.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed $model
+     * @param  Request  $request
+     * @param  Feed  $model
+     * @param  Carbon  $datetime
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function index(Request $request, Feed $model, Carbon $datetime, User $user)
-    {
+    public function index(
+        Request $request,
+        Feed $model,
+        Carbon $datetime
+    ) {
         $limit = (int) $request->query('limit', 20);
         $before = (int) $request->query('before', 0);
         $type = $request->query('type', 'all');
@@ -63,27 +68,26 @@ class FeedController extends Controller
                 break;
             case 'yesterday':
                 $stime = $datetime->yesterday();
-                $etime = $datetime->today();
+                $etime = $datetime->now();
                 break;
             case 'week':
                 $stime = $datetime->now()->subDays(7);
                 $etime = $datetime->now();
                 break;
             case 'lastDay':
-                $etime = $datetime->today();
+                $etime = $datetime->now();
                 break;
             default:
 
                 break;
         }
-
         $feeds = $model->with([
-                'user',
-                'paidNode',
-                'images',
-                'images.paidNode',
-                'pinned',
-            ])
+            'user',
+            'paidNode',
+            'images',
+            'images.paidNode',
+            'pinned',
+        ])
             ->when($before, function ($query) use ($before) { // 翻页
                 return $query->where('id', '<', $before);
             })
@@ -102,33 +106,54 @@ class FeedController extends Controller
             ->when($trashed, function ($query) {
                 return $query->onlyTrashed();
             })
-            ->when($top && $top !== 'all', function ($query) use ($top, $datetime) { // 置顶筛选
-                switch ($top) {
-                    case 'no':
-                        return $query->whereNotExists(function ($query) use ($datetime) {
-                            return $query->from('feed_pinneds')->whereRaw('feed_pinneds.target = feeds.id')->where('channel', 'feed');
-                        });
-                        break;
-                    case 'yes':
-                        return $query->whereExists(function ($query) use ($datetime) {
-                            return $query->from('feed_pinneds')->whereRaw('feed_pinneds.target = feeds.id')->where('channel', 'feed')->whereDate('expires_at', '>=', $datetime);
-                        });
-                        break;
-                    case 'wait':
-                        return $query->whereExists(function ($query) use ($datetime) {
-                            return $query->from('feed_pinneds')->whereRaw('feed_pinneds.target = feeds.id')->where('channel', 'feed')->whereNull('expires_at');
-                        });
-                        break;
-                    case 'reject':
-                        return $query->whereExists(function ($query) use ($datetime) {
-                            return $query->from('feed_pinneds')->whereRaw('feed_pinneds.target = feeds.id')->where('channel', 'feed')->whereDate('expires_at', '<', $datetime);
-                        });
-                        break;
-                    default:
-                        // code...
-                        break;
-                }
-            })
+            ->when($top && $top !== 'all',
+                function ($query) use ($top, $datetime) { // 置顶筛选
+                    switch ($top) {
+                        case 'no':
+                            return $query->whereNotExists(function ($query) use
+                            (
+                                $datetime
+                            ) {
+                                return $query->from('feed_pinneds')
+                                    ->whereRaw('feed_pinneds.target = feeds.id')
+                                    ->where('channel', 'feed');
+                            });
+                            break;
+                        case 'yes':
+                            return $query->whereExists(function ($query) use (
+                                $datetime
+                            ) {
+                                return $query->from('feed_pinneds')
+                                    ->whereRaw('feed_pinneds.target = feeds.id')
+                                    ->where('channel', 'feed')
+                                    ->whereDate('expires_at', '>=', $datetime);
+                            });
+                            break;
+                        case 'wait':
+                            return $query->whereExists(function ($query) use (
+                                $datetime
+                            ) {
+                                return $query->from('feed_pinneds')
+                                    ->whereRaw('feed_pinneds.target = feeds.id')
+                                    ->where('channel', 'feed')
+                                    ->whereNull('expires_at');
+                            });
+                            break;
+                        case 'reject':
+                            return $query->whereExists(function ($query) use (
+                                $datetime
+                            ) {
+                                return $query->from('feed_pinneds')
+                                    ->whereRaw('feed_pinneds.target = feeds.id')
+                                    ->where('channel', 'feed')
+                                    ->whereDate('expires_at', '<', $datetime);
+                            });
+                            break;
+                        default:
+                            return $query;
+                            break;
+                    }
+                })
             ->when($pay, function ($query) use ($pay) { // 筛选付费动态
                 switch ($pay) {
                     case 'all':
@@ -147,15 +172,20 @@ class FeedController extends Controller
 
                 return $query->where(function ($query) use ($method) {
                     return $query->{$method}(function ($query) {
-                        return $query->from('paid_nodes')->where('channel', 'feed')->whereRaw('paid_nodes.raw = feeds.id');
+                        return $query->from('paid_nodes')
+                            ->where('channel', 'feed')
+                            ->whereRaw('paid_nodes.raw = feeds.id');
                     })
-                    ->orWhere(function ($query) use ($method) {
-                        return $query->whereHas('images', function ($query) use ($method) {
-                            return $query->{$method}(function ($query) {
-                                return $query->from('paid_nodes')->where('channel', 'file')->whereRaw('paid_nodes.raw = file_withs.id');
-                            });
+                        ->orWhere(function ($query) use ($method) {
+                            return $query->whereHas('images',
+                                function ($query) use ($method) {
+                                    return $query->{$method}(function ($query) {
+                                        return $query->from('paid_nodes')
+                                            ->where('channel', 'file')
+                                            ->whereRaw('paid_nodes.raw = file_withs.id');
+                                    });
+                                });
                         });
-                    });
                 });
             })
             ->when($stime, function ($query) use ($stime, $datetime) { // 根据时间筛选
@@ -173,8 +203,9 @@ class FeedController extends Controller
     /**
      * Get deleted feeds.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed $model
+     * @param  Request  $request
+     * @param  Feed  $model
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -247,29 +278,44 @@ class FeedController extends Controller
     /**
      * Delete feed.
      *
-     * @param \Illuminate\Contracts\Cache\Repository $cache
-     * @param \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed $feed
+     * @param  CacheContract  $cache
+     * @param  Feed  $feed
+     *
      * @return mixed
+     * @throws \Throwable
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function destroy(CacheContract $cache, Feed $feed)
     {
-        $pinnedComments = FeedPinned::whereNull('expires_at')
+        $pinnedComments = FeedPinned::query()->whereNull('expires_at')
             ->where('raw', $feed->id)
             ->where('channel', 'comment')
             ->get();
         $process = new UserProcess();
-        $feed->getConnection()->transaction(function () use ($pinnedComments, $feed, $process, $cache) {
-            $pinnedComments->map(function ($comment) use ($process, $feed, $pinnedComments) {
-                $process->reject(0, $comment->amount, $comment->user_id, '评论申请置顶退款', sprintf('退还在动态《%s》申请置顶的评论的款项', Str::limit($feed->feed_content, 100)));
+        $feed->getConnection()->transaction(function () use (
+            $pinnedComments,
+            $feed,
+            $process,
+            $cache
+        ) {
+            $pinnedComments->map(function ($comment) use (
+                $process,
+                $feed,
+                $pinnedComments
+            ) {
+                $process->reject(0, $comment->amount, $comment->user_id,
+                    '评论申请置顶退款', sprintf('退还在动态《%s》申请置顶的评论的款项',
+                        Str::limit($feed->feed_content, 100)));
                 $comment->delete();
             });
             // 删除动态申请置顶
-            $pinnedFeed = FeedPinned::where('channel', 'feed')
+            $pinnedFeed = FeedPinned::query()->where('channel', 'feed')
                 ->where('target', $feed->id)
                 ->first();
             if ($pinnedFeed) {
-                $process->reject(0, $pinnedFeed->amount, $pinnedFeed->user_id, '动态申请置顶退款', sprintf('退还动态《%s》申请置顶的款项', Str::limit($feed->feed_content, 100)));
+                $process->reject(0, $pinnedFeed->amount, $pinnedFeed->user_id,
+                    '动态申请置顶退款', sprintf('退还动态《%s》申请置顶的款项',
+                        Str::limit($feed->feed_content, 100)));
                 $pinnedFeed->delete();
             }
 
@@ -283,13 +329,13 @@ class FeedController extends Controller
             $feed->delete();
             $cache->forget(sprintf('feed:%s', $feed->id));
         });
-        $userUnreadCount = FeedPinned::whereNull('expires_at')
+        $userUnreadCount = FeedPinned::query()->whereNull('expires_at')
             ->where('target_user', $feed->user_id)
             ->where('channel', 'comment')
             ->count();
 
-        $userCount = UserCount::firstOrNew([
-            'type' => 'user-feed-comment-pinned',
+        $userCount = UserCount::query()->firstOrNew([
+            'type'    => 'user-feed-comment-pinned',
             'user_id' => $feed->user_id,
         ]);
         $userCount->total = $userUnreadCount;
