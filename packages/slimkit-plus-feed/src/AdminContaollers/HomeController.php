@@ -23,11 +23,11 @@ namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\AdminControllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Comment;
+use function Zhiyi\Plus\setting;
 use Illuminate\Support\Facades\Cache;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedPinned;
-use function Zhiyi\Plus\setting;
 
 class HomeController extends Controller
 {
@@ -42,7 +42,7 @@ class HomeController extends Controller
         return view('feed:view::admin', [
             'base_url'     => route('feed:admin'),
             'csrf_token'   => csrf_token(),
-            'wallet_ratio' => setting('wallet', 'ratio', 100)
+            'wallet_ratio' => setting('wallet', 'ratio', 100),
         ]);
     }
 
@@ -188,7 +188,7 @@ class HomeController extends Controller
                             'payFeedsCount' => $payFeedsCount,
                             'payCount'      => $payCount,
                             'topFeed'       => $feedPinnedCount,
-                            'topComment'    => $commentPinnedCount
+                            'topComment'    => $commentPinnedCount,
                         ] : [
                             'feedsCount'    => 10000,
                             'commentsCount' => 3000,
@@ -199,7 +199,6 @@ class HomeController extends Controller
                         ];
                     });
             });
-
 
         return response()->json($statistics, 200);
     }

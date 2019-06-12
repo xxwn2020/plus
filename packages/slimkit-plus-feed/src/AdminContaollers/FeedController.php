@@ -110,8 +110,7 @@ class FeedController extends Controller
                 function ($query) use ($top, $datetime) { // 置顶筛选
                     switch ($top) {
                         case 'no':
-                            return $query->whereNotExists(function ($query) use
-                            (
+                            return $query->whereNotExists(function ($query) use (
                                 $datetime
                             ) {
                                 return $query->from('feed_pinneds')
