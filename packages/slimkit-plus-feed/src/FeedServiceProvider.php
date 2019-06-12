@@ -50,7 +50,7 @@ class FeedServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            dirname(__DIR__).'/assets' => $this->app->PublicPath()
+            dirname(__DIR__).'/admin/dist' => $this->app->PublicPath()
                 .'/assets/feed',
         ], 'feed:resource/assets');
 

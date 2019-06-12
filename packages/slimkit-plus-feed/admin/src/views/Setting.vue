@@ -1,17 +1,19 @@
 <template>
   <el-main>
     <el-card shadow="never"
-             class="box-card">
+      class="box-card">
       <div slot="header"
-           class="clearfix">
+        class="clearfix">
         <span>{{ i18n('setting') }}</span>
       </div>
-      <el-form v-loading="getting" ref="feedSetting"
-               label-width="120px"
-               :model="config">
+      <el-form v-loading="getting"
+        ref="feedSetting"
+        label-width="120px"
+        :model="config">
         <el-form-item :label="i18n('reward-switch')"
-                      prop="reward">
+          prop="reward">
           <el-alert
+            class="mb"
             :title="i18n('reward-intro')"
             type="info"
             :closable="false"
@@ -23,8 +25,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="i18n('payControl')"
-                      prop="open">
+          prop="open">
           <el-alert
+            class="mb"
             :title="i18n('payControl-intro')"
             type="info"
             :closable="false"
@@ -36,8 +39,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="i18n('payItems')"
-                      prop="payItems">
+          prop="payItems">
           <el-alert
+            class="mb"
             :title="i18n('payItems-intro')"
             type="info"
             :closable="false"
@@ -51,29 +55,38 @@
             @close="handleDeleteOption(index)">
             {{tag}}
           </el-tag>
-          <el-button plain v-if="!showItemInput" @click="showInput" type="primary"
-                     class="button-new-tag">{{ i18n('addItem') }}
+          <el-button plain
+            v-if="showButton"
+            @click="showInput"
+            type="primary"
+            class="button-new-tag">{{ i18n('addItem') }}
           </el-button>
-          <el-input v-else ref="saveTagInput"
-                    class="input-new-tag"
-                    v-model="item"
-                    @blur="handleInputConfirm"
-                    @keyup.enter.native="handleInputConfirm"
-                    :placeholder="i18n('itemInputIntro')"></el-input>
+          <el-input v-if="showItemInput"
+            ref="saveTagInput"
+            class="input-new-tag"
+            v-model="item"
+            @blur="handleInputConfirm"
+            @keyup.enter.native="handleInputConfirm"
+            :placeholder="i18n('itemInputIntro')"></el-input>
         </el-form-item>
         <el-form-item :label="i18n('textLength')"
-                      prop="textLength">
+          prop="textLength">
           <el-alert
+            class="mb"
             :title="i18n('textLength-intro')"
             type="info"
             :closable="false"
           >
           </el-alert>
           <el-input v-model="config.textLength"
-                    type="number"></el-input>
+            type="number"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button :loading="saving" plain @click="saveConfig" type="primary">{{ i18n('save') }}</el-button>
+          <el-button :loading="saving"
+            plain
+            @click="saveConfig"
+            type="primary">{{ i18n('save') }}
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -81,87 +94,93 @@
 </template>
 
 <script>
-  export default {
-    name: 'Setting',
-    data: () => ({
-      saving: false,
-      getting: false,
-      config: {
-        reward: false,
-        open: false,
-        payItems: [],
-        textLength: 50
-      },
-      showItemInput: false,
-      item: null
-    }),
-    beforeMount () {
-      this.fetchConfig()
+export default {
+  name: 'Setting',
+  data: () => ({
+    saving: false,
+    getting: false,
+    config: {
+      reward: false,
+      open: false,
+      payItems: [],
+      textLength: 50
     },
-    methods: {
-      /**
-       * 显示输入框
-       */
-      showInput () {
-        this.showItemInput = true
-        this.$nextTick(() => {
-          this.$refs.saveTagInput.$refs.input.focus()
+    showItemInput: false,
+    item: null
+  }),
+  beforeMount () {
+    this.fetchConfig()
+  },
+  computed: {
+    showButton () {
+      const { config: { payItems }, showItemInput } = this
+      return payItems.length < 3 && !showItemInput
+    }
+  },
+  methods: {
+    /**
+     * 显示输入框
+     */
+    showInput () {
+      this.showItemInput = true
+      this.$nextTick(() => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    /**
+     * 删除价格
+     * @param index 价格选项的key
+     */
+    handleDeleteOption (index) {
+      const { config: { payItems } } = this
+      payItems.splice(index, 1)
+    },
+    /**
+     * 回车按键
+     */
+    handleInputConfirm () {
+      const { config: { payItems } } = this
+      let inputValue = this.item
+      if (inputValue) {
+        payItems.push(inputValue)
+        this.$set(this, 'config', {
+          ...this.config,
+          payItems: Array.from(new Set(payItems))
         })
-      },
-      /**
-       * 删除价格
-       * @param index 价格选项的key
-       */
-      handleDeleteOption (index) {
-        const { config: { payItems } } = this
-        payItems.splice(index, 1)
-      },
-      /**
-       * 回车按键
-       */
-      handleInputConfirm () {
-        const { config: { payItems } } = this
-        let inputValue = this.item
-        if (inputValue) {
-          payItems.push(inputValue)
-          this.$set(this, 'config', {
-            ...this.config,
-            payItems: Array.from(new Set(payItems))
-          })
-        }
-        this.showItemInput = false
-        this.item = null
-      },
-      /**
-       * 保存配置
-       */
-      saveConfig () {
-        const { saving, config } = this
-        if (!saving) {
-          this.sLoading(true)
-          this.$api.saveConfig(config).then(() => {
-            this.Success()
-          }).catch(this.showApiError).finally(() => {
-            this.sLoading(false)
-          })
-        }
-      },
-      /**
-       * 获取服务端配置
-       */
-      fetchConfig () {
-        const { getting } = this
-        if (!getting) {
-          this.gLoading(true)
-          this.$api.payControl().then(({ data }) => {
-            this.$set(this, 'config', data)
-          }).catch(this.showApiError).finally(() => {
-            this.gLoading(false)
-          })
-        }
+      }
+      this.showItemInput = false
+      this.item = null
+    },
+    /**
+     * 保存配置
+     */
+    saveConfig () {
+      const { saving, config } = this
+      if (!saving) {
+        this.sLoading(true)
+        this.$api.saveConfig(config).then(() => {
+          this.Success()
+        }).catch(this.showApiError).finally(() => {
+          this.sLoading(false)
+        })
+      }
+    },
+    /**
+     * 获取服务端配置
+     */
+    fetchConfig () {
+      const { getting } = this
+      if (!getting) {
+        this.gLoading(true)
+        this.$api.payControl().then(({ data }) => {
+          this.$set(this, 'config', data)
+        }).catch(this.showApiError).finally(() => {
+          this.gLoading(false)
+        })
       }
     }
   }
+}
 </script>
 
 <style scoped>

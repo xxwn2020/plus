@@ -7,7 +7,7 @@ Vue.use(Router)
 export default new Router({
   mode: 'hash',
   // 此配置在vue.config.js中配置baseUrl
-  // base: process.env.BASE_URL,
+  base: process.env.BASE_URL,
   routes: [
     statistics,
     setting

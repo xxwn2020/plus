@@ -7,10 +7,8 @@ module.exports = {
       enableInSFC: true
     }
   },
-
-  outputDir: process.env.NODE_ENV !== 'production'
-    ? '../../../public/assets/feed'
-    : '../assets',
+  publicPath: '/assets/feed/',
+  outputDir: '../../../public/assets/feed',
   runtimeCompiler: true,
-  publicPath: '/feed/admin'
+  assetsDir: './statics'
 }
