@@ -67,7 +67,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <div>
+      <div style="display: flex; flex-direction: column">
         <el-pagination
           class="top"
           @size-change="handleSizeChange"
@@ -81,24 +81,14 @@
         <div class="feeds"
           v-if="page.data.length > 0"
           v-loading="getting">
-          <el-card shadow="hover"
-            class="box-card"
-            :key="feed.id"
-            v-for="feed in page.data">
-            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-              class="image">
-            <div style="padding: 14px;">
-              <span>好吃的汉堡</span>
-              <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text"
-                  class="button">操作按钮
-                </el-button>
-              </div>
-            </div>
-          </el-card>
+          <feed-card class="feed-card"
+            :feed="feed"
+            :callback="fetchData"
+            v-for="feed in page.data"
+            :key="feed.id"></feed-card>
         </div>
-        <div class="feeds noFeeds"
+        <div v-loading="getting"
+          class="feeds noFeeds"
           v-else>
           还没有动态
         </div>
@@ -119,9 +109,11 @@
 
 <script>
 import setQuery from '@/mixins/setQuery'
+import FeedCard from './components/feed-card'
 
 export default {
   mixins: [setQuery],
+  components: { FeedCard },
   name: 'Feeds',
   data: () => ({
     page: {
@@ -129,7 +121,7 @@ export default {
     },
     query: {
       page: 1,
-      limit: 15,
+      limit: 16,
       user: null,
       id: '',
       keyword: '',
@@ -184,9 +176,19 @@ export default {
 
 <style scoped
   lang="scss">
+  .feed-card {
+    margin: 10px;
+    height: auto;
+    width: calc((100% - 90px) / 4);
+  }
+
   .feeds {
-    width: 100%;
     min-height: 90px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: 0 -10px;
 
     &.noFeeds {
       color: #ccc;

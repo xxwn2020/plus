@@ -15,6 +15,9 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 .el-pagination {
   float: right;
+  align-items: flex-end;
+  display: flex;
+  justify-content: flex-end;
 
   &.top {
     margin-bottom: 15px;

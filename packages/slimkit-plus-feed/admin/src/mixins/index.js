@@ -1,5 +1,6 @@
 import plusMessageBundle from 'plus-message-bundle'
 import { i18n } from '@/utils/i18n'
+import { url } from '@/utils/tools'
 
 export default {
   data: () => ({
@@ -51,9 +52,23 @@ export default {
       }
 
       if (!canceled && message) {
-        // this.$message.error(message)
         this.showErrorUnClosable(message)
       }
+    }
+  },
+  filters: {
+    localTime (value) {
+      return value ? (new Date(`${value}Z`)).toLocaleString(
+        navigator.language, { hour12: false }
+      ) : '-'
+    },
+
+    fileUrl (id, params = {}) {
+      if ('json' in params) {
+        delete params.json
+      }
+
+      return url(id, params)
     }
   }
 }

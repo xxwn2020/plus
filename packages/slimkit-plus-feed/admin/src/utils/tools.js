@@ -1,3 +1,21 @@
+import queryString from 'query-string'
+import { host } from '@/apis/http'
+
+export const url = (file, params = {}) => {
+  let query = { rule: '' }
+  let rule = ''
+  if (Object.keys(params).length) {
+    for (let i in params) {
+      rule += `${i}_${params[i]},`
+    }
+    query.rule = rule
+    query = queryString.stringify(query)
+  }
+  const url = `${host}/api/v2/files/${file}`
+
+  return rule ? `${url}?${query}` : url
+}
+
 /**
  * 创建一个用于取消的错误对象.
  *

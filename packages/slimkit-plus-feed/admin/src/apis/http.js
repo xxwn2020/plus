@@ -26,8 +26,8 @@ const createInstance = (options) => {
 }
 // 创建并导出两个API实例
 export const admin = createInstance(adminBaseUrl)
-export const adminBase = createInstance(
-  document.location.protocol + '//' + document.location.hostname)
+export const host = document.location.protocol + '//' + document.location.hostname
+export const adminBase = createInstance(host)
 
 // 创建并导出一个资源类
 export class Resource {
