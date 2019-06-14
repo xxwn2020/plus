@@ -33,6 +33,13 @@ export default {
         message: this.serverMessage(message, defaultMessage)
       })
     },
+    /* 展示错误信息 */
+    Info (message = null, defaultMessage = '操作失败') {
+      this.$message({
+        type: 'info',
+        message: this.serverMessage(message, defaultMessage)
+      })
+    },
     showErrorUnClosable (message) {
       this.$notify({
         title: '出错了',

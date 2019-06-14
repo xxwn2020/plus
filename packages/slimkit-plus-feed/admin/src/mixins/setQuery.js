@@ -4,17 +4,11 @@ export default {
     getting: false
   }),
   beforeMount () {
-    const { $route: { query: { trashed = 0, limit = 15, page = 1 } = {} } = {} } = this
+    const { $route: { query: { limit = 15, page = 1 } = {} } = {} } = this
     this.$set(this, 'query', {
       ...this.query,
-      ...{
-        ...this.$route.query,
-        ...{
-          limit: parseInt(limit),
-          page: parseInt(page),
-          trashed: parseInt(trashed)
-        }
-      }
+      limit: parseInt(limit),
+      page: parseInt(page)
     })
 
     this.fetchData()
@@ -22,18 +16,12 @@ export default {
   watch: {
     '$route': function (to) {
       const {
-        query: { trashed = 0, limit = 15, page = 1 } = {}
+        query: { limit = 15, page = 1 } = {}
       } = to
       this.$set(this, 'query', {
         ...this.query,
-        ...{
-          ...this.$route.query,
-          ...{
-            limit: parseInt(limit),
-            page: parseInt(page),
-            trashed: parseInt(trashed)
-          }
-        }
+        limit: parseInt(limit),
+        page: parseInt(page)
       })
       this.fetchData()
     }

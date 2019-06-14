@@ -2,7 +2,8 @@
   "route": {
     "statistics": "动态统计",
     "setting": "动态设置",
-    "feeds": "动态管理"
+    "feeds": "动态管理",
+    "topics": "话题管理"
   },
   "setting": "动态设置",
   "statistics": "动态统计",
@@ -10,6 +11,9 @@
   "close": "关 闭",
   "open": "开 启",
   "save": "保 存",
+  "filter": "筛 选",
+  "create": "创 建",
+  "cancel-operation": "取消操作",
   "reward-intro": "关闭后无法对动态进行打赏操作",
   "payControl": "付费开关",
   "payItems": "金额选项",
@@ -19,5 +23,23 @@
   "textLength-intro": "付费文字大于多少个字之后开始收费；内容必须要大于这个长度，才能设置收费。",
   "addItem": "添加选项",
   "itemInputIntro": "请使用回车确定",
-  "feeds": "动态管理"
+  "operation": "操 作",
+  "feeds": "动态管理",
+  "topics": "话题管理",
+  "topic-name": "话题名称",
+  "topic-desc": "话题简介",
+  "topic-list": "话题列表",
+  "topics-config": "话题配置",
+  "topic-audited-status": "审核状态",
+  "topic-hot-status": "热门状态",
+  "topic-is-hot": "取消热门",
+  "topic-is-not-hot": "设为热门",
+  "topics-review-switch": "话题审核",
+  "review-intro": "当开关处于开启状态时，所有创建动态话题的地方均会进入等待审核状态，如果处于关闭状态，用户创建的话题将自动进入通过状态。",
+  "audit-passed": "审核通过",
+  "audit-waiting": "等待审核",
+  "audit-failed": "审核不通过",
+  "feed_count": "动态数量",
+  "followers_count": "关注数量",
+  "topic-creator": "创建者"
 }

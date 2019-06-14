@@ -62,13 +62,62 @@ const api = {
       validateStatus: status => status === 204
     })
   },
-
+  /* 移除回收站 */
   restore: id => (
     admin.patch('feeds', {}, {
       params: {
         feed: id
       },
       validateStatus: status => status === 201
+    })
+  ),
+  /* 话题列表 */
+  fetchTopics: params => (
+    admin.get('/topics', {
+      params,
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /* 创建话题 */
+  createTopic: params => (
+    admin.post('/topics', params, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  /* 更新话题 */
+  updateTopic: (params, id) => (
+    admin.put(`/topics/${id}`, params, {
+      validateStatus: s => (s === 204)
+    })
+  ),
+  /* 删除话题 */
+  destroyTopic: id => (
+    admin.delete(`/topics/${id}`, {
+      validateStatus: s => (s === 204)
+    })
+  ),
+  /* 获取话题配置 */
+  topicConfiguration: () => (
+    admin.get('/topic-review-switch-toggle', {
+      validateStatus: s => (s === 200)
+    })
+  ),
+  /* 保存话题配置 */
+  saveTopicConfiguration: params => (
+    admin.put('/topic-review-switch-toggle', params, {
+      validateStatus: s => (s === 204)
+    })
+  ),
+  /* 设置为热门动态 */
+  topicHotToggle: id => (
+    admin.put(`/topics/${id}/hot-toggle`, {}, {
+      validateStatus: s => (s === 204)
+    })
+  ),
+  /* 审核话题 */
+  topicAuditToggle: (id, status) => (
+    admin.put(`topics/${id}/review`, { status }, {
+      validateStatus: s => (204)
     })
   )
 }

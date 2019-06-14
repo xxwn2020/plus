@@ -132,6 +132,13 @@ export default {
     },
     search: ''
   }),
+  beforeMount () {
+    const { $route: { query: { trashed = 0 } = {} } = {} } = this
+    this.$set(this, 'query', {
+      ...this.query,
+      trashed: parseInt(trashed)
+    })
+  },
   methods: {
     /* 使用远程搜索结果 */
     selectUser (user) {
