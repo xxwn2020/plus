@@ -12,6 +12,12 @@ export default new Router({
   // 此配置在vue.config.js中配置baseUrl
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/',
+      name: 'Root',
+      redirect: '/statistics',
+      hidden: true
+    },
     statistics,
     setting,
     feeds,

@@ -34,11 +34,12 @@ export default {
   },
   created () {
     const { '$router': { options: { routes } } } = this
-
     this.$set(
       this,
       'routes',
-      routes
+      routes.filter(route => (
+        !route.hidden
+      ))
     )
   }
 }

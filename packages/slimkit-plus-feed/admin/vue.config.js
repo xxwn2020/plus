@@ -9,7 +9,9 @@ module.exports = {
   },
 
   publicPath: '/assets/feed/',
-  outputDir: './dist',
+  outputDir: process.env.NODE_ENV === 'production'
+    ? './dist'
+    : '../../../public/assets/feed/',
   productionSourceMap: false,
   assetsDir: './',
   filenameHashing: false

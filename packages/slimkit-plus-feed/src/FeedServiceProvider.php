@@ -85,11 +85,6 @@ class FeedServiceProvider extends ServiceProvider
                         ->where('channel', 'comment')
                         ->has('feed')
                         ->has('comment');
-                // return $query->where('expires_at', null)->where('channel', 'comment')->whereExists(function ($query) {
-                    //     return $query->from('feeds')->whereRaw('feed_pinneds.raw = feeds.id')->where('deleted_at', null);
-                    // })->whereExists(function ($query) {
-                    //     return $query->from('comments')->whereRaw('feed_pinneds.target = comments.id');
-                    // });
                 },
             ];
         });
@@ -111,7 +106,8 @@ class FeedServiceProvider extends ServiceProvider
         $this->app->make(ManageRepository::class)
             ->loadManageFrom('动态管理', 'feed:admin', [
                 'route' => true,
-                'icon'  => asset('assets/feed/feed-icon.png'),
+                // 'icon'  => asset('assets/feed/feed-icon.png'),
+                'icon' => 'Feed',
                 'key'   => 'feed',
             ]);
 
