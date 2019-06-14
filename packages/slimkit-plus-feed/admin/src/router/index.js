@@ -4,6 +4,7 @@ import statistics from './module/statistics'
 import setting from './module/setting'
 import feeds from './module/feeds'
 import topics from './module/topics'
+import comments from './module/comments'
 
 Vue.use(Router)
 export default new Router({
@@ -14,6 +15,7 @@ export default new Router({
     statistics,
     setting,
     feeds,
-    topics
+    topics,
+    comments
   ]
 })

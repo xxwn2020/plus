@@ -8,6 +8,11 @@ export default {
     getting: false
   }),
   methods: {
+    toLocalTime (value) {
+      return value ? (new Date(`${value}Z`)).toLocaleString(
+        navigator.language, { hour12: false }
+      ) : '-'
+    },
     i18n,
     gLoading (s) {
       this.$set(this, 'getting', s)

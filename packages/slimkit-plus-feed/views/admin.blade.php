@@ -17,16 +17,12 @@
             'walletRatio' => $wallet_ratio,
         ]) !!};
     </script>
-    <style type="text/css">
-        html, body, * {
-            margin: 0;
-            padding: 0;
-            font-family: Roboto, sans-serif, serif, Microsoft Yahei, "微软雅黑";
-        }
-    </style>
+    <link rel="stylesheet" href="{{ mix('/admin.css', 'assets/feed') }}" />
+    <link rel="stylesheet" href="{{ mix('/chunkVendors.css', 'assets/feed') }}" />
 </head>
 <body>
     <div id="app"></div>
-    <script src="{{ mix('admin.js', 'assets/feed') }}"></script>
+    <script src="{{ mix('/admin.js', 'assets/feed') }}"></script>
+    <script src="{{ mix('/chunkVendors.js', 'assets/feed') }}"></script>
 </body>
 </html>

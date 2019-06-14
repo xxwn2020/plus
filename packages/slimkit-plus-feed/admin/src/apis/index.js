@@ -119,6 +119,36 @@ const api = {
     admin.put(`topics/${id}/review`, { status }, {
       validateStatus: s => (204)
     })
+  ),
+  /* 评论列表 */
+  fetchComments: params => (
+    admin.get('/comments', {
+      params,
+      validateStatus: s => (s === 200)
+    })
+  ),
+  deleteComment: id => (
+    admin.delete(`/comments/${id}`, {
+      validateStatus: s => (s === 204)
+    })
+  ),
+  /** 设置评论置顶 */
+  pinnedComment: (id, day = 0) => (
+    admin.post(`/comments/${id}/pinned`, { day }, {
+      validateStatus: s => (s === 201)
+    })
+  ),
+  /** 取消评论置顶 */
+  rejectCommentPinned: id => (
+    admin.delete(`/comments/pinneds/${id}`, {
+      validateStatus: s => (s === 204)
+    })
+  ),
+  /* 通过评论置顶审核 */
+  acceptCommentPinned: (comment, pinned) => (
+    admin.patch(`/comments/${comment}/pinneds/${pinned}`, {}, {
+      validateStatus: s => (s === 201)
+    })
   )
 }
 

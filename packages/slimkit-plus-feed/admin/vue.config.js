@@ -7,8 +7,10 @@ module.exports = {
       enableInSFC: true
     }
   },
+
   publicPath: '/assets/feed/',
-  outputDir: '../../../public/assets/feed',
-  runtimeCompiler: true,
-  assetsDir: './statics'
+  outputDir: './dist',
+  productionSourceMap: false,
+  assetsDir: './',
+  filenameHashing: false
 }

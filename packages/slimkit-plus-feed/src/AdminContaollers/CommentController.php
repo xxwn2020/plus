@@ -136,7 +136,8 @@ class CommentController extends Controller
                 return $query->whereDate('created_at', '<=', $etime);
             })
             ->when(($top && $top !== 'all' && ! $pinned_etime && ! $pinned_stime), function ($query) use ($pinned_type, $top, $datetime) {
-                $method = $top == 'yes' ? 'whereExists' : 'whereNotExists';
+                // 判断动态是否置顶
+                $method = $top === 'yes' ? 'whereExists' : 'whereNotExists';
 
                 return $query->{$method}(function ($query) use ($datetime, $pinned_type) {
                     if ($pinned_type !== 'all') {
@@ -155,7 +156,10 @@ class CommentController extends Controller
             })
             ->when($pinned_stime, function ($query) use ($pinned_stime) {
                 return $query->whereExists(function ($query) use ($pinned_stime) {
-                    return $query->from('feed_pinneds')->whereRaw('feed_pinneds.target = comments.id')->where('channel', 'comment')->whereDate('expires_at', '>=', $pinned_stime);
+                    return $query->from('feed_pinneds')
+                        ->whereRaw('feed_pinneds.target = comments.id')
+                        ->where('channel', 'comment')
+                        ->whereDate('expires_at', '>=', $pinned_stime);
                 });
             })
             ->when($pinned_etime, function ($query) use ($pinned_etime) {
@@ -175,12 +179,8 @@ class CommentController extends Controller
             ->get();
 
         $data = [
-            'comments' => $paginator->getCollection()->toArray(),
+            'data' => $paginator->getCollection()->toArray(),
             'pinneds' => $pinneds,
-            'pervPage' => $this->getPrevPage($paginator),
-            'nextPage' => $this->getNextPage($paginator),
-            'lastPage' => $paginator->lastPage(),
-            'current_page' => $paginator->currentPage(),
             'total' => $paginator->count(),
         ];
 

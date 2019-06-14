@@ -3,7 +3,8 @@
     "statistics": "动态统计",
     "setting": "动态设置",
     "feeds": "动态管理",
-    "topics": "话题管理"
+    "topics": "话题管理",
+    "comments": "评论管理"
   },
   "setting": "动态设置",
   "statistics": "动态统计",
@@ -41,5 +42,15 @@
   "audit-failed": "审核不通过",
   "feed_count": "动态数量",
   "followers_count": "关注数量",
-  "topic-creator": "创建者"
+  "topic-creator": "创建者",
+  "comment": "评论管理",
+  "comment-body": "评论内容",
+  "comment-creator": "评论人",
+  "comment-datetime": "评论时间",
+  "comment-pinned-status": "置顶状态",
+  "comment-not-pinned": "未置顶",
+  "comment-set-pinned": "设置置顶",
+  "comment-pinned-waiting": "置顶待审",
+  "comment-pinned-expired": "置顶过期",
+  "comment-pinned-acting": "置顶中..."
 }
