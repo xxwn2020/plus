@@ -51,7 +51,9 @@
   import LangSelect from '@/components/LangSelect'
   import Search from '@/components/HeaderSearch'
 
-  const { user: { avatar: { url = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif' } = {} } = {} } = window.TS
+  const url = window.TS.user.avatar
+    ? window.TS.user.avatar.url
+    : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
   export default {
     data: () => ({
       url
