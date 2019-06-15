@@ -16,6 +16,7 @@
  * +----------------------------------------------------------------------+
  */
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Routing\Registrar as RouteRegisterContract;
 
 /*
@@ -34,11 +35,9 @@ Route::group([
         'auth:web', 'admin',
     ],
 ], function (RouteRegisterContract $route) {
-
     // Admin Index.
     // @GET /admin
     $route->get('/', 'HomeController@index');
-
     // 后台导航
     // @GET /admin/manages
     $route->get('/manages', 'HomeController@showManages');

@@ -22,11 +22,11 @@ namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
 use Zhiyi\Plus\Models\User;
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\username;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Auth;
 use Zhiyi\Plus\Models\VerificationCode;
+use function Zhiyi\Plus\username;
 
 class AuthController extends Controller
 {
@@ -43,7 +43,7 @@ class AuthController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\Guard
+     * @return Guard
      */
     public function guard()
     : Guard
@@ -54,17 +54,16 @@ class AuthController extends Controller
     /**
      * Get a JWT token via given credentials.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param  Request  $request
+     *
+     * @return JsonResponse
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function login(Request $request)
-    : JsonResponse
-    {
+    : JsonResponse {
         $login = (string) $request->input('login', '');
         $code = $request->input('verifiable_code');
         $field = username($login);
-
         if ($code !== null && in_array($field, ['phone', 'email'])) {
             $verify = VerificationCode::where('account', $login)
                 ->where('channel', $field == 'phone' ? 'sms' : 'mail')
@@ -74,33 +73,39 @@ class AuthController extends Controller
                 ->first();
 
             if (! $verify) {
-                return $this->response()->json(['message' => '验证码错误或者已失效'], 422);
+                return $this->response()
+                    ->json(['message' => '验证码错误或者已失效'], 422);
             }
 
             $verify->delete();
 
             if ($user = User::withTrashed()->where($field, $login)->first()) {
-                return ! $user->deleted_at ?
-                    $this->respondWithToken($this->guard()->login($user)) :
+                return ! $user->deleted_at
+                    ?
+                    $this->respondWithToken($this->guard()->login($user))
+                    :
                     $this->response()->json([
                         'message' => '账号已被禁用，请联系管理员',
                     ], 403);
             }
 
             return $this->response()->json([
-                'message' => sprintf('%s还没有注册', $field == 'phone' ? '手机号' : '邮箱'),
+                'message' => sprintf('%s还没有注册',
+                    $field == 'phone' ? '手机号'
+                        : ($field == 'name' ? '用户' : '邮箱')),
             ], 422);
         }
         if ($user = User::withTrashed()
             ->where($field, $login)
-            ->first()) {
+            ->first()
+        ) {
             if ($user->deleted_at) {
                 return $this->response()->json([
                     'message' => '账号已被禁用，请联系管理员',
                 ], 403);
             }
             $credentials = [
-                $field => $login,
+                $field     => $login,
                 'password' => $request->input('password', ''),
             ];
 
@@ -111,7 +116,9 @@ class AuthController extends Controller
             return $this->response()->json(['message' => '账号或密码不正确'], 422);
         } else {
             return $this->response()->json([
-                'message' => sprintf('%s还没有注册', $field == 'phone' ? '手机号' : '邮箱'),
+                'message' => sprintf('%s还没有注册',
+                    $field == 'phone' ? '手机号'
+                        : ($field == 'name' ? '用户' : '邮箱')),
             ], 422);
         }
     }
@@ -119,7 +126,7 @@ class AuthController extends Controller
     /**
      * Log the user out (Invalidate the token).
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function logout()
@@ -133,7 +140,7 @@ class AuthController extends Controller
     /**
      * Refresh a token.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function refresh()
@@ -147,22 +154,21 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param string $token
+     * @param  string  $token
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondWithToken(string $token)
-    : JsonResponse
-    {
+    : JsonResponse {
         $this->guard()->user()->update([
             'last_login_ip' => request()->ip(),
         ]);
 
         return $this->response()->json([
             'access_token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => $this->guard()->factory()->getTTL(),
-            'refresh_ttl' => config('jwt.refresh_ttl'),
-        ]);
+            'token_type'   => 'Bearer',
+            'expires_in'   => $this->guard()->factory()->getTTL(),
+            'refresh_ttl'  => config('jwt.refresh_ttl'),
+        ], 200);
     }
 }

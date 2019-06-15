@@ -30,7 +30,8 @@ class HomeController extends Controller
     /**
      * Admin home.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
@@ -43,7 +44,7 @@ class HomeController extends Controller
             'api'        => url('api/v2'),
             'logged'     => (bool) $user,
             'user'       => $user,
-            'token' => JWTAuth::fromUser($user),
+            'token'      => JWTAuth::fromUser($user),
         ];
 
         return view('admin', $data);

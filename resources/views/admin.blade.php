@@ -7,9 +7,8 @@
     @parent
 
     <script>
-        window.TS = {!!
+      window.TS = {!!
             json_encode([
-
                 'api'       => $api,
                 'baseURL'   => $base_url,
                 'csrfToken' => $csrf_token,

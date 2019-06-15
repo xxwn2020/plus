@@ -10,6 +10,7 @@ export default {
       this.$set(this, 'saveLoading', status)
     },
     showApiError (error, defaultMessage = null) {
+      console.log(error)
       error = this.$api.normError(error)
 
       let { message } = error

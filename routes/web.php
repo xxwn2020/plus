@@ -17,12 +17,13 @@
  */
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 
 if (! Route::has('home')) {
     /**
      * Get front “/” route.
      *
-     * @var \Illuminate\Routing\Route
+     * @var Route
      */
     $route = Arr::get(Route::getRoutes()->get('GET'), '/');
 
@@ -37,7 +38,8 @@ if (! Route::has('home')) {
 }
 
 if (! Route::has('login')) {
-    Route::get('/auth/login', 'Auth\\LoginController@showLoginForm')->name('login');
+    Route::get('/auth/login', 'Auth\\LoginController@showLoginForm')
+        ->name('login');
 }
 
 if (! Route::has('logout')) {

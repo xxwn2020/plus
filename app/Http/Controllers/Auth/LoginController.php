@@ -62,9 +62,9 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  Request  $request
      * @return mixed
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function login(Request $request)

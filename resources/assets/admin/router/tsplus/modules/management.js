@@ -5,7 +5,7 @@ const managementRouter = {
   component: Layout,
   name: 'management-index',
   meta: { title: 'management.root', icon: 'dashboard' },
-  redirect: '/management/users',
+  redirect: '/management/users/list',
   children: [
     {
       path: 'users',

@@ -23,11 +23,11 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="`${url}`" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
+          <router-link to="/management">
             <el-dropdown-item>
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
@@ -51,7 +51,11 @@
   import LangSelect from '@/components/LangSelect'
   import Search from '@/components/HeaderSearch'
 
+  const { user: { avatar: { url } } } = window.TS
   export default {
+    data: () => ({
+      url
+    }),
     components: {
       Breadcrumb,
       Hamburger,
@@ -75,7 +79,6 @@
       },
       async logout () {
         await this.$store.dispatch('user/logout')
-        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
     }
   }

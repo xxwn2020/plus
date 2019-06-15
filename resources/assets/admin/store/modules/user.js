@@ -1,5 +1,5 @@
-import { login as loginMethod, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { login as loginMethod } from '@/api/user'
+import { getToken, removeToken, setToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -30,29 +30,24 @@ const mutations = {
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
+  login ({ commit }, userInfo) {
     const { login, password } = userInfo
     return new Promise((resolve, reject) => {
-      loginMethod({ login: login.trim(), password: password }).then(response => {
-        // const { data } = response
-        commit('SET_TOKEN', 'admin-token')
-        setToken('admin-token')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      loginMethod({ login: login.trim(), password: password }).
+        then(({ data: { access_token, token_type } }) => {
+          commit('SET_TOKEN', `${token_type} ${access_token}`)
+          setToken(`${token_type} ${access_token}`)
+          resolve()
+        }).
+        catch(error => {
+          reject(error)
+        })
     })
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {
-      // getInfo(state.token).then(response => {
-      //   const { data } = response
-
-      //   if (!data) {
-      //     reject('Verification failed, please Login again.')
-      //   }
 
       const { roles, name, avatar, introduction } = {
         roles: ['admin'],
@@ -83,22 +78,16 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resetRouter()
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  logout ({ commit }) {
+    commit('SET_TOKEN', '')
+    commit('SET_ROLES', [])
+    removeToken()
+    resetRouter()
+    window.location.href = '/auth/logout'
   },
 
   // remove token
-  resetToken({ commit }) {
+  resetToken ({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -108,7 +97,7 @@ const actions = {
   },
 
   // Dynamically modify permissions
-  changeRoles({ commit, dispatch }, role) {
+  changeRoles ({ commit, dispatch }, role) {
     return new Promise(async resolve => {
       const token = role + '-token'
 
@@ -120,7 +109,8 @@ const actions = {
       resetRouter()
 
       // generate accessible routes map based on roles
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
+      const accessRoutes = await dispatch('permission/generateRoutes', roles,
+        { root: true })
 
       // dynamically add accessible routes
       router.addRoutes(accessRoutes)

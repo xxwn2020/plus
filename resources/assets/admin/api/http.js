@@ -1,7 +1,7 @@
 import http from 'axios'
 import { isCanceled } from '../utils/tools'
 
-const { csrfToken, token, baseURL: adminBaseUrl, api: apiv2BaseUrl } = window.TS
+const { domain, csrfToken, token, baseURL: adminBaseUrl, api: apiv2BaseUrl } = window.TS
 
 // API公共请求参数.
 http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
@@ -21,7 +21,23 @@ const createInstance = (options) => {
   }
 
   const instance = http.create(options)
-
+  // 拦截响应器
+  instance.interceptors.response.use(
+    response => (
+      Promise.resolve(response)
+    ),
+    error => {  //响应错误处理
+      const { response: { status } } = error
+      switch (status) {
+        case 401:
+          window.location.href = '/admin'
+          break
+        case 403:
+          break
+      }
+      return Promise.reject(error)
+    }
+  )
   instance.isCancel = http.isCancel.bind(http)
   instance.CancelToken = http.CancelToken.bind(http)
 
@@ -31,10 +47,11 @@ const createInstance = (options) => {
 // 创建并导出两个API实例
 export const admin = createInstance(adminBaseUrl)
 export const apiv2 = createInstance(apiv2BaseUrl)
+export const web = createInstance(domain)
 
 // 创建并导出一个资源类
 export class Resource {
-  constructor(uri, api) {
+  constructor (uri, api) {
     this.api = api || apiv2
     this.uri = encodeURI(uri)
   }

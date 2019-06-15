@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { apiv2, admin, Resource } from './http'
+import { admin, apiv2, Resource } from './http'
 
 const users = new Resource('/users', admin)
 
@@ -64,12 +64,5 @@ export function getInfo (token) {
     url: '/user/info',
     method: 'get',
     params: { token }
-  })
-}
-
-export function logout () {
-  return request({
-    url: '/user/logout',
-    method: 'post'
   })
 }
