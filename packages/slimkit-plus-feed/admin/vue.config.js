@@ -7,12 +7,29 @@ module.exports = {
       enableInSFC: true
     }
   },
-
-  publicPath: '/assets/feed/',
-  outputDir: process.env.NODE_ENV === 'production'
-    ? './dist'
-    : '../../../public/assets/feed/',
-  productionSourceMap: false,
-  assetsDir: './',
-  filenameHashing: false
+  configureWebpack: {
+    output: {
+      filename: 'js/app.js'
+    }
+  },
+  chainWebpack: config => {
+    config.optimization.delete('splitChunks')
+  },
+  publicPath:
+    '/assets/feed/',
+  outputDir:
+  // process.env.NODE_ENV === 'production'
+  //   //   ? './dist'
+  //   //   :
+    '../../../public/assets/feed/',
+  productionSourceMap:
+    false,
+  assetsDir:
+    './',
+  filenameHashing:
+    false,
+  css:
+    {
+      extract: true
+    }
 }
