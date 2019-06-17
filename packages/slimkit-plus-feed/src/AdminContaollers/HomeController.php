@@ -23,11 +23,11 @@ namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\AdminControllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Zhiyi\Plus\Models\Comment;
-use function Zhiyi\Plus\setting;
 use Illuminate\Support\Facades\Cache;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedPinned;
+use function Zhiyi\Plus\setting;
 
 class HomeController extends Controller
 {
@@ -182,20 +182,13 @@ class HomeController extends Controller
                             return $feed->paidNode->amount;
                         })->sum();
 
-                        return $type !== 'all' ? [
+                        return [
                             'feedsCount'    => $feedsCount,
                             'commentsCount' => $commentsCount,
                             'payFeedsCount' => $payFeedsCount,
                             'payCount'      => $payCount,
                             'topFeed'       => $feedPinnedCount,
                             'topComment'    => $commentPinnedCount,
-                        ] : [
-                            'feedsCount'    => 10000,
-                            'commentsCount' => 3000,
-                            'payFeedsCount' => 200,
-                            'payCount'      => 600,
-                            'topFeed'       => 100,
-                            'topComment'    => 2000,
                         ];
                     });
             });
