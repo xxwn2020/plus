@@ -147,8 +147,10 @@
         margin-right: 30px;
 
         .avatar-wrapper {
-          margin-top: 5px;
           position: relative;
+          height: 100%;
+          display: flex;
+          align-items: center;
 
           .user-avatar {
             cursor: pointer;
