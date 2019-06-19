@@ -5,16 +5,6 @@
     </div>
     <el-form class="el-form filterForm" :inline="true" ref="form" :model="query">
       <el-form-item>
-        <el-autocomplete
-          :fetch-suggestions="queryUsers"
-          v-model="query.username"
-          placeholder="可模糊搜索用户名"
-          @select="handleUserSelect"
-          value-key="name"
-          :debounce="500"
-        ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
         <el-select v-model="query.state">
           <el-option
             v-for="item in [{value: '', label: '全部'}, {value: 0, label: '等待'}, {value: 1, label: '成功'}, {value: -1, label: '失败'}]"
@@ -25,20 +15,20 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="可模糊搜索用户名"
+          @select="handleUserSelect"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
         <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.search.root')}}
         </el-button>
       </el-form-item>
     </el-form>
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
     <el-table
       border
       v-loading="getLoading"

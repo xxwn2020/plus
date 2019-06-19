@@ -29,7 +29,7 @@ mix.setPublicPath(path.join('public', 'assets')).
     output: {
       chunkFilename: mix.config.hmr
         ? `[name].js`
-        : (`js/chunk-[name].${mix.inProduction() ? '-[chunkhash].' : ''}js`),
+        : (`js/[name].${mix.inProduction() ? '[chunkhash].' : ''}js`),
       publicPath: mix.config.hmr ? '//localhost:8080/' : 'assets/'
     },
     devServer: {
@@ -41,8 +41,8 @@ mix.setPublicPath(path.join('public', 'assets')).
     path.join('public', 'assets', 'js', 'bootstrap.js')).
   js('resources/assets/admin/main.js',
     path.join('public', 'assets', 'js', 'admin.js'))
-  // sass('resources/sass/bootstrap.scss',
-  //   path.join('public', 'assets', 'css', 'bootstrap.css'))
+// sass('resources/sass/bootstrap.scss',
+//   path.join('public', 'assets', 'css', 'bootstrap.css'))
 
 if (mix.inProduction()) {
   mix.version()

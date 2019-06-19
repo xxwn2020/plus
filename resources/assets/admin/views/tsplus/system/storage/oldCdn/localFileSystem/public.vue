@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
+  <el-form ref="form" :model="form" label-width="120px">
     <el-form-item>
       <el-button plain @click="savePublicConfiguration" :loading="saveLoading" type="primary">{{$t('admin.submit')}}
       </el-button>

@@ -61,17 +61,6 @@
         </el-button>
       </div>
     </el-form>
-
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
     <el-table
       :default-sort="defaultSort"
       @sort-change="sortChange"
@@ -87,9 +76,9 @@
         prop="id"
         :label="$t('admin.users.search.userId')"
       />
-      <el-table-column prop="name" :label="$t('admin.users.search.name')"/>
-      <el-table-column prop="phone" :label="$t('admin.users.search.phone')"/>
-      <!-- <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"/> -->
+      <el-table-column prop="name" :label="$t('admin.users.search.name')"></el-table-column>
+      <el-table-column prop="phone" :label="$t('admin.users.search.phone')"></el-table-column>
+      <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"></el-table-column>
       <el-table-column prop="sex" :label="$t('admin.users.search.sex.root')">
         <template
           slot-scope="scope"
@@ -106,14 +95,16 @@
       >
         <template slot-scope="{row: user}">
           {{user.currency.sum}}
-          <el-button :loading="savingCurrency === user.id" @click="setCurrency(user.id)" type="primary" plain>设置积分
+          <el-button size="mini" :loading="savingCurrency === user.id" @click="setCurrency(user.id)" type="primary"
+                     plain>设置积分
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" :label="$t('admin.operation')">
+      <el-table-column width="450" fixed="right" :label="$t('admin.operation')">
         <template slot-scope="scope">
           <el-button
             plain
+            size="mini"
             type="primary"
             @click="goTo({name: 'management-users-edit', params: {uid: scope.row.id}})"
           >{{$t('admin.edit')}}
@@ -121,6 +112,7 @@
           <template>
             <el-button
               plain
+              size="mini"
               type="primary"
               v-if="scope.row.recommended === null"
               @click="handleRecommend(scope.row)"
@@ -129,6 +121,7 @@
             <el-button
               v-else
               plain
+              size="mini"
               type="danger"
               @click="handleUnRecommend(scope.row)"
             >{{ $t('admin.users.unrecommend') }}
@@ -137,12 +130,14 @@
           <template v-if="scope.row.famous === null">
             <el-button
               plain
+              size="mini"
               type="primary"
               @click="handleFollowedFamous(scope.row, 1)"
             >{{ $t('admin.users.followTa') }}
             </el-button>
             <el-button
               plain
+              size="mini"
               type="primary"
               @click="handleFollowedFamous(scope.row, 2)"
             >{{ $t('admin.users.followEachOthers') }}
@@ -151,6 +146,7 @@
           <template v-else>
             <el-button
               plain
+              size="mini"
               type="danger"
               @click="handleUnFamous(scope.row)"
             >{{ $t('admin.users.cancelFollow') }}
@@ -159,6 +155,7 @@
           <el-button
             v-if="!scope.row.deleted_at"
             plain
+            size="mini"
             type="danger"
             @click="handleTrash(scope.row)"
           >{{$t('admin.users.disable')}}
@@ -166,6 +163,7 @@
           <el-button
             v-else
             plain
+            size="mini"
             type="primary"
             @click="handleRestore(scope.row)"
           >{{$t('admin.users.restore')}}
@@ -221,18 +219,6 @@
         ]
       },
       {
-        id: 'userId',
-        type: 'input'
-      },
-      {
-        id: 'email',
-        type: 'input'
-      },
-      {
-        id: 'name',
-        type: 'input'
-      },
-      {
         id: 'role',
         type: 'select',
         options: [
@@ -243,21 +229,12 @@
         ]
       },
       {
-        id: 'phone',
-        type: 'input'
-      },
-      {
         id: 'dateTimeRange',
         type: 'dateTimeRange',
         options: {
           rangeSeparator: '至'
         }
       },
-      // {
-      //   id: "location",
-      //   type: "cascader",
-      //   options: []
-      // },
       {
         id: 'follow',
         type: 'select',
@@ -275,7 +252,30 @@
             value: 2
           }
         ]
+      },
+      {
+        id: 'userId',
+        type: 'input'
+      },
+      {
+        id: 'email',
+        type: 'input'
+      },
+      {
+        id: 'name',
+        type: 'input'
+      },
+
+      {
+        id: 'phone',
+        type: 'input'
       }
+
+      // {
+      //   id: "location",
+      //   type: "cascader",
+      //   options: []
+      // },
     ]
   }
   export default {

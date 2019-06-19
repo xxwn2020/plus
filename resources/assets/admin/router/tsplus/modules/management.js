@@ -5,97 +5,50 @@ const managementRouter = {
   component: Layout,
   name: 'management-index',
   meta: { title: 'management.root', icon: 'dashboard' },
-  redirect: '/management/users/list',
+  redirect: '/management/container',
   children: [
     {
-      path: 'users',
-      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/users'),
-      name: 'management-users',
-      meta: { title: 'management.users.root' },
-      redirect: '/management/users/list',
+      path: 'container',
+      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/components/Container'),
+      name: 'Management-Container',
+      meta: { title: 'operation.basic' },
+      redirect: '/management/container/siteInfo',
       children: [
         {
-          path: 'list',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/list'),
-          name: 'management-users-list',
-          meta: { title: 'management.users.list', tabs: true }
-        },
-        {
-          path: 'certifications',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/certifications'),
-          name: 'management-users-certifications',
-          meta: { title: 'management.users.certificated', tabs: true }
-        },
-        {
-          path: 'certifications/add',
-          hidden: true,
-          name: 'management-users-certifications-add',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/addCertificated'),
-          meta: {
-            title: 'management.certifications.add',
-            hidden: true,
-            noCache: true
-          }
-        },
-        {
-          path: 'certifications/edit/:id',
-          hidden: true,
-          name: 'management-users-certifications-edit',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/editCertificated'),
-          meta: {
-            title: 'management.certifications.edit',
-            hidden: true,
-            noCache: true
-          }
-        },
-        {
-          path: 'roles',
-          name: 'management-users-roles',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/roles'),
-          meta: { title: 'management.users.roles', tabs: true }
-        },
-        {
-          path: 'abilities',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/abilities'),
-          name: 'management-users-abilities',
-          meta: { title: 'management.users.abilities', tabs: true }
-        },
-        {
-          path: 'edit/:uid',
-          hidden: true,
-          name: 'management-users-edit',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/edit'),
-          meta: { title: 'management.users.edit', hidden: true, noCache: true }
-        },
-        {
-          path: 'add',
-          hidden: true,
-          name: 'management-users-add',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/users/add'),
-          meta: { title: 'management.users.edit', hidden: true, noCache: true }
+          path: 'siteInfo',
+          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/basic/siteInfo'),
+          meta: { title: 'operation.info.root', tabs: true },
+          name: 'Operation-Basic-SiteInfo'
+        }, {
+          path: 'setting',
+          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/basic/setting'),
+          meta: { title: 'operation.site.root', tabs: true },
+          name: 'Operation-Basic-Setting'
+        }, {
+          path: 'cache',
+          meta: { title: 'operation.cache.root', tabs: true },
+          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/basic/cache'),
+          name: 'Operation-Basic-Cache'
         }
       ]
     },
     {
-      path: 'tags',
-      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/tags/index'),
-      name: 'management-tags',
-      meta: { title: 'management.tags.root' },
-      redirect: '/management/tags/list',
-      children: [
-        {
-          path: 'list',
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/tags/list'),
-          name: 'Management-Tags-List',
-          meta: { title: 'management.tags.list', tabs: true }
-        },
-        {
-          component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/management/tags/categories'),
-          path: 'categories',
-          name: 'Management-Tags-Categories',
-          meta: { title: 'management.tags.categories', tabs: true }
-        }
-      ]
+      path: 'sensitive-words',
+      name: 'Operation-Sensitive-Words',
+      meta: { title: 'operation.sensitiveWords' },
+      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/sensitive-words/index')
+    },
+    {
+      path: 'client-configuration',
+      name: 'Operation-Client-Configuration',
+      meta: { title: 'operation.client' },
+      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/clients/clients.vue')
+    },
+    {
+      path: 'areas',
+      name: 'Operation-Areas',
+      meta: { title: 'operation.areas' },
+      component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/areas/index')
     }
   ]
 }

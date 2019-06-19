@@ -46,16 +46,6 @@
           <el-button plain @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
         </el-form-item>
       </el-form>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
       <el-table v-loading="getLoading" :data="page.data" border stripe>
         <el-table-column prop="id" label="#ID"></el-table-column>
         <el-table-column prop="data.name" :label="$t('admin.name')"></el-table-column>
@@ -77,34 +67,34 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column width="80px" :label="$t('admin.status')">
+        <el-table-column width="80" :label="$t('admin.status')">
           <template slot-scope="{row: certification}">
-            <el-button plain type="primary" v-if="certification.status === 1">已审</el-button>
-            <el-button plain type="warning" v-else>待审</el-button>
+            <el-button size="mini" plain type="primary" v-if="certification.status === 1">已审</el-button>
+            <el-button size="mini" plain type="warning" v-else>待审</el-button>
           </template>
         </el-table-column>
-        <el-table-column width="90px" :label="$t('admin.createdAt')">
+        <el-table-column width="90" :label="$t('admin.createdAt')">
           <template slot-scope="{row: certification}">{{certification.created_at | localTime }}</template>
         </el-table-column>
-        <el-table-column :label="$t('admin.operation')">
+        <el-table-column fixed="right" :label="$t('admin.operation')">
           <template slot-scope="{row: certification}">
             <div v-if="certification.status === 0">
-              <el-button :loading="operating === certification.id"
+              <el-button size="mini" :loading="operating === certification.id"
                          @click="auditCertification(certification.id, 'pass')" plain type="primary">通过
               </el-button>
-              <el-button :loading="operating === certification.id"
+              <el-button size="mini" :loading="operating === certification.id"
                          @click="auditCertification(certification.id, 'reject')" plain type="warning">驳回
               </el-button>
             </div>
             <div v-else>
-              <el-button
+              <el-button size="mini"
                 @click="goTo({name: 'management-users-certifications-edit', params: {id: certification.id}})"
                 plain
                 type="primary"
                 v-if="certification.status === 1"
               >{{$t('admin.edit')}}
               </el-button>
-              <el-button plain v-else type="danger">已驳回</el-button>
+              <el-button size="mini" plain v-else type="danger">已驳回</el-button>
             </div>
           </template>
         </el-table-column>

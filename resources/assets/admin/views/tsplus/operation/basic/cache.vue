@@ -4,8 +4,8 @@
       <span>缓存管理</span>
     </div>
     <el-form>
-      <el-alert title="清除所有数据缓存, 不包括配置和路由缓存" type="warning" :closable="false" show-icon></el-alert>
-      <el-form-item label="数据缓存">
+      <el-form-item label-width="80px" label="数据缓存">
+        <el-alert title="清除所有数据缓存, 不包括配置和路由缓存" type="warning" :closable="false"></el-alert>
         <el-button
           type="danger"
           plain
@@ -14,8 +14,8 @@
         >清理数据缓存
         </el-button>
       </el-form-item>
-      <el-alert title="清除配置缓存,并重新缓存,此操作能提高性能" type="success" :closable="false" show-icon></el-alert>
-      <el-form-item label="配置缓存">
+      <el-form-item label-width="80px" label="配置缓存">
+        <el-alert title="清除配置缓存,并重新缓存,此操作能提高性能" type="success" :closable="false"></el-alert>
         <el-button
           type="danger"
           plain
@@ -24,8 +24,8 @@
         >重置配置缓存
         </el-button>
       </el-form-item>
-      <el-alert title="清除路由缓存,并重新缓存,此操作能提高性能" type="success" :closable="false" show-icon></el-alert>
-      <el-form-item label="路由缓存">
+      <el-form-item label-width="80px" label="路由缓存">
+        <el-alert title="清除路由缓存,并重新缓存,此操作能提高性能" type="success" :closable="false"></el-alert>
         <el-button
           type="danger"
           plain

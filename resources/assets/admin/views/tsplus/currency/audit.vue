@@ -5,6 +5,14 @@
     </div>
     <el-form class="filterForm" ref="cashFilterForm" :model="query" :inline="true">
       <el-form-item>
+        <el-select v-model="query.state">
+          <el-option value="" label="全部"></el-option>
+          <el-option :value="0" label="等待"></el-option>
+          <el-option :value="1" label="成功"></el-option>
+          <el-option :value="-1" label="失败"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-autocomplete
           :fetch-suggestions="queryUsers"
           v-model="query.username"
@@ -13,14 +21,6 @@
           value-key="name"
           :debounce="500"
         ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
-        <el-select v-model="query.state">
-          <el-option value="" label="全部"></el-option>
-          <el-option :value="0" label="等待"></el-option>
-          <el-option :value="1" label="成功"></el-option>
-          <el-option :value="-1" label="失败"></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button plain :loading="getLoading" @click="doSearch" type="primary">{{$t('admin.submit')}}</el-button>
@@ -68,10 +68,10 @@
         :label="$t('admin.operation')"
       >
         <template slot-scope="{row: cash}">
-          <el-button :loading="auditing === cash.id" @click="handleAudit(cash.id,1)" type="primary" plain
+          <el-button size="mini" :loading="auditing === cash.id" @click="handleAudit(cash.id,1)" type="primary" plain
                      :disabled="cash.state !== 0">通过
           </el-button>
-          <el-button :loading="auditing === cash.id" type="danger" plain @click="handleAudit(cash.id,-1)"
+          <el-button size="mini" :loading="auditing === cash.id" type="danger" plain @click="handleAudit(cash.id,-1)"
                      class="btn btn-danger btn-sm"
                      :disabled="cash.state !== 0">拒绝
           </el-button>

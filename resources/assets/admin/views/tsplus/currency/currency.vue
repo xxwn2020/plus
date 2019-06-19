@@ -6,16 +6,6 @@
     </div>
     <el-form ref="queryForm" class="filterForm" :model="query" :inline="true">
       <el-form-item>
-        <el-autocomplete
-          :fetch-suggestions="queryUsers"
-          v-model="query.name"
-          placeholder="可模糊搜索用户名"
-          @select="selectUser"
-          value-key="name"
-          :debounce="500"
-        ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
         <el-select v-model="query.action" placeholder="筛选流水类型">
           <el-option
             v-for="item in [{label: '全部', value: null},{label:'收入', value: 1},{label:'支出', value: -1}]"
@@ -36,19 +26,19 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.name"
+          placeholder="可模糊搜索用户名"
+          @select="selectUser"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
         <el-button @click="doSearch" :loading="getLoading" type="primary" plain>{{$t('admin.submit')}}</el-button>
       </el-form-item>
     </el-form>
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
     <el-table
       v-loading="getLoading"
       :data="page.data"

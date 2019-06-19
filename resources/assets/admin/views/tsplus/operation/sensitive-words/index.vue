@@ -12,9 +12,6 @@
       </div>
       <el-form ref="sensitiveFilterForm" :inline="true" :model="query" class="filterForm">
         <el-form-item>
-          <el-input v-model="query.word" placeholder="检索敏感词"></el-input>
-        </el-form-item>
-        <el-form-item>
           <el-select v-model="query.type">
             <el-option
               v-for="item in [{value: '', label: '全部'},{value: 'replace', label: '替换'},{value: 'warning', label: '提示'}]"
@@ -25,19 +22,12 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="doSearch" :loading="listLoading" type="primary">{{$t('admin.submit')}}</el-button>
+          <el-input v-model="query.word" placeholder="检索敏感词"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="doSearch" plain :loading="listLoading" type="primary">{{$t('admin.submit')}}</el-button>
         </el-form-item>
       </el-form>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
       <el-table v-loading="listLoading" :data="page.data" border stripe>
         <el-table-column
           v-for="col in [{id: 'id', label: '#'},{id: 'word', label: '敏感词'},{id: 'replace', label: '替换词'}]"
@@ -50,8 +40,8 @@
         </el-table-column>
         <el-table-column :label="$t('admin.operation')">
           <template slot-scope="{row: sensitive}">
-            <el-button plain type="primary" @click="openDialog(sensitive)">编辑</el-button>
-            <el-button plain type="danger" @click="delSensitive(sensitive)">删除</el-button>
+            <el-button size="mini" plain type="primary" @click="openDialog(sensitive)">编辑</el-button>
+            <el-button size="mini" plain type="danger" @click="delSensitive(sensitive)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

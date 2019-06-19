@@ -60,8 +60,8 @@
           </el-table-column>
           <el-table-column label="更多操作">
             <template slot-scope="scope">
-              <el-button plain type="primary" @click="editRole(scope.row)">编辑</el-button>
-              <el-button
+              <el-button size="mini" plain type="primary" @click="editRole(scope.row)">编辑</el-button>
+              <el-button size="mini"
                 v-if="!scope.row.non_delete"
                 type="danger"
                 plain

@@ -1,7 +1,6 @@
 const FinanceRouter = {
   path: '/finance',
-  // component: () => import(/* webpackChunkName: 'finance' */ '@/views/tsplus/finance/index'),
-  component: () => import(/* webpackChunkName: 'system' */ '@/layout'),
+  component: () => import(/* webpackChunkName: 'finance' */ '@/layout'),
   name: 'Finance-Wrap',
   meta: { title: 'finance.root', icon: 'tree' },
   redirect: '/finance/wallet/statistics',

@@ -18,7 +18,7 @@
         <el-table-column prop="updated_at" :label="$t('admin.updatedAt')"></el-table-column>
         <el-table-column :label="$t('admin.operation')">
           <template slot-scope="scope">
-            <el-button
+            <el-button size="mini"
               plain
               type="danger"
               @click="deleteAbility(scope.row)"

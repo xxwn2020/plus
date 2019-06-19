@@ -6,9 +6,6 @@
     </div>
     <el-form class="filterForm" ref="feedBackFilter" :model="query" :inline="true">
       <el-form-item>
-        <el-input v-model="query.keyword" placeholder="搜索内容"></el-input>
-      </el-form-item>
-      <el-form-item>
         <el-select v-model="query.type">
           <el-option
             v-for="type in types"
@@ -19,20 +16,13 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-input v-model="query.keyword" placeholder="搜索内容"></el-input>
+      </el-form-item>
+      <el-form-item>
         <el-button type="primary" plain :loading="getLoading" @click="doSearch">{{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
     <el-table
       v-loading="getLoading"
       :data="page.data"
@@ -69,7 +59,7 @@
         :label="$t('admin.operation')"
       >
         <template slot-scope="{row: feedback}">
-          <el-button type="danger" plain :loading="deleting === feedback.id" @click="delFeedback(feedback.id)">
+          <el-button size="mini" type="danger" plain :loading="deleting === feedback.id" @click="delFeedback(feedback.id)">
             {{$t('admin.delete')}}
           </el-button>
         </template>

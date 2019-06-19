@@ -11,16 +11,6 @@
         >新增分类
         </el-button>
       </div>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
       <el-table v-loading="listLoading" :data="categories" border stripe>
         <el-table-column prop="id" label="#"></el-table-column>
         <el-table-column prop="name" :label="$t('admin.tags.name')"></el-table-column>
@@ -28,14 +18,14 @@
         <el-table-column prop="weight" :label="$t('admin.tags.weight')"></el-table-column>
         <el-table-column :label="$t('admin.operation')">
           <template slot-scope="{row: category}">
-            <el-button
+            <el-button size="mini"
               plain
               type="primary"
               @click="editCategory(category)"
             >{{ $t('admin.edit') }}
             </el-button>
 
-            <el-button
+            <el-button size="mini"
               plain
               type="danger"
               @click="delCategory(category)"

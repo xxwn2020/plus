@@ -44,7 +44,7 @@
         <el-table-column
           label="">
           <template slot="header" slot-scope="scope">
-            <el-button plain @click="showAddDialog = true" type="text">添加IAP产品</el-button>
+            <el-button @click="showAddDialog = true" type="text">添加IAP产品</el-button>
           </template>
           <template slot-scope="{row}">
             <el-button plain :loading="deleting === row.product_id" @click="deleteIapItem(row.product_id)"

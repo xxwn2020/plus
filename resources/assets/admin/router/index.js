@@ -54,7 +54,7 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: '/management'
+    redirect: '/operation'
     // children: [
     //   {
     //     path: 'dashboard',
@@ -86,7 +86,8 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'hash',
+
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

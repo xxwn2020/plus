@@ -19,16 +19,6 @@
           <el-button @click="doSearch" :loading="getLoading" type="primary">{{$t('admin.submit')}}</el-button>
         </el-form-item>
       </el-form>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      ></el-pagination>
       <el-table
         v-loading="getLoading"
         :data="page.data"

@@ -5,16 +5,6 @@
     </div>
     <el-form class="el-form filterForm" :inline="true" ref="cashForm" :model="query">
       <el-form-item>
-        <el-autocomplete
-          :fetch-suggestions="queryUsers"
-          v-model="query.username"
-          placeholder="可模糊搜索用户名"
-          @select="handleUserSelect"
-          value-key="name"
-          :debounce="500"
-        ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
         <el-select v-model="query.status">
           <el-option value="all" label="全部"></el-option>
           <el-option :value="0" label="待审批"></el-option>
@@ -29,20 +19,20 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="可模糊搜索用户名"
+          @select="handleUserSelect"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
+      <el-form-item>
         <el-button plain type="primary" :loading="getLoading" @click="doSearch">{{$t('admin.search.root')}}
         </el-button>
       </el-form-item>
     </el-form>
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
     <el-table
       border
       class="el-table"
@@ -75,7 +65,7 @@
         label="状态">
         <template slot-scope="{row}">
           <template v-if="row.status === 1">
-            <el-button plain disabled type="success">{{$t('admin.state.accept')}}
+            <el-button size="mini" plain disabled type="success">{{$t('admin.state.accept')}}
             </el-button>
             <el-alert
               class="remark"
@@ -86,7 +76,7 @@
             </el-alert>
           </template>
           <template v-else-if="row.status === 2">
-            <el-button plain disabled type="danger">{{$t('admin.state.refuse')}}
+            <el-button size="mini" plain disabled type="danger">{{$t('admin.state.refuse')}}
             </el-button>
             <el-alert
               class="remark"
@@ -97,7 +87,7 @@
             </el-alert>
           </template>
           <template v-else>
-            <el-button plain disabled type="info">{{$t('admin.state.waiting')}}</el-button>
+            <el-button size="mini" plain disabled type="info">{{$t('admin.state.waiting')}}</el-button>
           </template>
         </template>
       </el-table-column>
@@ -112,11 +102,11 @@
       >
         <template slot-scope="{row}">
           <template v-if="row.status === 0">
-            <el-button plain :loading="loadingItem === row.id" @click="operation(row.id, 'passed')"
+            <el-button size="mini" plain :loading="loadingItem === row.id" @click="operation(row.id, 'passed')"
                        type="primary"
             >同意
             </el-button>
-            <el-button plain :loading="loadingItem === row.id" @click="operation(row.id, 'refuse')"
+            <el-button size="mini" plain :loading="loadingItem === row.id" @click="operation(row.id, 'refuse')"
                        type="danger"
             >拒绝
             </el-button>

@@ -5,16 +5,6 @@
     </div>
     <el-form class="filterForm" ref="rewardsFilters" :model="query" :inline="true">
       <el-form-item>
-        <el-autocomplete
-          :fetch-suggestions="queryUsers"
-          v-model="query.username"
-          placeholder="打赏者，模糊搜索"
-          @select="selectUser"
-          value-key="name"
-          :debounce="500"
-        ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
         <el-select v-model="query.type">
           <el-option
             v-for="type in types"
@@ -37,23 +27,22 @@
           :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
-
+      <el-form-item>
+        <el-autocomplete
+          :fetch-suggestions="queryUsers"
+          v-model="query.username"
+          placeholder="打赏者，模糊搜索"
+          @select="selectUser"
+          value-key="name"
+          :debounce="500"
+        ></el-autocomplete>
+      </el-form-item>
       <el-form-item>
         <el-button @click="doSearch" :loading="getLoading" type="primary" plain>
           {{$t('admin.submit')}}
         </el-button>
       </el-form-item>
     </el-form>
-    <el-pagination
-      class="top"
-      @size-change="handleSizeChange"
-      @current-change="pageChange"
-      :current-page="page.current_page"
-      :page-sizes="[15, 30, 50]"
-      :page-size="query.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.total"
-    ></el-pagination>
     <el-table
       v-loading="getLoading"
       :data="page.data"

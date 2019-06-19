@@ -24,16 +24,6 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <el-pagination
-        class="top"
-        @size-change="handleSizeChange"
-        @current-change="pageChange"
-        :current-page="page.current_page"
-        :page-sizes="[15, 30, 50]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      />
       <el-table
         v-loading="getLoading"
         :data="page.data"
@@ -77,10 +67,10 @@
           :label="$t('admin.operation')"
         >
           <template slot-scope="{row:ad}">
-            <el-button plain @click="$router.push({name: 'Promotion-EditAd', params: {id: ad.id}})" plain
+            <el-button size="mini" plain @click="$router.push({name: 'Promotion-EditAd', params: {id: ad.id}})" plain
                        type="primary">{{$t('admin.edit')}}
             </el-button>
-            <el-button plain :loading="deleting === ad.id" @click="delAd(ad.id)" plain type="danger">
+            <el-button size="mini" plain :loading="deleting === ad.id" @click="delAd(ad.id)" plain type="danger">
               {{$t('admin.delete')}}
             </el-button>
           </template>
