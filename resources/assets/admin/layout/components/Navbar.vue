@@ -17,7 +17,7 @@
           <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
 
-        <lang-select class="right-menu-item hover-effect"/>
+        <!--        <lang-select class="right-menu-item hover-effect"/>-->
 
       </template>
 
@@ -34,6 +34,9 @@
           </router-link>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided>
+            <el-link :underline="false" type="info" href="/">返回前台</el-link>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
