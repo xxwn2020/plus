@@ -8,7 +8,7 @@ export default {
 
     /** TSPlust */
     packages: {
-      root: '扩展包',
+      root: '应用',
       list: '应用列表',
       manage: '应用管理'
     },
@@ -19,7 +19,7 @@ export default {
     },
     reports: '举报管理',
     finance: {
-      root: '财务管理',
+      root: '财务',
       wallet: '钱包管理',
       flow: '钱包流水',
       statistics: '统 计',
@@ -57,7 +57,7 @@ export default {
       turnover: '打赏清单'
     },
     operation: {
-      root: '运营管理',
+      root: '运营',
       basic: '设置',
       sensitiveWords: '敏感词',
       areas: '地区管理',
@@ -82,7 +82,7 @@ export default {
     },
 
     system: {
-      root: '系统配置',
+      root: '配置',
       info: '系统信息',
       registerSetting: '注册设置',
       certification: '认证设置',

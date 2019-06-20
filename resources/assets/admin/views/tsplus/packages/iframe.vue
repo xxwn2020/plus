@@ -1,10 +1,9 @@
 <style lang="css" module>
   .appIframe {
     position: absolute;
-    top: 0;
+    top: 84px;
     height: 100%;
-    min-width: 100%;
-    max-height: 100%;
+    width: 100%;
     overflow: auto;
     border: none;
   }

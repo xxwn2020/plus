@@ -3,6 +3,7 @@ export default {
   component: () => import(/* webpackChunkName: 'package' */ '@/layout'),
   redirect: '/packages/list',
   name: 'Package-Container',
+  meta: { title: 'packages.root' },
   children: [
     {
       path: 'list',

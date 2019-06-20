@@ -3,6 +3,7 @@ export default {
   name: 'Templates',
   meta: { title: 'templates.root' },
   component: () => import(/* webpackChunkName: 'template' */ '@/layout'),
+  redirect: '/templates/about-us',
   children: [
     {
       path: 'about-us',
