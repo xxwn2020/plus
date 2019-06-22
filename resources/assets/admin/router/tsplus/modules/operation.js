@@ -5,27 +5,35 @@ const OperationRouter = {
   component: Layout,
   name: 'Operation',
   redirect: '/operation/users',
-  meta: { title: 'operation.root', icon: 'dashboard' },
+  meta: { title: 'operation.root', icon: 'iconyunying' },
   children: [
     /* 用户 */
     {
       path: 'users',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/users/users'),
       name: 'management-users',
-      meta: { title: 'management.users.root' },
-      redirect: '/operation/users/list',
+      meta: { title: 'management.users.root', icon: 'iconyonghu' },
+      redirect: '/operation/users/users-list',
       children: [
         {
-          path: 'list',
+          path: 'users-list',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/users/list'),
           name: 'management-users-list',
-          meta: { title: 'management.users.list', tabs: true }
+          meta: {
+            title: 'management.users.list',
+            tabs: true,
+            icon: 'iconyonghu'
+          }
         },
         {
           path: 'certifications',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/users/certifications'),
           name: 'management-users-certifications',
-          meta: { title: 'management.users.certificated', tabs: true }
+          meta: {
+            title: 'management.users.certificated',
+            tabs: true,
+            icon: 'iconrenzheng'
+          }
         },
         {
           path: 'certifications/add',
@@ -53,13 +61,21 @@ const OperationRouter = {
           path: 'roles',
           name: 'management-users-roles',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/users/roles'),
-          meta: { title: 'management.users.roles', tabs: true }
+          meta: {
+            title: 'management.users.roles',
+            tabs: true,
+            icon: 'iconjiaoseshouquan'
+          }
         },
         {
           path: 'abilities',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/users/abilities'),
           name: 'management-users-abilities',
-          meta: { title: 'management.users.abilities', tabs: true }
+          meta: {
+            title: 'management.users.abilities',
+            tabs: true,
+            icon: 'iconjiaoseshouquan'
+          }
         },
         {
           path: 'edit/:uid',
@@ -82,11 +98,11 @@ const OperationRouter = {
       path: 'tags',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/tags/index'),
       name: 'management-tags',
-      meta: { title: 'management.tags.root' },
-      redirect: '/management/tags/list',
+      meta: { title: 'management.tags.root', icon: 'iconhuiyuanbiaoqian' },
+      redirect: '/management/tags/tags-list',
       children: [
         {
-          path: 'list',
+          path: 'tags-list',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/tags/list'),
           name: 'Management-Tags-List',
           meta: { title: 'management.tags.list', tabs: true }
@@ -105,31 +121,31 @@ const OperationRouter = {
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/index'),
       name: 'Currency-Container',
       redirect: '/operation/currency-container/turnover',
-      hidden: true,
+      meta: { title: 'currency.root', icon: 'iconjifen' },
       children: [
         {
           path: 'statistics',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/statistics'),
           name: 'Currency-Statistics',
-          meta: { title: 'currency.statistics', tabs: true }
+          meta: { title: 'currency.statistics', tabs: true, icon: 'iconjifen' }
         },
         {
           path: 'turnover',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/currency'),
           name: 'Currency-Turnover',
-          meta: { title: 'currency.turnover', tabs: true }
+          meta: { title: 'currency.turnover', tabs: true, icon: 'iconzijinliushui' }
         },
         {
           path: 'config',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/config'),
           name: 'Currency-Config',
-          meta: { title: 'currency.config', tabs: true }
+          meta: { title: 'currency.config', tabs: true, icon: 'iconpeizhi' }
         },
         {
           path: 'audit',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/audit'),
           name: 'Currency-Audit',
-          meta: { title: 'currency.audit', tabs: true }
+          meta: { title: 'currency.audit', tabs: true, icon: 'iconrenzheng' }
         }
       ]
     },
@@ -138,7 +154,7 @@ const OperationRouter = {
       path: 'rewards-container',
       name: 'Rewards-Container',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/reward/index'),
-      hidden: true,
+      meta: {title: 'rewards.root', icon: 'icondashang'},
       redirect: '/operation/rewards-container/statistics',
       children: [
         {
@@ -159,7 +175,7 @@ const OperationRouter = {
     {
       path: 'ad',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/promotion/ad'),
-      meta: { title: 'promotion.ad' },
+      meta: { title: 'promotion.ad', icon: 'iconguanggao1' },
       name: 'Promotion-Ad'
     },
     {
@@ -178,26 +194,17 @@ const OperationRouter = {
     },
     /* 举报 */
     {
-      path: 'list',
+      path: 'reports-list',
       name: 'Reports-List',
-      meta: { title: 'reports' },
+      meta: { title: 'reports', icon: 'iconjubao' },
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/report/report')
     },
     /* 意见 */
     {
-      path: 'feedback-container',
-      name: 'Feedback-container',
-      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/feedback/index'),
-      hidden: true,
-      redirect: '/feedback/feedback-container/list',
-      children: [
-        {
-          path: 'list',
-          name: 'Feedback-List',
-          component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/feedback/list'),
-          meta: { title: 'feedback' }
-        }
-      ]
+      path: 'feedback-list',
+      name: 'Feedback-List',
+      component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/feedback/list'),
+      meta: { title: 'feedback', icon: 'iconyijianfankui' }
     }
   ]
 }

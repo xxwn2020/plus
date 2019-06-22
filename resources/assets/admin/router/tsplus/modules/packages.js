@@ -3,12 +3,12 @@ export default {
   component: () => import(/* webpackChunkName: 'package' */ '@/layout'),
   redirect: '/packages/list',
   name: 'Package-Container',
-  meta: { title: 'packages.root' },
+  meta: { title: 'packages.root', icon: 'iconyingyong' },
   children: [
     {
       path: 'list',
       component: () => import(/* webpackChunkName: 'package' */ '@/views/tsplus/packages/index'),
-      meta: { title: 'packages.list' },
+      meta: { title: 'packages.list', icon: 'iconapplication' },
       name: 'Package-List'
     },
     {

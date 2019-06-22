@@ -2,7 +2,7 @@ export default {
   path: '/currency',
   component: () => import(/* webpackChunkName: 'currency' */ '@/layout'),
   name: 'Currency',
-  meta: { title: 'currency.root' },
+  meta: { title: 'currency.root', icon: 'iconjifen', alwaysShow: true },
   redirect: '/currency/container',
   children: [
     {

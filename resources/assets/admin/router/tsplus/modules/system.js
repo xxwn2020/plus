@@ -2,7 +2,7 @@ const SystemRouter = {
   path: '/system',
   component: () => import(/* webpackChunkName: 'system' */ '@/layout'),
   name: 'System',
-  meta: { title: 'system.root', icon: 'tree' },
+  meta: { title: 'system.root', icon: 'iconpeizhi' },
   redirect: '/system/info',
   children: [
     {

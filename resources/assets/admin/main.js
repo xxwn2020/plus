@@ -20,6 +20,7 @@ import mixins from './mixins'
 
 import * as filters from './filters' // error log
 import NavBarInPage from '@/views/tsplus/components/NavBarInPage'
+import '@/icons/iconfont.css'
 
 Vue.use(Api)
 Vue.mixin(mixins)

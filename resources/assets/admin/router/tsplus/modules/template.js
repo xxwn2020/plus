@@ -1,7 +1,7 @@
 export default {
   path: '/templates',
   name: 'Templates',
-  meta: { title: 'templates.root' },
+  meta: { title: 'templates.root', icon: 'iconguanyuwomen' },
   component: () => import(/* webpackChunkName: 'template' */ '@/layout'),
   redirect: '/templates/about-us',
   children: [

@@ -9,10 +9,10 @@ export default {
       name: 'Feedback-container',
       component: () => import(/* webpackChunkName: 'feedback' */ '@/views/tsplus/feedback/index'),
       hidden: true,
-      redirect: '/feedback/container/list',
+      redirect: '/feedback/container/feedback-list',
       children: [
         {
-          path: 'list',
+          path: 'feedback-list',
           name: 'Feedback-List',
           component: () => import(/* webpackChunkName: 'feedback' */ '@/views/tsplus/feedback/list'),
           meta: { title: 'feedback' }

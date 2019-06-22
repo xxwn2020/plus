@@ -2,7 +2,7 @@ const FinanceRouter = {
   path: '/finance',
   component: () => import(/* webpackChunkName: 'finance' */ '@/layout'),
   name: 'Finance-Wrap',
-  meta: { title: 'finance.root', icon: 'tree' },
+  meta: { title: 'finance.root', icon: 'iconcaiwu' },
   redirect: '/finance/wallet/statistics',
   children: [
     {
