@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Throwable;
 use RuntimeException;
 use Tymon\JWTAuth\JWTAuth;
@@ -31,6 +30,7 @@ use function Zhiyi\Plus\setting;
 use function Zhiyi\Plus\username;
 use Zhiyi\Plus\Models\VerificationCode;
 use Zhiyi\Plus\Http\Requests\API2\StoreUserPost;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class UserController extends Controller
