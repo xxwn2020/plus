@@ -21,24 +21,27 @@ declare(strict_types=1);
 namespace Zhiyi\Plus\Admin\Controllers\Setting;
 
 use Illuminate\Http\Response;
-use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Admin\Controllers\Controller;
 use Zhiyi\Plus\Admin\Requests\SetEasemob as SetEasemobRequest;
+use function Zhiyi\Plus\setting;
 
 class Easemob extends Controller
 {
     /**
      * Get configure.
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function getConfigure(): JsonResponse
+    public function getConfigure()
+    : JsonResponse
     {
         $settings = setting('user', 'vendor:easemob', [
-            'open' => false,
-            'appKey' => '',
-            'clientId' => '',
+            'open'         => false,
+            'appKey'       => '',
+            'clientId'     => '',
             'clientSecret' => '',
+            'prefix'       => 'ts_',
             'registerType' => 0,
         ]);
 
@@ -47,17 +50,21 @@ class Easemob extends Controller
 
     /**
      * set configure.
-     * @param \Zhiyi\Plus\Admin\Requests\SetEasemob $request
-     * @return \Illuminate\Http\Response
+     *
+     * @param  SetEasemobRequest  $request
+     *
+     * @return Response
+     * @throws \Throwable
      */
     public function setConfigure(SetEasemobRequest $request)
     {
         setting('user')->set('vendor:easemob', [
-            'open' => (bool) $request->input('open'),
-            'appKey' => $request->input('appKey'),
-            'clientId' => $request->input('clientId'),
+            'open'         => (bool) $request->input('open'),
+            'appKey'       => $request->input('appKey'),
+            'clientId'     => $request->input('clientId'),
             'clientSecret' => $request->input('clientSecret'),
             'registerType' => (int) $request->input('registerType'),
+            'prefix'       => (string) $request->input('prefix'),
         ]);
 
         return new Response('', Response::HTTP_NO_CONTENT);

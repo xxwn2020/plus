@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Throwable;
 use RuntimeException;
 use Tymon\JWTAuth\JWTAuth;
@@ -140,7 +141,12 @@ class UserController extends Controller
     /**
      * 创建用户.
      *
+     * @param  StoreUserPost  $request
+     * @param  ResponseFactoryContract  $response
+     * @param  JWTAuth  $auth
+     *
      * @return mixed
+     * @throws BindingResolutionException
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function store(

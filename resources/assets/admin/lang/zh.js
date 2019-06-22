@@ -433,7 +433,8 @@ export default {
         switch: '开关',
         clientId: 'Client ID',
         clientSecret: 'Client Secret',
-        registerType: '注册方式'
+        registerType: '注册方式',
+        prefix: '用户前缀'
       },
       certificate: {
         root: '',

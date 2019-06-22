@@ -29,6 +29,9 @@
       <el-form-item :label="$t('admin.userConfig.thirdParts.clientSecret')" prop="clientSecret">
         <el-input v-model="form.clientSecret"></el-input>
       </el-form-item>
+      <el-form-item :label="$t('admin.userConfig.thirdParts.prefix')" prop="prefix">
+        <el-input v-model="form.prefix" placeholder="用于区分在一个应用下有多个系统公用的问题"></el-input>
+      </el-form-item>
       <el-form-item :label="$t('admin.userConfig.thirdParts.registerType')" prop="registerType">
         <el-select v-model="form.registerType">
           <el-option
@@ -56,6 +59,7 @@
         appKey: '',
         clientId: '',
         clientSecret: '',
+        prefix: 'ts_',
         registerType: 0
       },
       getLoading: false,

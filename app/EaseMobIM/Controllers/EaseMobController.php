@@ -29,40 +29,39 @@ class EaseMobController
 {
     // Client ID
     protected $client_id;
-
     // Client Secret
     protected $client_secret;
-
     // OrgName
     protected $org_name;
-
     // AppName
     protected $app_name;
-
     // 环信请求地址
     protected $url;
-
     // 环信注册类型  0-开放注册，1-授权注册
     protected $register_type;
-
     // 环信是否开启
     protected $open = false;
+    // 用户前缀
+    protected $prefix;
 
     protected function getConfig($callback)
     {
         $settings = setting('user', 'vendor:easemob', [
-            'open' => false,
-            'appKey' => '',
-            'clientId' => '',
+            'open'         => false,
+            'appKey'       => '',
+            'clientId'     => '',
             'clientSecret' => '',
             'registerType' => 0,
+            'prefix'       => 'ts_',
         ]);
         $this->open = $settings['open'];
         $this->client_id = $settings['clientId'];
         $this->client_secret = $settings['clientSecret'];
         $this->register_type = $settings['registerType'];
-
-        if (! $this->open || ! $this->client_id || ! $this->client_secret || ! $settings['appKey']) {
+        $this->prefix = $settings['prefix'];
+        if (! $this->open || ! $this->client_id || ! $this->client_secret
+            || ! $settings['appKey']
+        ) {
             return response()->json([
                 'message' => ['环信未开启或者配置信息不全'],
             ])->setStatusCode(500);
@@ -73,7 +72,8 @@ class EaseMobController
         $this->org_name = $appKey[0] ?? '';
         $this->app_name = $appKey[1] ?? '';
         if (! empty($this->org_name) && ! empty($this->app_name)) {
-            $this->url = 'https://a1.easemob.com/'.$this->org_name.'/'.$this->app_name.'/';
+            $this->url = 'https://a1.easemob.com/'.$this->org_name.'/'
+                .$this->app_name.'/';
         }
 
         return $callback();
@@ -82,8 +82,8 @@ class EaseMobController
     public function getToken()
     {
         $options = [
-            'grant_type' => 'client_credentials',
-            'client_id' => $this->client_id,
+            'grant_type'    => 'client_credentials',
+            'client_id'     => $this->client_id,
             'client_secret' => $this->client_secret,
         ];
         $url = $this->url.'token';
@@ -99,7 +99,8 @@ class EaseMobController
     /**
      * 开放注册模式.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return string
      * @author ZsyD<1251992018@qq.com>
      */
@@ -107,7 +108,7 @@ class EaseMobController
     {
         $callback = function () use ($request) {
             $user_id = $request->user_id ?: $request->user()->id;
-            $options['username'] = $user_id;
+            $options['username'] = $this->prefix.$user_id;
             $options['password'] = $this->getImPwdHash($user_id);
             $url = $this->url.'users';
 
@@ -137,6 +138,7 @@ class EaseMobController
      * 获取用户密码.
      *
      * @param $user_id
+     *
      * @return mixed
      * @author ZsyD<1251992018@qq.com>
      */
@@ -150,7 +152,8 @@ class EaseMobController
     /**
      * 授权注册.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author ZsyD<1251992018@qq.com>
      */
@@ -163,7 +166,7 @@ class EaseMobController
             $user_id = $request->user_id ?: $request->user()->id;
             $url = $this->url.'users';
             $options = [
-                'username' => $user_id,
+                'username' => $this->prefix.$user_id,
                 'password' => $this->getImPwdHash($user_id),
             ];
             $data['body'] = json_encode($options);
@@ -193,7 +196,8 @@ class EaseMobController
     /**
      * 批量注册用户.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author ZsyD<1251992018@qq.com>
      */
@@ -201,7 +205,8 @@ class EaseMobController
     {
         $callback = function () use ($request) {
             $user_ids = $request->user_ids ?: $request->input('user_ids');
-            $user_ids = is_array($user_ids) ? $user_ids : explode(',', $user_ids);
+            $user_ids = is_array($user_ids) ? $user_ids
+                : explode(',', $user_ids);
             $options = [];
             $users = User::when($user_ids, function ($query) use ($user_ids) {
                 return $query->whereIn('id', $user_ids);
@@ -211,7 +216,7 @@ class EaseMobController
 
             foreach ($users as $user) {
                 $options[] = [
-                    'username' => $user->id,
+                    'username' => $this->prefix.$user->id,
                     'password' => $user->getImPwdHash(),
                 ];
             }
@@ -244,7 +249,8 @@ class EaseMobController
     /**
      * 重置环信密码.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author ZsyD<1251992018@qq.com>
      */
@@ -282,7 +288,7 @@ class EaseMobController
             } else {
                 // 用户存在时，重置环信密码
                 $user_id = $request->user_id ?: $request->user()->id;
-                $url = $this->url.'users/'.$user_id.'/password';
+                $url = $this->url.'users/'.$this->prefix.$user_id.'/password';
                 $options = [
                     'oldpassword' => $request->old_pwd_hash,
                     'newpassword' => $this->getImPwdHash($user_id),
@@ -316,7 +322,8 @@ class EaseMobController
     /**
      * 获取环信用户信息，无则新注册一个.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author ZsyD<1251992018@qq.com>
      */
@@ -324,7 +331,7 @@ class EaseMobController
     {
         $callback = function () use ($request) {
             $user_id = $request->user_id ?: $request->user()->id;
-            $url = $this->url.'users/'.$user_id;
+            $url = $this->url.'users/'.$this->prefix.$user_id;
             $data['headers'] = [
                 'Authorization' => $this->getToken(),
             ];
@@ -351,7 +358,7 @@ class EaseMobController
             }
 
             return response()->json([
-                'message' => ['成功'],
+                'message'     => ['成功'],
                 'im_pwd_hash' => $this->getImPwdHash($user_id),
             ])->setStatusCode(201);
         };
@@ -362,7 +369,8 @@ class EaseMobController
     /**
      * 删除单个用户.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
      * @author ZsyD<1251992018@qq.com>
      */
@@ -398,16 +406,22 @@ class EaseMobController
     /**
      * 发送普通消息 [群组相关时需要].
      *
-     * @param string $content       消息内容
-     * @param array  $target        消息发送对象
-     * @param string $from          消息发送者
-     * @param string $target_type   users 给用户发消息。chatgroups: 给群发消息，chatrooms: 给聊天室发消息
-     * @param array  $ext           扩展信息
+     * @param  string  $content  消息内容
+     * @param  array  $target  消息发送对象
+     * @param  string  $from  消息发送者
+     * @param  string  $target_type  users 给用户发消息。chatgroups: 给群发消息，chatrooms: 给聊天室发消息
+     * @param  array  $ext  扩展信息
+     *
      * @return bool
      * @author ZsyD<1251992018@qq.com>
      */
-    public function sendCmd(string $content = '', array $target = [], string $from = 'admin', string $target_type = 'chatgroups', array $ext = [])
-    {
+    public function sendCmd(
+        string $content = '',
+        array $target = [],
+        string $from = 'admin',
+        string $target_type = 'chatgroups',
+        array $ext = []
+    ) {
         $url = $this->url.'messages';
         $data['headers'] = [
             'Authorization' => $this->getToken(),
@@ -415,13 +429,13 @@ class EaseMobController
         $data['http_errors'] = false;
         $option = [
             'target_type' => $target_type,
-            'target' => $target,
-            'msg' => [
+            'target'      => $target,
+            'msg'         => [
                 'type' => 'txt',
-                'msg' => $content,
+                'msg'  => $content,
             ],
-            'from' => $from,
-            'ext' => (object) $ext,
+            'from'        => $from,
+            'ext'         => (object) $ext,
         ];
         $data['body'] = json_encode($option);
         $Client = new Client();
@@ -437,9 +451,10 @@ class EaseMobController
     /**
      * 为未注册环信用户注册环信（兼容老用户）.
      *
-     * @author ZsyD<1251992018@qq.com>
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return mixed
+     * @author ZsyD<1251992018@qq.com>
      */
     public function registerOldUsers(Request $request)
     {
@@ -462,7 +477,8 @@ class EaseMobController
                 ])->setStatusCode(500);
             }
 
-            $registered = collect($reCon->entities)->pluck('username')->filter();
+            $registered = collect($reCon->entities)->pluck('username')
+                ->filter();
             $ids = User::whereNull('deleted_at')->pluck('id');
             $unregistered = $ids->diff($registered);
 
@@ -475,7 +491,7 @@ class EaseMobController
 
                         if ($result_->getStatusCode() != 201) {
                             return response()->json([
-                                'message' => [json_decode($result_->getContent())->message],
+                                'message'      => [json_decode($result_->getContent())->message],
                                 'unregistered' => $unregistered,
                             ])->setStatusCode(500);
                         }
@@ -487,7 +503,7 @@ class EaseMobController
 
                     if ($result_->getStatusCode() != 201) {
                         return response()->json([
-                            'message' => [json_decode($result_->getContent())->message],
+                            'message'      => [json_decode($result_->getContent())->message],
                             'unregistered' => $unregistered,
                         ])->setStatusCode(500);
                     }
@@ -531,7 +547,7 @@ class EaseMobController
 
             return response()->json([
                 'message' => ['获取成功'],
-                'url' => $url,
+                'url'     => $url,
             ])->setStatusCode(500);
         };
 
