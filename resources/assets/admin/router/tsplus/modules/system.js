@@ -15,14 +15,14 @@ const SystemRouter = {
       path: 'user',
       name: 'System-User-Setting',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user'),
-      meta: { title: 'system.user.root', icon: 'iconjiaoseshouquan' },
+      meta: { title: 'system.user.root', icon: 'iconyonghuguanli1' },
       redirect: '/system/user/configure',
       children: [
         {
           path: 'configure',
           name: 'System-User-Setting-Configure',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user/config'),
-          meta: { title: 'system.user.config', icon: 'people', tabs: true }
+          meta: { title: 'system.user.config', tabs: true , icon: 'iconyonghu'}
         },
         {
           path: 'authentication',
@@ -30,7 +30,7 @@ const SystemRouter = {
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user/certificate/certificate'),
           meta: {
             title: 'system.user.certification',
-            icon: 'people',
+            icon: 'iconrenzheng',
             tabs: true
           }
         },
@@ -40,7 +40,7 @@ const SystemRouter = {
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user/thirdParts'),
           meta: {
             title: 'system.user.thirdParts.root',
-            icon: 'people',
+            icon: 'icondisanfang',
             tabs: true
           }
         }

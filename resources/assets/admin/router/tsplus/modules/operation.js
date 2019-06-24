@@ -127,7 +127,7 @@ const OperationRouter = {
           path: 'statistics',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/statistics'),
           name: 'Currency-Statistics',
-          meta: { title: 'currency.statistics', tabs: true, icon: 'iconjifen' }
+          meta: { title: 'currency.statistics', tabs: true, icon: 'iconzhandianshujutongji' }
         },
         {
           path: 'turnover',
@@ -139,13 +139,13 @@ const OperationRouter = {
           path: 'config',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/config'),
           name: 'Currency-Config',
-          meta: { title: 'currency.config', tabs: true, icon: 'iconpeizhi' }
+          meta: { title: 'currency.config', tabs: true, icon: 'iconpeizhishujuyuan' }
         },
         {
           path: 'audit',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/currency/audit'),
           name: 'Currency-Audit',
-          meta: { title: 'currency.audit', tabs: true, icon: 'iconrenzheng' }
+          meta: { title: 'currency.audit', tabs: true, icon: 'icontixian' }
         }
       ]
     },
@@ -161,13 +161,13 @@ const OperationRouter = {
           path: 'statistics',
           name: 'Rewards-Statistics',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/reward/statistics'),
-          meta: { title: 'rewards.statistics', tabs: true }
+          meta: { title: 'rewards.statistics', tabs: true , icon: 'iconzhifushoukuan'}
         },
         {
           path: 'turnover',
           name: 'Rewards-Turnover',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/reward/turnover'),
-          meta: { title: 'rewards.turnover', tabs: true }
+          meta: { title: 'rewards.turnover', tabs: true , icon: 'iconliuliangqianbao'}
         }
       ]
     },

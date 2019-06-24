@@ -11,7 +11,7 @@ const managementRouter = {
       path: 'container',
       component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/components/Container'),
       name: 'Management-Container',
-      meta: { title: 'operation.basic', icon: 'iconpeizhi' },
+      meta: { title: 'operation.basic', icon: 'iconicon-test' },
       redirect: '/management/container/siteInfo',
       children: [
         {
@@ -22,7 +22,7 @@ const managementRouter = {
         }, {
           path: 'setting',
           component: () => import(/* webpackChunkName: 'management' */ '@/views/tsplus/operation/basic/setting'),
-          meta: { title: 'operation.site.root', tabs: true },
+          meta: { title: 'operation.site.root', tabs: true, icon: 'iconpeizhi' },
           name: 'Operation-Basic-Setting'
         }, {
           path: 'cache',

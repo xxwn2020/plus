@@ -29,7 +29,7 @@ export default {
     management: {
       root: '管理',
       users: {
-        root: '用户管理',
+        root: '用户',
         list: '用户列表',
         recommend: '推荐用户',
         certificated: '认证用户',
@@ -38,7 +38,7 @@ export default {
         edit: '编辑用户'
       },
       tags: {
-        root: '标签管理',
+        root: '标签',
         categories: '标签分类',
         list: '标签列表',
         add: '添加标签'
@@ -52,7 +52,7 @@ export default {
       }
     },
     rewards: {
-      root: '打赏管理',
+      root: '打赏',
       statistics: '打赏统计',
       turnover: '打赏清单'
     },
@@ -124,7 +124,7 @@ export default {
     },
     promotion: {
       root: '推广',
-      ad: '广告管理',
+      ad: '广告',
       addAd: '添加广告',
       editAd: '编辑广告'
     }
@@ -469,7 +469,7 @@ export default {
         '当前页数'
     },
     reports: {
-      root: '举报管理'
+      root: '举报'
     },
     promotion: {
       ad: {
