@@ -39,3 +39,13 @@ form.el-form {
     margin-bottom: 15px;
   }
 }
+.el-card{
+  border: none;
+  &__body{
+    padding: 20px 5px;
+  }
+}
+
+.iconfont{
+  margin-right: 5px;
+}

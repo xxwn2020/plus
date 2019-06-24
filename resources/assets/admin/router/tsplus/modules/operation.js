@@ -5,14 +5,14 @@ const OperationRouter = {
   component: Layout,
   name: 'Operation',
   redirect: '/operation/users',
-  meta: { title: 'operation.root', icon: 'iconyunying' },
+  meta: { title: 'operation.root', icon: 'iconyunying1' },
   children: [
     /* 用户 */
     {
       path: 'users',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/users/users'),
       name: 'management-users',
-      meta: { title: 'management.users.root', icon: 'iconyonghu' },
+      meta: { title: 'management.users.root', icon: 'iconicon-user' },
       redirect: '/operation/users/users-list',
       children: [
         {
@@ -22,7 +22,7 @@ const OperationRouter = {
           meta: {
             title: 'management.users.list',
             tabs: true,
-            icon: 'iconyonghu'
+            icon: 'iconyonghuguanli'
           }
         },
         {
@@ -64,7 +64,7 @@ const OperationRouter = {
           meta: {
             title: 'management.users.roles',
             tabs: true,
-            icon: 'iconjiaoseshouquan'
+            icon: 'iconyonghujiaoseweihu'
           }
         },
         {
@@ -74,7 +74,7 @@ const OperationRouter = {
           meta: {
             title: 'management.users.abilities',
             tabs: true,
-            icon: 'iconjiaoseshouquan'
+            icon: 'iconyonghuguanli1'
           }
         },
         {
@@ -98,20 +98,20 @@ const OperationRouter = {
       path: 'tags',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/tags/index'),
       name: 'management-tags',
-      meta: { title: 'management.tags.root', icon: 'iconhuiyuanbiaoqian' },
+      meta: { title: 'management.tags.root', icon: 'iconbiaoqian1' },
       redirect: '/management/tags/tags-list',
       children: [
         {
           path: 'tags-list',
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/tags/list'),
           name: 'Management-Tags-List',
-          meta: { title: 'management.tags.list', tabs: true }
+          meta: { title: 'management.tags.list', tabs: true, icon: 'iconhuiyuanbiaoqian' }
         },
         {
           component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/management/tags/categories'),
           path: 'categories',
           name: 'Management-Tags-Categories',
-          meta: { title: 'management.tags.categories', tabs: true }
+          meta: { title: 'management.tags.categories', tabs: true, icon: 'iconbiaoqian' }
         }
       ]
     },
@@ -154,7 +154,7 @@ const OperationRouter = {
       path: 'rewards-container',
       name: 'Rewards-Container',
       component: () => import(/* webpackChunkName: 'operation' */ '@/views/tsplus/reward/index'),
-      meta: {title: 'rewards.root', icon: 'icondashang'},
+      meta: {title: 'rewards.root', icon: 'icondashang1'},
       redirect: '/operation/rewards-container/statistics',
       children: [
         {

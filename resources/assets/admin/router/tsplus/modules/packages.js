@@ -8,7 +8,7 @@ export default {
     {
       path: 'list',
       component: () => import(/* webpackChunkName: 'package' */ '@/views/tsplus/packages/index'),
-      meta: { title: 'packages.list', icon: 'iconapplication' },
+      meta: { title: 'packages.list', icon: 'iconyingyong1' },
       name: 'Package-List'
     },
     {

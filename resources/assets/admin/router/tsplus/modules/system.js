@@ -2,20 +2,20 @@ const SystemRouter = {
   path: '/system',
   component: () => import(/* webpackChunkName: 'system' */ '@/layout'),
   name: 'System',
-  meta: { title: 'system.root', icon: 'iconpeizhi' },
+  meta: { title: 'system.root', icon: 'iconguanlishitu' },
   redirect: '/system/info',
   children: [
     {
       path: 'info',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/systemInfo'),
       name: 'System-Info',
-      meta: { title: 'system.info', icon: 'example' }
+      meta: { title: 'system.info', icon: 'iconzhandianshujutongji' }
     },
     {
       path: 'user',
       name: 'System-User-Setting',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/user'),
-      meta: { title: 'system.user.root', icon: 'people' },
+      meta: { title: 'system.user.root', icon: 'iconjiaoseshouquan' },
       redirect: '/system/user/configure',
       children: [
         {
@@ -50,32 +50,32 @@ const SystemRouter = {
       path: 'payment-setting',
       name: 'System-Payment-Setting',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment'),
-      meta: { title: 'system.payment.root', icon: 'money' },
+      meta: { title: 'system.payment.root', icon: 'iconzhifufangshi' },
       redirect: '/system/payment-setting/basic',
       children: [
         {
           path: 'basic',
           name: 'System-Payment-Setting-Basic',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/basic'),
-          meta: { title: 'system.payment.secretRequired', tabs: true }
+          meta: { title: 'system.payment.secretRequired', tabs: true , icon: 'iconzhifushoukuan'}
         },
         {
           path: 'native',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/native'),
           name: 'System-Payment-Setting-Native',
-          meta: { title: 'system.payment.native', tabs: true }
+          meta: { title: 'system.payment.native', tabs: true, icon: 'icondisanfangdanbao' }
         },
         {
           path: 'applePay',
           name: 'System-Payment-Setting-ApplePay',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/applePay'),
-          meta: { title: 'system.payment.applePay', tabs: true }
+          meta: { title: 'system.payment.applePay', tabs: true, icon: 'iconapple-pay' }
         },
         {
           path: 'paymentOptions',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/payment/payType'),
           name: 'System-Payment-Setting-PaymentOptions',
-          meta: { title: 'system.payment.paymentOption', tabs: true }
+          meta: { title: 'system.payment.paymentOption', tabs: true, icon: 'iconqianbaoqiandaiyue' }
         }
       ]
     },
@@ -83,39 +83,39 @@ const SystemRouter = {
       path: 'sms',
       name: 'System-Sms-Setting',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/index'),
-      meta: { title: 'system.sms.root', icon: 'message' },
+      meta: { title: 'system.sms.root', icon: 'iconlogin_duanxin' },
       redirect: '/system/sms/logs',
       children: [
         {
           path: 'logs',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/logs/index'),
           name: 'System-Sms-Log',
-          meta: { tabs: true, title: 'system.sms.list' }
+          meta: { tabs: true, title: 'system.sms.list', icon: 'iconnavicon-dxsf'}
         },
         {
           path: 'configure',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/sms/configure/index'),
           name: 'System-Sms-Config',
-          meta: { tabs: true, title: 'system.sms.config' }
+          meta: { tabs: true, title: 'system.sms.config', icon: 'iconnavicon-dxpz' }
         }
       ]
     },
     {
       path: 'mail',
       name: 'System-Mail-Setting',
-      meta: { title: 'system.mailSetting', icon: 'email' },
+      meta: { title: 'system.mailSetting', icon: 'iconyoujian' },
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/mail/configure')
     },
     {
       path: 'cors',
       name: 'System-Cors',
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/cors/cors'),
-      meta: { title: 'system.cors.root', icon: 'lock' }
+      meta: { title: 'system.cors.root', icon: 'icondiyufenbu' }
     },
     {
       path: 'storage',
       name: 'System-Storage',
-      meta: { title: 'system.storage.root', icon: 'lock' },
+      meta: { title: 'system.storage.root', icon: 'iconcunchuqia' },
       component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/firstWrap'),
       redirect: '/system/storage/basic',
       children: [
@@ -123,12 +123,12 @@ const SystemRouter = {
           path: 'cdn',
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/oldCdn'),
           name: 'System-Storage-Cdn',
-          meta: { title: 'system.cdn.root' }
+          meta: { title: 'system.cdn.root', icon: 'iconcdn'  }
         },
         {
           path: 'new-store',
           name: 'System-Storage-Storage',
-          meta: { title: 'system.storage.new' },
+          meta: { title: 'system.storage.new', icon: 'iconyidongyunkongzhitaiicon06'  },
           component: () => import(/* webpackChunkName: 'system' */ '@/views/tsplus/system/storage/newStorage'),
           redirect: '/system/storage/new-store/basic',
           children: [
