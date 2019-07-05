@@ -35,7 +35,7 @@ class PublicController extends BaseController
         if ($request->getinfo) {
             $data['temp'] = true;
             $params = [
-                'limit' => $request->query('limit', 15),
+                'limit' => $request->query('limit', 50),
                 'offset' => $request->query('offset', 0),
             ];
             switch ($type) {

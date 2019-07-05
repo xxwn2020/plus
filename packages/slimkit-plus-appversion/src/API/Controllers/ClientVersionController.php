@@ -36,7 +36,7 @@ class ClientVersionController
     public function index(Request $request, ClientVersion $versionModel)
     {
         $type = $request->query('type');
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
 
         $versions = $versionModel->when($after, function ($query) use ($after) {

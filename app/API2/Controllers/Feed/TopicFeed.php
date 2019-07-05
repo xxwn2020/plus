@@ -45,7 +45,7 @@ class TopicFeed extends Controller
             })
             ->select('index', 'feed_id')
             ->orderBy('index', $direction)
-            ->limit($request->query('limit', 15))
+            ->limit($request->query('limit', 50))
             ->get();
         $links->load([
             'feed',

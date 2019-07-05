@@ -59,13 +59,13 @@ class GroupController extends BaseController
         } elseif ($type == 'join') {
             $params = [
                 'offset' => $request->query('offset', 0),
-                'limit' => $request->query('limit', 15),
+                'limit' => $request->query('limit', 50),
             ];
             $groups = api('GET', '/api/v2/plus-group/user-groups', $params);
         } elseif ($type == 'nearby') {
             $params = [
                 'offset' => $request->query('offset', 0),
-                'limit' => $request->query('limit', 15),
+                'limit' => $request->query('limit', 50),
                 'longitude' => $request->query('longitude'),
                 'latitude' => $request->query('latitude'),
             ];
@@ -73,7 +73,7 @@ class GroupController extends BaseController
         } else {
             $params = [
                 'offset' => $request->query('offset', 0),
-                'limit' => $request->query('limit', 15),
+                'limit' => $request->query('limit', 50),
                 'category_id' => $request->query('category_id'),
             ];
             $groups = api('GET', '/api/v2/plus-group/groups', $params);

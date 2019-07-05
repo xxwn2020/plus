@@ -112,7 +112,7 @@ class RewardController extends Controller
         $start = $request->get('start');
         $keyword = $request->get('keyword');
 
-        $limit = (int) $request->query('limit', 15);
+        $limit = (int) $request->query('limit', 50);
 
         $query = Reward::with(['user', 'target'])
             ->when($type, function ($query) use ($type) {

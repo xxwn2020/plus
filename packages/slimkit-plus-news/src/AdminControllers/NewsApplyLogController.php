@@ -36,7 +36,7 @@ class NewsApplyLogController extends Controller
      */
     public function index(Request $request, NewsApplyLog $model)
     {
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         // $offset = $request->query('offset', 0);
         $key = $request->query('key');
         $user_id = $request->query('user_id');

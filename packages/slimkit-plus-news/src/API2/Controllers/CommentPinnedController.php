@@ -44,7 +44,7 @@ class CommentPinnedController extends Controller
     public function index(Request $request, NewsPinnedModel $model)
     {
         $user = $request->user();
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
 
         $grammar = $model->getConnection()->getQueryGrammar();

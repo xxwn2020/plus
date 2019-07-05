@@ -156,7 +156,7 @@ class FeedController extends Controller
         FeedModel $feedModel,
         FeedRepository $repository
     ) {
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
         $user = $request->user('api')->id ?? 0;
         $search = $request->query('search');
@@ -250,7 +250,7 @@ class FeedController extends Controller
             })
             ->where(FeedModel::CREATED_AT, '>',
                 $dateTime->subDay(setting('feed', 'list/hot-duration', 7)))
-            ->limit($request->query('limit', 15))
+            ->limit($request->query('limit', 50))
             ->orderBy('hot', 'desc')
             ->get();
         $feeds->load([
@@ -309,7 +309,7 @@ class FeedController extends Controller
             abort(401);
         }
 
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
         $feeds = $model->leftJoin('user_follow', function ($join) use ($user) {
             $join->where('user_follow.user_id', $user->id);
@@ -894,7 +894,7 @@ class FeedController extends Controller
         Carbon $datetime
     ) {
         $user = $request->user('api')->id ?? 0;
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
         $current_user = $request->query('user', $user);
         $screen = $request->query('screen');

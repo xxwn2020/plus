@@ -38,7 +38,7 @@ class MusicPaidController extends Controller
     public function specials(Request $request, MusicSpecial $musicSpecial)
     {
         $user = $request->user();
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $max_id = $request->query('max_id', 0);
         $specials = $musicSpecial->with(['storage', 'paidNode'])->select('music_specials.*')->join('paid_nodes', function ($join) {
             return $join->on('paid_nodes.raw', '=', 'music_specials.id')->where('channel', 'music');
@@ -76,7 +76,7 @@ class MusicPaidController extends Controller
     public function musics(Request $request, Music $musicModel)
     {
         $user = $request->user();
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $max_id = $request->query('max_id', 0);
         $musics = $musicModel->select('musics.*')
         ->with(['singer' => function ($query) {

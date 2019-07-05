@@ -72,7 +72,7 @@ class FeedCollectionController extends Controller
     {
         $user = $request->user();
         $current_user = $request->query('user', $user->id);
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $offset = $request->query('offset', 0);
 
         $feeds = $feedModel->join('feed_collections', function ($join) use ($current_user) {

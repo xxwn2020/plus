@@ -57,7 +57,7 @@ class Topic extends Controller
                 return $query->where('name', 'like', sprintf('%%%s%%', $name));
             })
             ->orderBy($request->query('orderBy', 'id'), $request->query('direction', 'desc'))
-            ->paginate($request->query('limit', 15), ['*'], 'page');
+            ->paginate($request->query('limit', 50), ['*'], 'page');
 
         return new JsonResponse($data);
     }

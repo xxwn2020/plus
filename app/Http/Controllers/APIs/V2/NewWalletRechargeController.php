@@ -44,7 +44,7 @@ class NewWalletRechargeController extends Controller
      */
     public function list(Request $request, WalletOrderModel $walletOrderModel)
     {
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
         $action = $request->query('action');
         $user = $request->user();

@@ -42,7 +42,7 @@ class TopicParticipant extends Controller
         $result = $model
             ->query()
             ->where('topic_id', $topic)
-            ->limit($request->query('limit', 15))
+            ->limit($request->query('limit', 50))
             ->offset($request->query('offset', 0))
             ->orderBy(Model::UPDATED_AT, 'desc')
             ->get();

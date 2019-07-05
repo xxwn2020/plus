@@ -35,7 +35,7 @@ class UserTrashedController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = (int) $request->query('limit', 15);
+        $limit = (int) $request->query('limit', 50);
         $offset = (int) $request->query('offset', 0);
 
         $users = UserModel::onlyTrashed()

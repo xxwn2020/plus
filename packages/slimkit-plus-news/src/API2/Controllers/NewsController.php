@@ -63,7 +63,7 @@ class NewsController extends Controller
                     ->when($key = $request->query('key'), function ($query) use ($key) {
                         return $query->where('title', 'like', '%'.$key.'%');
                     })
-                    ->limit($request->query('limit', 15));
+                    ->limit($request->query('limit', 50));
             })
             ->where('audit_status', 0)
             ->whereDoesntHave('blacks', function ($query) use ($userId) {

@@ -84,7 +84,7 @@ class MusicCommentController extends Controller
     public function list(Request $request, Music $music)
     {
         $max_id = $request->query('max_id');
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $comments = $music->comments()->when($max_id, function ($query) use ($max_id) {
             return $query->where('id', '<', $max_id);
         })->with(['user' => function ($query) {
@@ -158,7 +158,7 @@ class MusicCommentController extends Controller
     public function specialList(Request $request, MusicSpecial $special)
     {
         $max_id = $request->query('max_id');
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $comments = $special->comments()->where(function ($query) use ($special) {
             return $query->where(function ($query) use ($special) {
                 return $query->where('commentable_type', 'music_specials')->where('commentable_id', $special->id);

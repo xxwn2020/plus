@@ -28,7 +28,7 @@ class UserLikeController extends Controller
 {
     public function index(Request $request, ResponseContract $response, LikeModel $model)
     {
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after', false);
         $user = $request->user();
 

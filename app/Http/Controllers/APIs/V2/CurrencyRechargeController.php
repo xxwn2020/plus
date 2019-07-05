@@ -39,7 +39,7 @@ class CurrencyRechargeController extends Controller
     {
         $user = $request->user();
 
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after');
         $action = $request->query('action');
         $type = $request->query('type');

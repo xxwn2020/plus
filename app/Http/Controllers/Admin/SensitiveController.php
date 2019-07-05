@@ -38,7 +38,7 @@ class SensitiveController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = (int) $request->query('limit', 15);
+        $limit = (int) $request->query('limit', 50);
         $type = $request->query('type');
         $word = $request->query('word');
 

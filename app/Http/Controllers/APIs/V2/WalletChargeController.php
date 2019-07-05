@@ -39,7 +39,7 @@ class WalletChargeController extends Controller
      */
     public function list(Request $request, ContractResponse $response)
     {
-        $limit = intval($request->query('limit', 15));
+        $limit = intval($request->query('limit', 50));
         $after = $request->query('after');
         $action = $request->query('action');
         // $filter = $request->query('filter');

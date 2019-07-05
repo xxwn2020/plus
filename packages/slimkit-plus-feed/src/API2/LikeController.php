@@ -39,7 +39,7 @@ class LikeController extends Controller
      */
     public function index(Request $request, ResponseContract $response, FeedModel $feed)
     {
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after', false);
         $userID = $request->user('api')->id ?? 0;
         $likes = $feed->likes()

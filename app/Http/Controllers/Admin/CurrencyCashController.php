@@ -42,7 +42,7 @@ class CurrencyCashController extends Controller
      */
     public function list(Request $request, OrderModel $orderModel)
     {
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $state = $request->query('state');
         $user = (int) $request->query('user');
 

@@ -125,7 +125,7 @@ class Topic extends Controller
             })
 
             // Set the number of data
-            ->limit($request->query('limit', 15))
+            ->limit($request->query('limit', 50))
 
             // Using `$direction` set `id` direction,
             // the `$direction` enum `asc` or `desc`.

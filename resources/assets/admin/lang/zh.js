@@ -364,9 +364,9 @@ export default {
         sort:
           '排序方式',
         email:
-          '电子邮箱',
+          '邮箱',
         phone:
-          '手机号码',
+          '手机号',
         role:
           '用户角色',
         follow:
@@ -376,9 +376,9 @@ export default {
         regist_end_date:
           '注册时间',
         name:
-          '用户昵称',
+          '用户名',
         location:
-          '所在地区',
+          '地区',
         dateTimeRange:
           '注册时间',
         trashed:
@@ -391,13 +391,13 @@ export default {
           '注册时间',
         sex:
           {
-            root: '性 别',
+            root: '性别',
             male:
               '男',
             female:
               '女',
             hide:
-              '保 密'
+              '保密'
           }
       }
     },

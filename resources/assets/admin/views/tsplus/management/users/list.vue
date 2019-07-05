@@ -20,8 +20,10 @@
           :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
           v-if="field.type === 'input'"
           v-model="query[field.id]"
+          size="mini"
         ></el-input>
         <el-cascader
+        size="mini"
           :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
           v-if="field.type === 'cascader'"
           :options="field.options"
@@ -29,6 +31,7 @@
           @change="handleChange"
         ></el-cascader>
         <el-select
+        size="mini"
           :placeholder="$t(`admin.${formFileds.module}.search.${field.id}`)"
           v-if="field.type === 'select'"
           v-model="query[field.id]"
@@ -41,6 +44,7 @@
           ></el-option>
         </el-select>
         <el-date-picker
+        size="mini"
           v-if="field.type === 'dateTimeRange'"
           v-model="dateTimeRange"
           type="datetimerange"
@@ -55,6 +59,7 @@
         <el-button
           plain
           type="primary"
+          size="mini"
           :loading="loading"
           @click="doSearch()"
         >{{ $t('admin.search.root') }}
@@ -69,17 +74,17 @@
       border
       stripe
     >
-      <el-table-column
+      <!-- <el-table-column
         sortable="custom"
         fixed
         width="80"
         prop="id"
         :label="$t('admin.users.search.userId')"
-      />
-      <el-table-column prop="name" :label="$t('admin.users.search.name')"></el-table-column>
-      <el-table-column prop="phone" :label="$t('admin.users.search.phone')"></el-table-column>
+      /> -->
+      <el-table-column width="100" prop="name" :label="$t('admin.users.search.name')"></el-table-column>
+      <el-table-column width="100" prop="phone" :label="$t('admin.users.search.phone')"></el-table-column>
       <el-table-column width="120" prop="location" :label="$t('admin.users.search.location')"></el-table-column>
-      <el-table-column prop="sex" :label="$t('admin.users.search.sex.root')">
+      <el-table-column width="60" prop="sex" :label="$t('admin.users.search.sex.root')">
         <template
           slot-scope="scope"
         >{{scope.row.sex === 0 ? $t('admin.users.search.sex.hide') : (scope.row.sex === 1 ?

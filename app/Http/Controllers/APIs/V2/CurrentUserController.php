@@ -164,7 +164,7 @@ class CurrentUserController extends Controller
     public function followers(Request $request, ResponseFactoryContract $response)
     {
         $user = $request->user();
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $offset = $request->query('offset', 0);
 
         $followers = $user->followers()
@@ -194,7 +194,7 @@ class CurrentUserController extends Controller
     public function followings(Request $request, ResponseFactoryContract $response)
     {
         $user = $request->user();
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $offset = $request->query('offset', 0);
 
         $followings = $user->followings()
@@ -274,7 +274,7 @@ class CurrentUserController extends Controller
     public function followMutual(Request $request, ResponseFactoryContract $response)
     {
         $user = $request->user();
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $offset = $request->query('offset', false);
         $keyword = $request->query('keyword', null);
 

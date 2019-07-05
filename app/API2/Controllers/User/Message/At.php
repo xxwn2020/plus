@@ -45,7 +45,7 @@ class At extends Controller
                 return $query->where('id', $direction === 'asc' ? '>' : '<', $index);
             })
             ->where('user_id', $request->user()->id)
-            ->limit($request->query('limit', 15))
+            ->limit($request->query('limit', 50))
             ->orderBy('id', $direction)
             ->get();
 

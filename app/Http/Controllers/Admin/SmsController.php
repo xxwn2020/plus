@@ -49,7 +49,7 @@ class SmsController extends Controller
   ) {
         $state = $request->query('state');
         $phone = $request->query('phone');
-        $limit = (int) $request->query('limit', 15);
+        $limit = (int) $request->query('limit', 50);
         $offset = (int) $request->query('offset', 0);
 
         $query = $model->withTrashed()

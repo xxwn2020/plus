@@ -50,7 +50,7 @@ class FeedCommentController extends Controller
     public function index(Request $request, ResponseFactoryContract $response, FeedModel $feed)
     {
         $user = $request->user('api')->id ?? 0;
-        $limit = $request->query('limit', 15);
+        $limit = $request->query('limit', 50);
         $after = $request->query('after', false);
 
         $comments = $feed->comments()
