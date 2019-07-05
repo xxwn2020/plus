@@ -23,7 +23,6 @@ namespace Zhiyi\Plus\Http\Controllers\Admin;
 use Carbon\Carbon;
 use Zhiyi\Plus\Models\Area;
 use Illuminate\Http\Request;
-use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\CommonConfig;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +31,7 @@ use Illuminate\Contracts\Config\Repository;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use function Zhiyi\Plus\setting;
 
 class SiteController extends Controller
 {
@@ -68,7 +68,8 @@ class SiteController extends Controller
      * @author Seven Du <shiweidu@outlook.com>
      * @homepage http://medz.cn
      */
-    public function get(Request $request,
+    public function get(
+        Request $request,
         Repository $config,
         ResponseFactory $response
     ) {
@@ -82,7 +83,7 @@ class SiteController extends Controller
             function () use ($config) {
                 return collect($config->get('app'))
                     ->only('name', 'keywords', 'description', 'icp',
-                        'technical', 'copyright', 'stateCode', 'pc')
+                        'technical', 'copyright', 'stateCode', 'logo')
                     ->all();
             });
 
@@ -99,7 +100,8 @@ class SiteController extends Controller
      * @author Seven Du <shiweidu@outlook.com>
      * @homepage http://medz.cn
      */
-    public function updateSiteInfo(Request $request,
+    public function updateSiteInfo(
+        Request $request,
         Configuration $config,
         ResponseFactory $response
     ) {
@@ -111,7 +113,7 @@ class SiteController extends Controller
 
         $keys = [
             'name', 'keywords', 'description', 'icp', 'technical', 'copyright',
-            'stateCode', 'pc',
+            'stateCode', 'logo',
         ];
 
         $site = [];
@@ -389,7 +391,8 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function updateMailInfo(Request $request,
+    public function updateMailInfo(
+        Request $request,
         Configuration $config,
         ResponseFactory $response
     ) {
@@ -415,7 +418,8 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function sendMail(Request $request,
+    public function sendMail(
+        Request $request,
         Mailer $mailer,
         ResponseFactory $response
     ) {
@@ -527,7 +531,8 @@ class SiteController extends Controller
         return response()->json($data, 200);
     }
 
-    public function setBackGroundConfiguration(Request $request,
+    public function setBackGroundConfiguration(
+        Request $request,
         Configuration $config
     ) {
         $config->set('site.background.logo', $request->input('logo_src'));

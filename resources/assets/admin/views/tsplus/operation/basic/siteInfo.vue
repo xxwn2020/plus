@@ -13,60 +13,29 @@
       <el-form-item label="站点描述" prop="description">
         <el-input type="textarea" placeholder v-model="form.description"></el-input>
       </el-form-item>
+      <el-form-item label="站点Logo" prop="logo">
+        <el-upload
+          class="pc-logo-uploader"
+          :show-file-list="false"
+          action
+          :http-request="uploadLogo"
+          :multiple="false"
+          :disabled="logoUploading"
+          accept="image/*"
+          :limit="1"
+          :auto-upload="true"
+        >
+          <div v-if="!logoUploading">
+            <img v-if="logoUrl" :src="logoUrl" style="width: 100px; height: 100px;" class="cover_node">
+            <i v-else class="el-icon-plus avatar-uploader-icon"/>
+          </div>
+          <el-progress v-else type="circle" :percentage="logoPercentage"/>
+          <div slot="tip" class="el-upload__tip">站点logo, 宽高比例为1:1</div>
+        </el-upload>
+      </el-form-item>
       <el-form-item label="版权信息" prop="copyright">
         <el-input placeholder type="textarea" v-model="form.copyright"></el-input>
       </el-form-item>
-<!--      <template v-if="hasPc">-->
-<!--        <el-form-item label="PC 开关" prop="technical">-->
-<!--          <el-radio-group v-model="form.pc.status" prop="status">-->
-<!--            <el-radio border label="开启">开启</el-radio>-->
-<!--            <el-radio border label="关闭">关闭</el-radio>-->
-<!--          </el-radio-group>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="PC LOGO" prop="logo">-->
-<!--          <el-upload-->
-<!--            class="pc-logo-uploader"-->
-<!--            :show-file-list="false"-->
-<!--            action-->
-<!--            :http-request="uploadLogo"-->
-<!--            :multiple="false"-->
-<!--            :disabled="logoUploading"-->
-<!--            accept="image/*"-->
-<!--            :limit="1"-->
-<!--            :auto-upload="true"-->
-<!--          >-->
-<!--            <div v-if="!logoUploading">-->
-<!--              <img v-if="logoUrl" :src="logoUrl" class="cover_node">-->
-<!--              <i v-else class="el-icon-plus avatar-uploader-icon"/>-->
-<!--            </div>-->
-<!--            <el-progress v-else type="circle" :percentage="logoPercentage"/>-->
-<!--            <div slot="tip" class="el-upload__tip">上传PC的站点logo, 宽高比例为1:1</div>-->
-<!--          </el-upload>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="PC 登录背景" prop="loginbg">-->
-<!--          <el-upload-->
-<!--            class="pc-logo-uploader"-->
-<!--            :show-file-list="false"-->
-<!--            action-->
-<!--            :http-request="uploadLoginBg"-->
-<!--            :multiple="false"-->
-<!--            :disabled="loginBgUploading"-->
-<!--            accept="image/*"-->
-<!--            :limit="1"-->
-<!--            :auto-upload="true"-->
-<!--          >-->
-<!--            <div v-if="!loginBgUploading">-->
-<!--              <img v-if="loginBgUrl" :src="loginBgUrl" class="cover_node">-->
-<!--              <i v-else class="el-icon-plus avatar-uploader-icon"/>-->
-<!--            </div>-->
-<!--            <el-progress v-else type="circle" :percentage="loginBgPercentage"/>-->
-<!--            <div slot="tip" class="el-upload__tip">上传PC的站点登录背景图, 宽高比例为2:3</div>-->
-<!--          </el-upload>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="PC 统计代码" prop="stats_code">-->
-<!--          <el-input type="textarea" placeholder v-model="form.pc.stats_code"></el-input>-->
-<!--        </el-form-item>-->
-<!--      </template>-->
       <el-form-item label="技术支持" prop="technical">
         <el-input placeholder v-model="form.technical"></el-input>
       </el-form-item>
@@ -96,17 +65,10 @@
         icp: null,
         copyright: null,
         technical: null,
-        pc: {
-          status: 0,
-          states_code: null,
-          logo: null,
-          loginbg: null
-        }
+        logo: null
       },
       logoUploading: false,
-      loginBgUploading: false,
       logoPercentage: 0,
-      logoBgPercentage: 0,
       getLoading: false,
       saveLoading: false
     }),
@@ -124,29 +86,6 @@
               this.$set(this, 'saveLoading', false)
             })
           }
-        })
-      },
-      /* 文件上传 */
-      async uploadLoginBg ({ file }) {
-        const { data: task } = await this.createTask(file)
-        const { headers, method, uri, node } = task
-        this.loginBgUploading = true
-        const instance = axios.create()
-        instance.defaults.timeout = 100000
-        instance.defaults.onUploadProgress = ({ loaded, total }) => {
-          this.loginBgPercentage = parseInt((loaded / total).toFixed(2) * 100)
-        }
-        instance.defaults.validateStatus = s => [200, 201, 203, 204].includes(s)
-        instance.request({
-          method: method.toLowerCase(),
-          url: uri,
-          headers,
-          data: file
-        }).then(() => {
-          this.$set(this, 'loginBgPercentage', 0)
-          this.$set(this.form.pc, 'loginbg', node)
-        }).catch(this.showApiError).finally(() => {
-          this.loginBgUploading = false
         })
       },
 
@@ -167,7 +106,7 @@
           data: file
         }).then(() => {
           this.$set(this, 'logoPercentage', 0)
-          this.$set(this.form.pc, 'logo', node)
+          this.$set(this.form, 'logo', node)
         }).catch(this.showApiError).finally(() => {
           this.logoUploading = false
         })
@@ -233,17 +172,17 @@
       //   return Object.keys(this.manageList).includes('pc')
       // },
       // /* pc logo */
-      // logoUrl () {
-      //   const {
-      //     form: {
-      //       pc: { logo = '' }
-      //     }
-      //   } = this
-      //   if (!logo) {
-      //     return null
-      //   }
-      //   return File.url(logo, { w: 100, h: 100 })
-      // },
+      logoUrl () {
+        const {
+          form: {
+            logo = ''
+          }
+        } = this
+        if (!logo) {
+          return null
+        }
+        return File.url(logo, { w: 200, h: 200 })
+      }
       // /* pc 登录页面背景 */
       // loginBgUrl () {
       //   const {
