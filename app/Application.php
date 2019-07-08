@@ -109,7 +109,8 @@ class Application extends LaravelApplication implements AppInterface
      * @return string
      */
     public function appConfigurePath(string $path = '')
-    : string {
+    : string
+    {
         return $this->basePath().'/storage/configure'.($path
                 ? DIRECTORY_SEPARATOR.$path : '');
     }

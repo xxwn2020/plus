@@ -54,7 +54,7 @@ class FindUserController extends Controller
             ->select('user_id')
             ->with([
                 'user',
-                'user.extra'
+                'user.extra',
             ])
             ->orderBy('followers_count', 'desc')
             ->orderBy('updated_at', 'desc')

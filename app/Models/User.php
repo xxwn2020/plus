@@ -77,6 +77,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $appends = ['verified'];
+
     /**
      * The relations to eager load on every query.
      *
