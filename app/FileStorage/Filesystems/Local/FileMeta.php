@@ -34,32 +34,35 @@ use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 class FileMeta extends FileMetaAbstract
 {
     use HasImageTrait;
-
     /**
      * Local filesystem.
+     *
      * @var \Illuminate\Contracts\Filesystem\Filesystem
      */
     protected $filesystem;
-
     /**
      * Resource instance.
+     *
      * @var \Zhiyi\Plus\FileStorage\ResourceInterface
      */
     protected $resource;
-
     /**
      * Cache the instance image dimension.
+     *
      * @var \Zhiyi\Plus\FileStorage\ImageDimensionInterface
      */
     protected $dimension;
 
     /**
      * Create a file meta.
-     * @param \Illuminate\Contracts\Filesystem\Filesystem $filesystem
-     * @param \Zhiyi\Plus\FileStorage\ResourceInterface $resource
+     *
+     * @param  \Illuminate\Contracts\Filesystem\Filesystem  $filesystem
+     * @param  \Zhiyi\Plus\FileStorage\ResourceInterface  $resource
      */
-    public function __construct(FilesystemContract $filesystem, ResourceInterface $resource)
-    {
+    public function __construct(
+        FilesystemContract $filesystem,
+        ResourceInterface $resource
+    ) {
         $this->filesystem = $filesystem;
         $this->resource = $resource;
         $this->hasImage();
@@ -67,9 +70,11 @@ class FileMeta extends FileMetaAbstract
 
     /**
      * Use custom MIME types.
+     *
      * @return null|\Closure
      */
-    protected function useCustomTypes(): ?Closure
+    protected function useCustomTypes()
+    : ?Closure
     {
         return function () {
             return [
@@ -83,9 +88,11 @@ class FileMeta extends FileMetaAbstract
 
     /**
      * Has the file is image.
+     *
      * @return bool
      */
-    public function hasImage(): bool
+    public function hasImage()
+    : bool
     {
         return $this->hasImageType(
             $this->getMimeType()
@@ -94,9 +101,11 @@ class FileMeta extends FileMetaAbstract
 
     /**
      * Get image file dimension.
+     *
      * @return \Zhiyi\Plus\FileStorage\ImageDimensionInterface
      */
-    public function getImageDimension(): ImageDimensionInterface
+    public function getImageDimension()
+    : ImageDimensionInterface
     {
         if (! $this->hasImage()) {
             throw new Exception('调用的资源并非图片或者是不支持的图片资源');
@@ -109,14 +118,17 @@ class FileMeta extends FileMetaAbstract
         );
         [$width, $height] = getimagesize($realPath);
 
-        return $this->dimension = new ImageDimension((float) $width, (float) $height);
+        return $this->dimension = new ImageDimension((float) $width,
+            (float) $height);
     }
 
     /**
      * Get the file size (Byte).
+     *
      * @return int
      */
-    public function getSize(): int
+    public function getSize()
+    : int
     {
         return $this->filesystem->getSize(
             $this->resource->getPath()
@@ -125,9 +137,11 @@ class FileMeta extends FileMetaAbstract
 
     /**
      * Get the resource mime type.
+     *
      * @return string
      */
-    public function getMimeType(): string
+    public function getMimeType()
+    : string
     {
         return $this->filesystem->mimeType(
             $this->resource->getPath()
@@ -136,32 +150,36 @@ class FileMeta extends FileMetaAbstract
 
     /**
      * Get the resource pay info.
-     * @param \Zhiyi\Plus\Models\User $user
+     *
+     * @param  \Zhiyi\Plus\Models\User  $user
+     *
      * @return \Zhiyi\Plus\FileStorage\Pay\PayInterface
      */
-    public function getPay(User $user): ?PayInterface
-    {
+    public function getPay(User $user)
+    : ?PayInterface {
         return null;
     }
 
     /**
      * Get the storage vendor name.
+     *
      * @return string
      */
-    public function getVendorName(): string
+    public function getVendorName()
+    : string
     {
         return 'local';
     }
 
     /**
      * Get the resource url.
+     *
      * @return string
      */
-    public function url(): string
+    public function url()
+    : string
     {
-        return route('storage:get', [
-            'channel' => $this->resource->getChannel(),
-            'path' => base64_encode($this->resource->getPath()),
-        ]);
+        return url(sprintf('/storage/%s/%s', $this->resource->getChannel(),
+            base64_encode($this->resource->getPath())));
     }
 }

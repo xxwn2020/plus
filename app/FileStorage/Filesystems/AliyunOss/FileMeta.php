@@ -137,10 +137,8 @@ class FileMeta extends FileMetaAbstract
      */
     public function url(): string
     {
-        return route('storage:get', [
-            'channel' => $this->resource->getChannel(),
-            'path' => base64_encode($this->resource->getPath()),
-        ]);
+        return url(sprintf('/storage/%s/%s', $this->resource->getChannel(),
+            base64_encode($this->resource->getPath())));
     }
 
     /**
