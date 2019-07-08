@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Http\Controllers\APIs\V2;
 
-use Zhiyi\Plus\Models\GoldType;
 use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Zhiyi\Plus\Models\CommonConfig;
@@ -36,118 +35,88 @@ class BootstrappersController extends Controller
      *
      * @param  BootstrapAPIsEventer  $events
      * @param  AdvertisingSpace  $space
-     * @param  GoldType  $goldType
      *
      * @return JsonResponse
      */
-    public function show(
-        BootstrapAPIsEventer $events,
-        AdvertisingSpace $space,
-        GoldType $goldType
-    )
-    : JsonResponse {
-        $config = \Cache::rememberForever('bootstrapper',
-            function () use ($space, $goldType) {
-                $bootstrapper = [
-                    'server:version' => app()->version(),
-                ];
-                foreach (
-                    CommonConfig::byNamespace('common')->get() as $bootstrapper
-                ) {
-                    $bootstrapper[$bootstrapper->name]
-                        = $this->formatValue($bootstrapper->value);
-                }
+    public function show(BootstrapAPIsEventer $events, AdvertisingSpace $space): JsonResponse
+    {
+        $bootstrappers = [
+            'server:version' => app()->version(),
+        ];
+        foreach (CommonConfig::byNamespace('common')->get() as $bootstrapper) {
+            $bootstrappers[$bootstrapper->name] = $this->formatValue($bootstrapper->value);
+        }
 
-                $bootstrapper['ad'] = $space->where('space', 'boot')->with([
-                        'advertising' => function ($query) {
-                            $query->orderBy('sort', 'asc');
-                        },
-                    ])->first()->advertising ?? [];
+        $bootstrappers['ad'] = $space->where('space', 'boot')->with(['advertising' => function ($query) {
+            $query->orderBy('sort', 'asc');
+        }])->first()->advertising ?? [];
 
-                $bootstrapper['site'] = [
-                    'about_url'            => setting('site', 'about-url'),
-                    'anonymous'            => setting('user', 'anonymous', []),
-                    'client_email'         => setting('site', 'client-email'),
-                    'gold'                 => [
-                        'status' => setting('site', 'gold-switch'),
-                    ],
-                    'reserved_nickname'    => setting('user', 'keep-username'),
-                    'reward'               => setting('site', 'reward', []),
-                    'user_invite_template' => setting('user',
-                        'invite-template'),
-                ];
-                $bootstrapper['registerSettings'] = setting('user',
-                    'register-setting',
-                    [
-                        'showTerms' => true,
-                        'method'    => 'all',
-                        'content'   => '# 服务条款及隐私政策',
-                        'fixed'     => 'need',
-                        'type'      => 'all',
-                    ]);
-                $ipaConfig = setting('pay', 'iapConfig');
-                $bootstrapper['currency'] = [
-                    'IAP'      => [
-                        'only' => $ipaConfig['IAP_only'] ?? false,
-                        'rule' => $ipaConfig['rule'] ?? '',
-                    ],
-                    'cash'     => setting('currency', 'cash', [
-                        'rule'   => '我是提现规则',
-                        'status' => true, // 提现开关
-                    ]),
-                    'recharge' => setting('currency', 'recharge', [
-                        'rule'   => '我是积分充值规则',
-                        'status' => true, // 充值开关
-                    ]),
-                    'rule'     => setting('currency', 'rule', '我是积分规则'),
-                    'settings' => setting('currency', 'settings', [
-                        'recharge-ratio'   => 1,
-                        'recharge-options' => '100,500,1000,2000,5000,10000',
-                        'recharge-max'     => 10000000,
-                        'recharge-min'     => 100,
-                        'cash-max'         => 10000000,
-                        'cash-min'         => 100,
-                    ]),
-                ];
+        $bootstrappers['site'] = [
+            'about_url' => setting('site', 'about-url'),
+            'anonymous' => setting('user', 'anonymous', []),
+            'client_email' => setting('site', 'client-email'),
+            'gold' => [
+                'status' => setting('site', 'gold-switch'),
+            ],
+            'reserved_nickname' => setting('user', 'keep-username'),
+            'reward' => setting('site', 'reward', []),
+            'user_invite_template' => setting('user', 'invite-template'),
+        ];
+        $bootstrappers['registerSettings'] = setting('user', 'register-setting', [
+            'showTerms' => true,
+            'method' => 'all',
+            'content' => '# 服务条款及隐私政策',
+            'fixed' => 'need',
+            'type' => 'all',
+        ]);
 
-                $bootstrapper['wallet'] = [
-                    'rule'               => setting('wallet', 'rule'),
-                    'labels'             => setting('wallet', 'labels', []),
-                    'ratio'              => setting('wallet', 'ratio', 100),
-                    'cash'               => [
-                        'min-amount' => setting('wallet', 'cash-min-amount',
-                            100),
-                        'types'      => setting('wallet', 'cash-types', []),
-                        'status'     => setting('wallet', 'cash-status', true),
-                    ],
-                    'recharge'           => [
-                        'types'  => setting('wallet', 'recharge-types', []),
-                        'status' => setting('wallet', 'recharge-status', true),
-                    ],
-                    'transform-currency' => setting('wallet',
-                        'transform-status', true),
-                ];
+        $bootstrappers['currency'] = [
+            'IAP' => [
+                'only' => config('currency.recharge.IAP.only', true),
+                'rule' => config('currency.recharge.IAP.rule', ''),
+            ],
+            'cash' => setting('currency', 'cash', [
+                'rule' => '我是提现规则',
+                'status' => true, // 提现开关
+            ]),
+            'recharge' => setting('currency', 'recharge', [
+                'rule' => '我是积分充值规则',
+                'status' => true, // 充值开关
+            ]),
+            'rule' => setting('currency', 'rule', '我是积分规则'),
+            'settings' => setting('currency', 'settings', [
+                'recharge-ratio' => 1,
+                'recharge-options' => '100,500,1000,2000,5000,10000',
+                'recharge-max' => 10000000,
+                'recharge-min' => 100,
+                'cash-max' => 10000000,
+                'cash-min' => 100,
+            ]),
+        ];
 
-                $goldSetting = $goldType->where('status', 1)
-                        ->select('name', 'unit')
-                        ->first() ?? collect(['name' => '金币', 'unit' => '个']);
-                $bootstrapper['site']['gold_name'] = $goldSetting;
+        $bootstrappers['wallet'] = [
+            'rule' => setting('wallet', 'rule'),
+            'labels' => setting('wallet', 'labels', []),
+            'ratio' => setting('wallet', 'ratio', 100),
+            'cash' => [
+                'min-amount' => setting('wallet', 'cash-min-amount', 100),
+                'types' => setting('wallet', 'cash-types', []),
+                'status' => setting('wallet', 'cash-status', true),
+            ],
+            'recharge' => [
+                'types' => setting('wallet', 'recharge-types', []),
+                'status' => setting('wallet', 'recharge-status', true),
+            ],
+            'transform-currency' => setting('wallet', 'transform-status', true),
+        ];
 
-                $currency = CurrencyType::where('enable', 1)->first() ??
-                    collect(['name' => '积分', 'unit' => '']);
-                $bootstrapper['site']['currency_name'] = $currency;
-                config('im.helper-user')
-                && $bootstrapper['im:helper-user'] = config('im.helper-user');
-                // 每页数据量
-                $bootstrapper['limit'] = config('app.data_limit');
-                $bootstrapper['pay-validate-user-password'] = setting('pay',
-                    'validate-password', false);
+        $bootstrappers['site']['currency_name'] = CurrencyType::current();
+        config('im.helper-user') && $bootstrappers['im:helper-user'] = config('im.helper-user');
+        // 每页数据量
+        $bootstrappers['limit'] = config('app.data_limit');
+        $bootstrappers['pay-validate-user-password'] = setting('pay', 'validate-password', false);
 
-                return $bootstrapper;
-            });
-
-        return new JsonResponse($this->filterNull($events->dispatch('v2',
-            [$config])), JsonResponse::HTTP_OK);
+        return new JsonResponse($this->filterNull($events->dispatch('v2', [$bootstrappers])), JsonResponse::HTTP_OK);
     }
 
     /**

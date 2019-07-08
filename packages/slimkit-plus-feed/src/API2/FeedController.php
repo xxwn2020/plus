@@ -20,18 +20,25 @@ declare(strict_types=1);
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\API2;
 
+use Batch;
+use Throwable;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use function Zhiyi\Plus\setting;
 use Zhiyi\Plus\Models\UserCount;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Zhiyi\Plus\Models\User as UserModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Zhiyi\Plus\AtMessage\AtMessageHelperTrait;
 use Zhiyi\Plus\Models\FileWith as FileWithModel;
 use Zhiyi\Plus\Models\PaidNode as PaidNodeModel;
 use Zhiyi\Plus\Models\FeedTopic as FeedTopicModel;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed;
 use Zhiyi\Plus\Packages\Currency\Processes\User as UserProcess;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedVideo;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedPinned;
@@ -50,8 +57,10 @@ class FeedController extends Controller
     /**
      * 分享列表.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  Request  $request
+     * @param  ApplicationContract  $app
+     *
+     * @param  ResponseContract  $response
      *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
@@ -89,64 +98,67 @@ class FeedController extends Controller
         }
 
         $user = $request->user('api')->id ?? 0;
-        $feeds = $feedModel->newQuery()->select('feeds.*')
-            ->join('feed_pinneds', function ($join) use ($datetime) {
-                return $join->on('feeds.id', '=', 'feed_pinneds.target')
-                    ->where('channel', 'feed')
-                    ->where('expires_at', '>', $datetime);
-            })
-            ->whereDoesntHave('blacks', function ($query) use ($user) {
-                $query->where('user_id', $user);
-            })
-            ->with([
-                'user'           => function ($query) {
-                    return $query->withTrashed();
-                },
-                'user.certification',
-                'pinnedComments' => function ($query) {
-                    return $query->with([
+        // 置顶动态缓存
+        $feeds = Cache::remember('pinnedFeeds', '5',
+            function () use ($feedModel, $datetime, $user) {
+                return $feedModel->newQuery()->select('feeds.*')
+                    ->with([
+                        'pinnedComments',
+                        'comments' => function (MorphMany $builder) {
+                            $builder->limit(10);
+                        },
                         'user',
-                        'user.certification',
                     ])
-                        ->where('expires_at', '>', new Carbon)
-                        ->orderBy('amount', 'desc')
-                        ->orderBy('created_at', 'desc');
-                },
-            ])
-            ->orderBy('feed_pinneds.amount', 'desc')
-            ->orderBy('feed_pinneds.created_at', 'desc')
-            ->get();
-        $feeds->load([
-            'topics' => function ($query) {
-                return $query->select('id', 'name');
-            },
-        ]);
+                    ->join('feed_pinneds',
+                        function (JoinClause $join) use ($datetime) {
+                            return $join->on('feeds.id', '=',
+                                'feed_pinneds.target')
+                                ->where('channel', 'feed')
+                                ->where('expires_at', '>', $datetime);
+                        })
+                    ->whereDoesntHave('blacks',
+                        function (Builder $query) use ($user) {
+                            $query->where('user_id', $user);
+                        })
+                    ->orderBy('feed_pinneds.amount', 'desc')
+                    ->orderBy('feed_pinneds.created_at', 'desc')
+                    ->get();
+            });
 
         $user = $request->user('api')->id ?? 0;
-
-        return $feeds->map(function (FeedModel $feed) use ($repository, $user) {
+        $updateValues = [];
+        $feeds = $feeds->map(function (FeedModel $feed) use (
+            $repository,
+            $user
+        ) {
             $feed->feed_view_count += 1;
-            $feed->hot = $feed->makeHotValue();
-            $feed->save();
-
+            $updateValues[] = [
+                'id'              => $feed->id,
+                'feed_view_count' => $feed->feed_view_count,
+                'hot'             => $feed->makeHotValue(),
+            ];
             $repository->setModel($feed);
             $repository->images();
             $repository->format($user);
             $repository->previewComments();
 
-            $feed->has_collect = $feed->collected($user);
-            $feed->has_like = $feed->liked($user);
+            $feed->has_collect = $user ? $feed->collected($user) : false;
+            $feed->has_like = $user ? $feed->liked($user) : false;
 
             return $feed;
         });
+
+        Batch::update($feedModel->getTable(), $updateValues, 'id');
+
+        return $feeds;
     }
 
     /**
      * Get new feeds.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $feedModel
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Repository\Feed  $repository
+     * @param  Request  $request
+     * @param  FeedModel  $feedModel
+     * @param  FeedRepository  $repository
      *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
@@ -156,16 +168,25 @@ class FeedController extends Controller
         FeedModel $feedModel,
         FeedRepository $repository
     ) {
-        $limit = $request->query('limit', 50);
+        $limit = $request->query('limit', 15);
         $after = $request->query('after');
         $user = $request->user('api')->id ?? 0;
         $search = $request->query('search');
         $id = $request->query('id', '');
 
-        $feeds = $feedModel->when($after, function ($query) use ($after) {
-            return $query->where('id', '<', $after);
-        })
-            ->when($id, function ($query) use ($id) {
+        $feeds = $feedModel->newQuery()
+            ->with([
+                'pinnedComments',
+                'comments' => function (MorphMany $builder) {
+                    $builder->limit(10);
+                },
+                'user',
+            ])
+            ->when($after,
+                function (Builder $query) use ($after) {
+                    return $query->where('id', '<', $after);
+                })
+            ->when($id, function (Builder $query) use ($id) {
                 $id = array_values(
                     array_filter(
                         explode(',', $id)
@@ -178,58 +199,55 @@ class FeedController extends Controller
 
                 return $query->whereIn('id', $id);
             })
-            ->when(isset($search), function ($query) use ($search) {
+            ->when(isset($search), function (Builder $query) use ($search) {
                 return $query->where('feed_content', 'LIKE', '%'.$search.'%');
             })
-            ->whereDoesntHave('blacks', function ($query) use ($user) {
+            ->whereDoesntHave('blacks', function (Builder $query) use ($user) {
                 $query->where('user_id', $user);
             })
             ->orderBy('id', 'desc')
-            ->with([
-                'user'           => function ($query) {
-                    return $query->withTrashed();
-                },
-                'topics'         => function ($query) {
-                    return $query->select('id', 'name');
-                },
-                'user.certification',
-                'pinnedComments' => function ($query) {
-                    return $query->with([
-                        'user',
-                        'user.certification',
-                    ])
-                        ->where('expires_at', '>', new Carbon)
-                        ->orderBy('amount', 'desc')
-                        ->orderBy('created_at', 'desc');
-                },
-            ])
             ->limit($limit)
             ->get();
 
-        return $feeds->map(function (FeedModel $feed) use ($repository, $user) {
+        $updateValues = [];
+
+        $feeds = $feeds->map(function (FeedModel $feed) use (
+            $repository,
+            $user,
+            &$updateValues
+        ) {
             $feed->feed_view_count += 1;
-            $feed->hot = $feed->makeHotValue();
-            $feed->save();
+
+            $updateValues[] = [
+                'id'              => $feed->id,
+                'feed_view_count' => $feed->feed_view_count,
+                'hot'             => $feed->makeHotValue(),
+            ];
 
             $repository->setModel($feed);
             $repository->images();
             $repository->format($user);
             $repository->previewComments();
 
-            $feed->has_collect = $feed->collected($user);
-            $feed->has_like = $feed->liked($user);
+            $feed->has_collect = $user ? $feed->collected($user) : false;
+            $feed->has_like = $user ? $feed->liked($user) : false;
 
             return $feed;
         });
+
+        Batch::update($feedModel->getTable(), $updateValues, 'id');
+
+        return $feeds;
     }
 
     /**
      * Get hot feeds.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\FeedDigg  $model
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Repository\Feed  $repository
-     * @param  \Carbon\Carbon  $dateTime
+     * @param  Request  $request
+     * @param  FeedRepository  $repository
+     * @param  Carbon  $dateTime
+     *
+     * @param  FeedModel  $model
      *
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
@@ -245,59 +263,59 @@ class FeedController extends Controller
 
         $feeds = $model
             ->query()
-            ->when($hot, function ($query) use ($hot) {
+            ->with([
+                'pinnedComments',
+                'user',
+                'comments' => function (MorphMany $builder) {
+                    $builder->limit(10);
+                },
+            ])
+            ->when($hot, function (Builder $query) use ($hot) {
                 return $query->where('hot', '<', $hot);
             })
             ->where(FeedModel::CREATED_AT, '>',
                 $dateTime->subDay(setting('feed', 'list/hot-duration', 7)))
-            ->limit($request->query('limit', 50))
+            ->limit($request->query('limit', 15))
             ->orderBy('hot', 'desc')
             ->get();
-        $feeds->load([
-            'user'           => function ($query) {
-                return $query->withTrashed();
-            },
-            'topics'         => function ($query) {
-                return $query->select('id', 'name');
-            },
-            'user.certification',
-            'pinnedComments' => function ($query) {
-                return $query->with([
-                    'user',
-                    'user.certification',
-                ])
-                    ->where('expires_at', '>', new Carbon)
-                    ->orderBy('amount', 'desc')
-                    ->orderBy('created_at', 'desc');
-            },
-        ]);
+        $updateValues = [];
 
-        return $feeds->map(function ($feed) use ($repository, $user) {
+        $feeds = $feeds->map(function ($feed) use (
+            $repository,
+            $user,
+            &$updateValues
+        ) {
             $feed->feed_view_count += 1;
-            $feed->hot = $feed->makeHotValue();
-            $feed->save();
+
+            $updateValues[] = [
+                'id'              => $feed->id,
+                'feed_view_count' => $feed->feed_view_count,
+                'hot'             => $feed->makeHotValue(),
+            ];
 
             $repository->setModel($feed);
             $repository->images();
             $repository->format($user);
             $repository->previewComments();
-            $feed->has_collect = $feed->collected($user);
-            $feed->has_like = $feed->liked($user);
+            $feed->has_collect = $user ? $feed->collected($user) : false;
+            $feed->has_like = $user ? $feed->liked($user) : false;
 
             return $feed;
         });
+
+        Batch::update($model->getTable(), $updateValues, 'id');
+
+        return $feeds;
     }
 
     /**
      * Get user follow user feeds.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $model
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Repository\Feed  $repository
-     * @param  Carbon  $datetime
+     * @param  Request  $request
+     * @param  FeedModel  $model
+     * @param  FeedRepository  $repository
      *
      * @return mixed
-     * @throws \Throwable
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function follow(
@@ -311,35 +329,25 @@ class FeedController extends Controller
 
         $limit = $request->query('limit', 50);
         $after = $request->query('after');
-        $feeds = $model->leftJoin('user_follow', function ($join) use ($user) {
-            $join->where('user_follow.user_id', $user->id);
-        })
-            ->whereDoesntHave('blacks', function ($query) use ($user) {
-                $query->where('user_id', $user);
+        $feeds = $model->newQuery()
+            ->leftJoin('user_follow', function (JoinClause $join) use ($user) {
+                $join->where('user_follow.user_id', $user->id);
             })
-            ->where(function ($query) use ($user) {
+            ->with([
+                'pinnedComments',
+                'user',
+                'comments' => function (MorphMany $builder) {
+                    $builder->limit(10);
+                },
+            ])
+            ->whereDoesntHave('blacks', function (Builder $query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->where(function (Builder $query) use ($user) {
                 $query->whereColumn('feeds.user_id', '=', 'user_follow.target')
                     ->orWhere('feeds.user_id', $user->id);
             })
-            ->with([
-                'user'           => function ($query) {
-                    return $query->withTrashed();
-                },
-                'topics'         => function ($query) {
-                    return $query->select('id', 'name');
-                },
-                'user.certification',
-                'pinnedComments' => function ($query) {
-                    return $query->with([
-                        'user',
-                        'user.certification',
-                    ])
-                        ->where('expires_at', '>', new Carbon)
-                        ->orderBy('amount', 'desc')
-                        ->orderBy('created_at', 'desc');
-                },
-            ])
-            ->when((bool) $after, function ($query) use ($after) {
+            ->when((bool) $after, function (Builder $query) use ($after) {
                 return $query->where('feeds.id', '<', $after);
             })
             ->distinct()
@@ -348,10 +356,18 @@ class FeedController extends Controller
             ->limit($limit)
             ->get();
 
-        return $feeds->map(function (FeedModel $feed) use ($repository, $user) {
+        $updateValues = [];
+        $feeds = $feeds->map(function (FeedModel $feed) use (
+            $repository,
+            $user,
+            &$updateValues
+        ) {
             $feed->feed_view_count += 1;
-            $feed->hot = $feed->makeHotValue();
-            $feed->save();
+            $updateValues[] = [
+                'id'              => $feed->id,
+                'feed_view_count' => $feed->feed_view_count,
+                'hot'             => $feed->makeHotValue(),
+            ];
 
             $repository->setModel($feed);
             $repository->images();
@@ -359,20 +375,24 @@ class FeedController extends Controller
             $repository->previewComments();
 
             $feed->has_collect = $feed->collected($user->id);
-            $feed->has_like = $feed->liked($user);
+            $feed->has_like = $feed->liked($user->id);
 
             return $feed;
         });
+        Batch::update($model->getTable(), $updateValues, 'id');
+
+        return $feeds;
     }
 
     /**
      * get single feed info.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Repository\Feed  $repository
+     * @param  Request  $request
+     * @param  FeedRepository  $repository
      * @param  int  $feed
      *
      * @return mixed
+     * @throws Throwable
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function show(
@@ -399,7 +419,6 @@ class FeedController extends Controller
             $repository,
             $user
         ) {
-            $feed->load('user');
             $feed->has_collect = $feed->collected($user);
             $feed->has_like = $feed->liked($user);
             $feed->reward = $feed->rewardCount();
@@ -417,7 +436,7 @@ class FeedController extends Controller
     /**
      * Make feed link topics.
      *
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\FormRequest\API2\StoreFeedPost  $request
+     * @param  StoreFeedPostRequest  $request
      *
      * @return array
      */
@@ -459,7 +478,7 @@ class FeedController extends Controller
      * Link feed to topics and increment topic followers_count column.
      *
      * @param  array  $topics
-     * @param  Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $feed
+     * @param  FeedModel  $feed
      *
      * @return void
      */
@@ -478,7 +497,7 @@ class FeedController extends Controller
     /**
      * Update and touching user feed topics data.
      *
-     * @param  \Zhiyi\Plus\Models\User  $user
+     * @param  UserModel  $user
      * @param  array  $topics
      *
      * @return void
@@ -519,7 +538,7 @@ class FeedController extends Controller
     /**
      * Create an feed.
      *
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\FormRequest\API2\StoreFeedPost  $request
+     * @param  StoreFeedPostRequest  $request
      *
      * @return mixed
      */
@@ -622,7 +641,7 @@ class FeedController extends Controller
      *
      * @param  StoreFeedPostRequest  $request  [description]
      *
-     * @return   [type]                        [description]
+     * @return FileWithModel
      */
     protected function makeVideoCoverWith(StoreFeedPostRequest $request)
     {
@@ -668,11 +687,11 @@ class FeedController extends Controller
      * @DateTime 2018-04-02
      * @Email    qiaobin@zhiyicx.com
      *
-     * @param    [type]              $videoWith      [description]
-     * @param    [type]              $videoCoverWith [description]
+     * @param $videoWith
+     * @param $videoCoverWith
      * @param  FeedModel  $feed  [description]
      *
-     * @return   [type]                              [description]
+     * @return void
      */
     protected function saveFeedVideoWith(
         $videoWith,
@@ -707,7 +726,7 @@ class FeedController extends Controller
      * 保存分享图片使用.
      *
      * @param  array  $fileWiths
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $feed
+     * @param  FeedModel  $feed
      *
      * @return void
      * @author Seven Du <shiweidu@outlook.com>
@@ -725,7 +744,7 @@ class FeedController extends Controller
      * 保存分享文件付费节点.
      *
      * @param  array  $nodes
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $feed
+     * @param  FeedModel  $feed
      *
      * @return void
      * @author Seven Du <shiweidu@outlook.com>
@@ -743,8 +762,8 @@ class FeedController extends Controller
     /**
      * 保存分享付费节点.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $feed
+     * @param  Request  $request
+     * @param  FeedModel  $feed
      *
      * @return void
      * @author Seven Du <shiweidu@outlook.com>
@@ -770,10 +789,10 @@ class FeedController extends Controller
     /**
      * Fill initial feed data.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed  $feed
+     * @param  Request  $request
+     * @param  FeedModel  $feed
      *
-     * @return \Zhiyi\Component\ZhiyiPlus\PlusComponentFeed\Models\Feed
+     * @return FeedModel
      * @author Seven Du <shiweidu@outlook.com>
      */
     protected function fillFeedBaseData(Request $request, FeedModel $feed)
@@ -802,6 +821,7 @@ class FeedController extends Controller
      * @param  FeedModel  $feed
      *
      * @return mixed
+     * @throws Throwable
      * @author BS <414606094@qq.com>
      */
     public function newDestroy(
@@ -884,6 +904,8 @@ class FeedController extends Controller
      * @param  FeedModel  $feedModel
      * @param  FeedRepository  $repository
      *
+     * @param  Carbon  $datetime
+     *
      * @return mixed
      * @author bs<414606094@qq.com>
      */
@@ -900,7 +922,7 @@ class FeedController extends Controller
         $screen = $request->query('screen');
 
         $feeds = $feedModel->where('user_id', $current_user)
-            ->when($screen, function ($query) use ($datetime, $screen) {
+            ->when($screen, function (Builder $query) use ($datetime, $screen) {
                 switch ($screen) {
                     case 'pinned':
                         $query->whereHas('pinned',
@@ -913,26 +935,11 @@ class FeedController extends Controller
                         break;
                 }
             })
-            ->when($after, function ($query) use ($after) {
+            ->when($after, function (Builder $query) use ($after) {
                 return $query->where('id', '<', $after);
             })
             ->with([
-                'user'           => function ($query) {
-                    return $query->withTrashed();
-                },
-                'topics'         => function ($query) {
-                    return $query->select('id', 'name');
-                },
-                'user.certification',
-                'pinnedComments' => function ($query) {
-                    return $query->with([
-                        'user',
-                        'user.certification',
-                    ])
-                        ->where('expires_at', '>', new Carbon)
-                        ->orderBy('amount', 'desc')
-                        ->orderBy('created_at', 'desc');
-                },
+                'pinnedComments',
             ])
             ->orderBy('id', 'desc')
             ->limit($limit)
@@ -944,8 +951,8 @@ class FeedController extends Controller
             $repository->format($user);
             $repository->previewComments();
 
-            $feed->has_collect = $feed->collected($user);
-            $feed->has_like = $feed->liked($user);
+            $feed->has_collect = $user ? $feed->collected($user) : false;
+            $feed->has_like = $user ? $feed->liked($user) : false;
 
             return $feed;
         });

@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Medz\Laravel\Notifications\JPush\Sender;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Zhiyi\Plus\FileStorage\FileMetaInterface;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -40,10 +42,7 @@ class User extends Authenticatable implements JWTSubject
         Concerns\UserHasNotifiable,
         Concerns\Macroable;
     // 关系数据相关
-    use Relations\UserHasWallet,
-        Relations\UserHasWalletCash,
-        Relations\UserHasWalletCharge,
-        Relations\UserHasFilesWith,
+    use Relations\UserHasFilesWith,
         Relations\UserHasFollow,
         Relations\UserHasComment,
         Relations\UserHasReward,
@@ -83,7 +82,13 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $with = ['extra'];
+    public static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('certification', function (Builder $query) {
+            $query->with('certification');
+        });
+    }
 
     /**
      * Get Notification for JPush sender.

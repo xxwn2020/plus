@@ -37,9 +37,10 @@ use Zhiyi\Plus\AtMessage\ResourceManagerInterface;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Resgister the application service.
      *
      * @return void
+     * @author Seven Du <shiweidu@outlook.com>
      */
     public function register()
     {

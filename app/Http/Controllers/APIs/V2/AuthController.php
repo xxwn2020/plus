@@ -117,9 +117,8 @@ class AuthController extends Controller
             return $this->response()->json(['message' => '账号或密码不正确'], 422);
         } else {
             return $this->response()->json([
-                'message' => sprintf('%s还没有注册',
-                    $field == 'phone' ? '手机号'
-                        : ($field == 'name' ? '用户' : '邮箱')),
+                'message' => sprintf('%s还没有注册', $field == 'phone'
+                    ? '手机号' : ($field === 'name' ? '账号' : '邮箱')),
             ], 422);
         }
     }
@@ -171,6 +170,6 @@ class AuthController extends Controller
             'token_type'   => 'Bearer',
             'expires_in'   => $this->guard()->factory()->getTTL(),
             'refresh_ttl'  => config('jwt.refresh_ttl'),
-        ], 200);
+        ]);
     }
 }

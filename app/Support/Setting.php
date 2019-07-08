@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Zhiyi\Plus\Support;
 
+use Cache;
 use Zhiyi\Plus\Models\Setting as Model;
 
 class Setting
@@ -40,7 +41,7 @@ class Setting
     /**
      * Create a setting namespace.
      *
-     * @param  \Zhiyi\Plus\Models\Setting
+     * @param  Model  $model
      * @param  string
      */
     public function __construct(Model $model, string $namespace)
@@ -87,19 +88,25 @@ class Setting
     public function get(?string $name = null, $default = null)
     {
         if ($name) {
-            $single = $this
-                ->query()
-                ->byName($name)
-                ->first();
+            return Cache::rememberForever(sprintf('setting_cache_%s', $name),
+                function () use ($name, $default) {
+                    $single = $this
+                        ->query()
+                        ->byName($name)
+                        ->first();
 
-            return $single ? $single->contents : $default;
+                    return $single ? $single->contents : $default;
+                });
         }
 
-        $collection = $this->query()->get();
+        return Cache::rememberForever(sprintf('setting_namespace_%s',
+            $this->namespace), function () {
+                $collection = $this->query()->get();
 
-        return $collection->keyBy('name')->map(function ($value) {
-            return $value;
-        });
+                return $collection->keyBy('name')->map(function ($value) {
+                    return $value;
+                });
+            });
     }
 
     /**
@@ -123,6 +130,8 @@ class Setting
                 foreach ($name as $name => $contents) {
                     call_user_func($callbale, $name, $contents);
                 }
+                Cache::forget(sprintf('setting_namespace_%s',
+                    $this->namespace));
             });
 
             return;
@@ -137,6 +146,7 @@ class Setting
 
         $setting->contents = $contents;
         $setting->save();
+        Cache::forget(sprintf('setting_cache_%s', $name));
     }
 
     /**

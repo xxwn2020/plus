@@ -23,9 +23,9 @@ namespace Zhiyi\Plus;
 use Zhiyi\Plus\Support\Setting;
 
 /**
- * 验证是否是中国验证码.
+ * 验证是否是中国手机号.
  *
- * @param  string  $number
+ * @param string $number
  *
  * @return bool
  */
@@ -146,6 +146,7 @@ function filterUrlStringLength(string $data, int $length = 0)
  *
  * @param  string  $namespace
  * @param  string|null  $name
+ * @param  null  $default
  *
  * @return Support\any|Setting
  */

@@ -96,10 +96,7 @@ class UserController extends Controller
         $users->load(['certification']);
 
         return $response->json($model->getConnection()->transaction(function (
-        ) use (
-            $users,
-            $user
-        ) {
+        ) use ($users, $user) {
             return $users->map(function (User $item) use ($user) {
                 $item->following = $item->hasFollwing($user->id ?? 0);
                 $item->follower = $item->hasFollower($user->id ?? 0);
@@ -174,7 +171,7 @@ class UserController extends Controller
             ->first();
 
         if (! $verify) {
-            return $response->json(['message' => ['验证码错误或者已失效']], 422);
+            return $response->json(['message' => '验证码错误或者已失效'], 422);
         }
 
         $user = new User();

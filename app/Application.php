@@ -29,12 +29,13 @@ class Application extends LaravelApplication implements AppInterface
      *
      * @var string
      */
-    const VERSION = '2.3.0';
+    const VERSION = '2.4.0';
 
     /**
      * Create a new Illuminate application instance.
      *
-     * @param string|null $basePath
+     * @param  string|null  $basePath
+     *
      * @author Seven Du <shiweidu@outlook.com>
      */
     public function __construct($basePath = null)
@@ -42,10 +43,11 @@ class Application extends LaravelApplication implements AppInterface
         parent::__construct($basePath);
 
         // Load configuration after.
-        $this->afterBootstrapping(\Illuminate\Foundation\Bootstrap\LoadConfiguration::class, function ($app) {
-            $app->make(\Zhiyi\Plus\Bootstrap\LoadConfiguration::class)
-                ->handle();
-        });
+        $this->afterBootstrapping(\Illuminate\Foundation\Bootstrap\LoadConfiguration::class,
+            function ($app) {
+                $app->make(\Zhiyi\Plus\Bootstrap\LoadConfiguration::class)
+                    ->handle();
+            });
 
         // Use environment path.
         $this->useEnvironmentPath($this->appConfigurePath());
@@ -73,24 +75,26 @@ class Application extends LaravelApplication implements AppInterface
         parent::registerCoreContainerAliases();
 
         // Register the app core container aliased.
-        foreach ([
-            'app' => [
-                static::class,
-                \Zhiyi\Plus\AppInterface::class,
-            ],
-            'cdn' => [
-                \Zhiyi\Plus\Contracts\Cdn\UrlFactory::class,
-                \Zhiyi\Plus\Cdn\UrlManager::class,
-            ],
-            'at-message' => [
-                \Zhiyi\Plus\AtMessage\MessageInterface::class,
-                \Zhiyi\Plus\AtMessage\Message::class,
-            ],
-            'at-resource-manager' => [
-                \Zhiyi\Plus\AtMessage\ResourceManagerInterface::class,
-                \Zhiyi\Plus\AtMessage\ResourceManager::class,
-            ],
-        ] as $abstract => $aliases) {
+        foreach (
+            [
+                'app'                 => [
+                    static::class,
+                    \Zhiyi\Plus\AppInterface::class,
+                ],
+                'cdn'                 => [
+                    \Zhiyi\Plus\Contracts\Cdn\UrlFactory::class,
+                    \Zhiyi\Plus\Cdn\UrlManager::class,
+                ],
+                'at-message'          => [
+                    \Zhiyi\Plus\AtMessage\MessageInterface::class,
+                    \Zhiyi\Plus\AtMessage\Message::class,
+                ],
+                'at-resource-manager' => [
+                    \Zhiyi\Plus\AtMessage\ResourceManagerInterface::class,
+                    \Zhiyi\Plus\AtMessage\ResourceManager::class,
+                ],
+            ] as $abstract => $aliases
+        ) {
             foreach ($aliases as $alias) {
                 $this->alias($abstract, $alias);
             }
@@ -99,19 +103,24 @@ class Application extends LaravelApplication implements AppInterface
 
     /**
      * The app configure path.
-     * @param  string $path
+     *
+     * @param  string  $path
+     *
      * @return string
      */
-    public function appConfigurePath(string $path = ''): string
-    {
-        return $this->basePath().'/storage/configure'.($path ? DIRECTORY_SEPARATOR.$path : '');
+    public function appConfigurePath(string $path = '')
+    : string {
+        return $this->basePath().'/storage/configure'.($path
+                ? DIRECTORY_SEPARATOR.$path : '');
     }
 
     /**
      * Get the app YAML configure filename.
+     *
      * @return string
      */
-    public function appYamlConfigureFile(): string
+    public function appYamlConfigureFile()
+    : string
     {
         return $this->appConfigurePath('plus.yml');
     }

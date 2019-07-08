@@ -60,23 +60,19 @@ class NewsServiceProvider extends ServiceProvider
             dirname(__DIR__).'/../router.php'
         );
 
-        // Register Bootstrapper API event.
+        // Register Bootstraper API event.
         $this->app->make(BootstrapAPIsEventer::class)
             ->listen('v2', function () {
-                return Cache::rememberForever('news-bootstrapper',
-                    function () {
-                        return [
-                            'news' => [
-                                'contribute'     => setting('news',
-                                    'contribute', [
-                                        'pay'      => true,
-                                        'verified' => true,
-                                    ]),
-                                'pay_contribute' => setting('news',
-                                    'contribute-amount', 100),
-                            ],
-                        ];
-                    });
+                return [
+                    'news' => [
+                        'contribute'     => setting('news', 'contribute', [
+                            'pay'      => true,
+                            'verified' => true,
+                        ]),
+                        'pay_contribute' => setting('news', 'contribute-amount',
+                            100),
+                    ],
+                ];
             });
 
         // 注册置顶审核通知事件
@@ -103,6 +99,10 @@ class NewsServiceProvider extends ServiceProvider
 
         $this->app->make('Illuminate\Database\Eloquent\Factory')->load(__DIR__
             .'/../../database/factories');
+
+        Relation::morphMap([
+            'news' => News::class,
+        ]);
     }
 
     /**
@@ -125,9 +125,5 @@ class NewsServiceProvider extends ServiceProvider
             return $this->belongsToMany(News::class, 'news_collections',
                 'user_id', 'news_id');
         });
-
-        Relation::morphMap([
-            'news' => News::class,
-        ]);
     }
 }
