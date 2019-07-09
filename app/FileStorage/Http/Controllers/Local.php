@@ -22,7 +22,6 @@ namespace Zhiyi\Plus\FileStorage\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\Auth\Guard;
@@ -34,18 +33,21 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Contracts\Cache\Factory as FactoryContract;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use function Zhiyi\Plus\setting;
 
 class Local extends Controller
 {
     /**
      * File storage instance.
+     *
      * @var \Zhiyi\Plus\FileStorage\StorageInterface
      */
     protected $storage;
 
     /**
      * Create the controller instance.
-     * @param \Zhiyi\Plus\FileStorage\StorageInterface $storage
+     *
+     * @param  \Zhiyi\Plus\FileStorage\StorageInterface  $storage
      */
     public function __construct(StorageInterface $storage)
     {
@@ -61,28 +63,33 @@ class Local extends Controller
 
     /**
      * Get a file.
-     * @param \Illuminate\Http\Request $request
-     * @param string $channel
-     * @param string $path
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $channel
+     * @param  string  $path
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function get(Request $request, string $channel, string $path): Response
-    {
+    public function get(Request $request, string $channel, string $path)
+    : Response {
         $resource = new Resource($channel, base64_decode($path));
 
-        return $this->storage->response($resource, $request->query('rule', null));
+        return $this->storage->response($resource,
+            $request->query('rule', null));
     }
 
     /**
      * Put a file.
-     * @param \Illuminate\Http\Request $request
-     * @param s\Illuminate\Contracts\Cache\Factory $cache
-     * @param string $channel
-     * @param string $path
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  s\Illuminate\Contracts\Cache\Factory  $cache
+     * @param  string  $channel
+     * @param  string  $path
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function put(Request $request, FactoryContract $cache, string $channel, string $path): JsonResponse
-    {
+    public function put(Request $request, FactoryContract $cache, string $channel, string $path)
+    : JsonResponse {
         $signature = $request->query('signature');
         if ($cache->has($signature)) {
             throw new AccessDeniedHttpException('未授权的非法访问');
@@ -101,12 +108,16 @@ class Local extends Controller
 
         $this->storage->callback($resource);
         $expiresAt = (new Carbon)->addSeconds(
-            setting('file-storage', 'filesystems.local', ['timeout' => 3360])['timeout']
+            setting('file-storage', 'filesystems.local',
+                ['timeout' => 3360])['timeout']
         );
         $cache->put($signature, 1, $expiresAt);
         $this->guard()->invalidate();
 
-        return new JsonResponse(['node' => (string) $resource], Response::HTTP_CREATED);
+        return new JsonResponse([
+            'node' => (string) $resource,
+            'uri'  => url(sprintf('/storage/%s:%s', $resource->getChannel(), base64_encode($resource->getPath()))),
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -114,7 +125,8 @@ class Local extends Controller
      *
      * @return \Illuminate\Contracts\Auth\Guard
      */
-    public function guard(): Guard
+    public function guard()
+    : Guard
     {
         return Auth::guard('api');
     }

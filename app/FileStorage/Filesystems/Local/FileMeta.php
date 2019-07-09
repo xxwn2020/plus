@@ -156,8 +156,7 @@ class FileMeta extends FileMetaAbstract
      * @return \Zhiyi\Plus\FileStorage\Pay\PayInterface
      */
     public function getPay(User $user)
-    : ?PayInterface
-    {
+    : ?PayInterface {
         return null;
     }
 
@@ -180,7 +179,7 @@ class FileMeta extends FileMetaAbstract
     public function url()
     : string
     {
-        return url(sprintf('/storage/%s/%s', $this->resource->getChannel(),
+        return url(sprintf('/storage/%s:%s', $this->resource->getChannel(),
             base64_encode($this->resource->getPath())));
     }
 }
