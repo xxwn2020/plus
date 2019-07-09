@@ -99,14 +99,12 @@
           }
         }, 500)
       })
-
       $('#location').focus(function() {
         var val = $.trim($('#location').val())
         if (val.length >= 1) {
           location_search()
         }
       })
-
       $('.area_searching').on('click', 'a', function() {
         $('#location').val($(this).text())
         $('.area_searching').hide()
@@ -117,7 +115,6 @@
         var area_searching = $('.area_searching')
         area_searching.html('').hide()
         if (!val || val == '') { return }
-
         axios.get('/api/v2/locations/search', { params: { name: val } }).then(function(response) {
           if (response.data.length > 0) {
             $.each(response.data, function(key, value) {
@@ -172,24 +169,32 @@
             this.init()
           }
 
+          // base64
+          function dataURLtoBlob (dataurl) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+              bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n)
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n)
+            }
+            return new Blob([u8arr], { type: mime })
+          }
+
           // get round avater
-          // function getRoundedCanvas (sourceCanvas) {
-          //   var canvas = document.createElement('canvas')
-          //   var context = canvas.getContext('2d')
-          //   var width = sourceCanvas.width
-          //   var height = sourceCanvas.height
-          //
-          //   canvas.width = width
-          //   canvas.height = height
-          //   context.beginPath()
-          //   context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI)
-          //   context.strokeStyle = 'rgba(0,0,0,0)'
-          //   context.stroke()
-          //   context.clip()
-          //   context.drawImage(sourceCanvas, 0, 0, width, height)
-          //
-          //   return canvas
-          // }
+          function getRoundedCanvas (sourceCanvas) {
+            var canvas = document.createElement('canvas')
+            var context = canvas.getContext('2d')
+            var width = sourceCanvas.width
+            var height = sourceCanvas.height
+            canvas.width = width
+            canvas.height = height
+            context.beginPath()
+            context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI)
+            context.strokeStyle = 'rgba(0,0,0,0)'
+            context.stroke()
+            context.clip()
+            context.drawImage(sourceCanvas, 0, 0, width, height)
+            return canvas
+          }
 
           CropAvatar.prototype = {
             constructor: CropAvatar,
@@ -208,23 +213,64 @@
               this.$avatarSave.on('click', $.proxy(this.click, this))
             },
             click: function() {
-              if (this.file.type) {
-                // 设置canvas高宽
-                var data = this.$img.cropper('getData')
-                var options = {
-                  width: data.width < 500 ? data.width : 500,
-                  height: data.height < 500 ? data.height : 500
-                }
-                var croppedCanvas = this.$img.cropper('getCroppedCanvas', options)
-                var dataurl = croppedCanvas.toDataURL(this.file.type, 0.6)
+              if (this.fileUpload.mime_type) {
+                // 默认宽高 160
+                var croppedCanvas = this.$img.cropper('getCroppedCanvas')
+                var roundedCanvas = getRoundedCanvas(croppedCanvas) // 获取圆形头像
+                var dataurl = roundedCanvas.toDataURL('image/png')
                 var blob = dataURLtoBlob(dataurl)
-                this.$avatarSave.text('上传中...')
-                upload(blob, { name: this.file.name, type: this.file.type }, dataurl, this.insert)
+                  /*blob.name = this.fileUpload.origin_filename;
+                   this.$avatarSave.text('上传中...');
+                   fileUpload.init(blob, updateImg);*/
+                this.upload(blob, dataurl)
               } else {
                 ly.error('请选择上传文件', false)
               }
             },
-
+            upload: function(blob, url) {
+              var _this = this
+              var reader = new FileReader()
+              reader.onload = function(e) {
+                var base64 = e.target.result
+                var hash = md5(base64)
+                _this.$avatarSave.text('上传中...')
+                var params = {
+                  filename: md5(_this.fileUpload.origin_filename) + '.' +
+                    _this.fileUpload.origin_filename.split('.').splice(-1),
+                  hash: hash,
+                  size: blob.size,
+                  mime_type: 'image/png',
+                  storage: { channel: 'public' }
+                }
+                axios.post('/api/v2/storage', params).then(function(res) {
+                  var result = res.data
+                  var node = result.node
+                  var instance = axios.create()
+                  instance.request({
+                    method: result.method,
+                    url: result.uri,
+                    headers: result.headers,
+                    data: blob
+                  }).then(function(res) {
+                    // 头像上传成功后，更新用户头像
+                    axios.patch('/api/v2/user', { avatar: node }).then(function() {
+                      _this.insert(url)
+                    }).catch(function(error) {
+                      showError(error.response.data)
+                    })
+                  }).catch(function(error) {
+                    showError(error.response.data)
+                  })
+                }).catch(function(error) {
+                  showError(error.response.data)
+                })
+              }
+              var file = new File([blob], _this.fileUpload.origin_filename, {
+                type: 'image/png',
+                lastModified: new Date()
+              })
+              reader.readAsArrayBuffer(file)
+            },
             insert: function(src) {
               $('#J-image-preview').attr('src', src)
               layer.closeAll()
@@ -236,7 +282,8 @@
                 files = this.$avatarInput.prop('files')
                 if (files.length > 0) {
                   file = files[0]
-                  this.file = file
+                  this.fileUpload.mime_type = file.type
+                  this.fileUpload.origin_filename = file.name
                   if (this.isImageFile(file)) {
                     if (this.url) {
                       URL.revokeObjectURL(this.url) // Revoke the old one
