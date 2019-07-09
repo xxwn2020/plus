@@ -42,7 +42,8 @@ class User extends Authenticatable implements JWTSubject
         Concerns\UserHasNotifiable,
         Concerns\Macroable;
     // 关系数据相关
-    use Relations\UserHasFilesWith,
+    use Relations\UserHasWalletCash,
+        Relations\UserHasFilesWith,
         Relations\UserHasFollow,
         Relations\UserHasComment,
         Relations\UserHasReward,
