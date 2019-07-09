@@ -22,6 +22,7 @@ namespace Zhiyi\Plus\FileStorage\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use function Zhiyi\Plus\setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\Auth\Guard;
@@ -33,7 +34,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Contracts\Cache\Factory as FactoryContract;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use function Zhiyi\Plus\setting;
 
 class Local extends Controller
 {
@@ -71,7 +71,8 @@ class Local extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function get(Request $request, string $channel, string $path)
-    : Response {
+    : Response
+    {
         $resource = new Resource($channel, base64_decode($path));
 
         return $this->storage->response($resource,
@@ -89,7 +90,8 @@ class Local extends Controller
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function put(Request $request, FactoryContract $cache, string $channel, string $path)
-    : JsonResponse {
+    : JsonResponse
+    {
         $signature = $request->query('signature');
         if ($cache->has($signature)) {
             throw new AccessDeniedHttpException('未授权的非法访问');

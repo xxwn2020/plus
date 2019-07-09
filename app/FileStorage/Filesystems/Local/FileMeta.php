@@ -156,7 +156,8 @@ class FileMeta extends FileMetaAbstract
      * @return \Zhiyi\Plus\FileStorage\Pay\PayInterface
      */
     public function getPay(User $user)
-    : ?PayInterface {
+    : ?PayInterface
+    {
         return null;
     }
 
