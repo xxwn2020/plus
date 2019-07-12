@@ -112,7 +112,7 @@
           </div>
           <div class="info">
             <span>{{feed.user.name}}「#{{feed.user.id}}」</span>
-            <span>{{feed.user.bio}}</span>
+            <span>签名：{{feed.user.bio}}</span>
           </div>
         </div>
         <div class="images">
@@ -122,6 +122,7 @@
             :src="url(image.id)"
             class="image"></el-image>
           <video :poster="url(feed.video.cover_id)"
+                 class="video"
             :src="url(feed.video.video_id)"
             v-if="feed.video">
           </video>
@@ -394,6 +395,9 @@ export default {
 
       .images {
         flex: 2;
+        video {
+          width: 100%;
+        }
       }
 
       .content {
