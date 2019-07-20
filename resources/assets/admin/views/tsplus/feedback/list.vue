@@ -59,7 +59,8 @@
         :label="$t('admin.operation')"
       >
         <template slot-scope="{row: feedback}">
-          <el-button size="mini" type="danger" plain :loading="deleting === feedback.id" @click="delFeedback(feedback.id)">
+          <el-button size="mini" type="danger" plain :loading="deleting === feedback.id"
+                     @click="delFeedback(feedback.id)">
             {{$t('admin.delete')}}
           </el-button>
         </template>
@@ -85,7 +86,9 @@
     mixins: [setQuery],
     name: 'index',
     data: () => ({
-      page: {},
+      page: {
+        data: []
+      },
       query: {
         limit: 15,
         page: 1,
@@ -116,6 +119,7 @@
         if (!getLoading) {
           this.gLoading(true)
           this.$api.feedback.list(query).then(({ data }) => {
+            this.$set(this, 'page', data)
           }).catch(this.showApiError).finally(() => {
             this.gLoading(false)
           })
